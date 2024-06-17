@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: we-work
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:h2:file:./new-parquimetro-prd
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+api:
+  security:
+    token:
+      secret: my-secret
