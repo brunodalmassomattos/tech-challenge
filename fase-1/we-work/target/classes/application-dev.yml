@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: # ${MYSQL_HOST:localhost}:3306/db_example?createDatabaseIfNotExist=true
+    username: spring-test-dev
+    password: spring-test-dev
+    driver-class-name: com.mysql.cj.jdbc.Driver

@@ -1,0 +1,15 @@
+insert into perfis(ID, DESCRICAO) values('baaa1272-9b0d-465c-8266-b53179e7ff21', 'LOCADOR');
+insert into perfis(ID, DESCRICAO) values('bf485139-a6f9-4e25-8655-76083fcbf960', 'LOCATARIO');
+insert into perfis(ID, DESCRICAO) values('5c520905-fc4c-4a63-b7a1-ae19c9baa356', 'ADMINISTRADOR');
+
+insert into users(ID, NOME, CPF_CNPJ, DATA_ABERTURA, DATA_NASCIMENTO, EMAIL, SENHA, PERFIL_ID, STATUS) values('cffcb587-e465-4d36-ae40-c7db920bf725', 'Bruno', '123.456.789-00', NULL, '2020-01-01', 'bruno@email.com', '123456', '5c520905-fc4c-4a63-b7a1-ae19c9baa356', 'ATIVO');
+insert into users(ID, NOME, CPF_CNPJ, DATA_ABERTURA, DATA_NASCIMENTO, EMAIL, SENHA, PERFIL_ID, STATUS) values('6eaf0bb6-6783-42c9-abd5-ea1e585e8d57', 'Guilherme', '123.456.789-00', NULL, '2020-01-01', 'guilherme@email.com', '123456', '5c520905-fc4c-4a63-b7a1-ae19c9baa356', 'ATIVO');
+insert into users(ID, NOME, CPF_CNPJ, DATA_ABERTURA, DATA_NASCIMENTO, EMAIL, SENHA, PERFIL_ID, STATUS) values('61808d6b-113e-4783-a149-f3b9da4b663a', 'Aline', '123.456.789-00', NULL, '2020-01-01', 'aline@email.com', '123456', '5c520905-fc4c-4a63-b7a1-ae19c9baa356', 'ATIVO');
+insert into users(ID, NOME, CPF_CNPJ, DATA_ABERTURA, DATA_NASCIMENTO, EMAIL, SENHA, PERFIL_ID, STATUS) values('ffed21c5-41b9-4750-a871-94a1697de9fe', 'Wendel', '123.456.789-00', NULL, '2020-01-01', 'wendel@email.com', '123456', '5c520905-fc4c-4a63-b7a1-ae19c9baa356', 'ATIVO');
+insert into users(ID, NOME, CPF_CNPJ, DATA_ABERTURA, DATA_NASCIMENTO, EMAIL, SENHA, PERFIL_ID, STATUS) values('5d1f7b66-2bf3-4328-9f8f-00f8834a07f7', 'Matheus', '123.456.789-00', NULL, '2020-01-01', 'matheus@email.com', '123456', '5c520905-fc4c-4a63-b7a1-ae19c9baa356', 'ATIVO');
+
+insert into users(ID, NOME, CPF_CNPJ, DATA_ABERTURA, DATA_NASCIMENTO, EMAIL, SENHA, PERFIL_ID, STATUS) values('71c9fc67-811c-438a-8451-2f633ac5ec38', 'Locador 1', '123.456.789-00', NULL, '2020-01-01', 'locador1@email.com', '123456', 'baaa1272-9b0d-465c-8266-b53179e7ff21', 'ATIVO');
+insert into users(ID, NOME, CPF_CNPJ, DATA_ABERTURA, DATA_NASCIMENTO, EMAIL, SENHA, PERFIL_ID, STATUS) values('9f811f8d-879a-455d-b2ab-670f29f3b840', 'Locador 2', '17.760.035/0001-21', '2020-01-01', null, 'locador2@email.com', '123456', 'baaa1272-9b0d-465c-8266-b53179e7ff21', 'ATIVO');
+
+insert into users(ID, NOME, CPF_CNPJ, DATA_ABERTURA, DATA_NASCIMENTO, EMAIL, SENHA, PERFIL_ID, STATUS) values('203ca7af-99b3-4062-9e02-7c54c0bf8217', 'Locatario 1', '123.456.789-00', null, '2020-01-01', 'locatario1@email.com', '123456', 'bf485139-a6f9-4e25-8655-76083fcbf960', 'INATIVO');
+insert into users(ID, NOME, CPF_CNPJ, DATA_ABERTURA, DATA_NASCIMENTO, EMAIL, SENHA, PERFIL_ID, STATUS) values('47475585-ee18-4ca2-b90c-17a6df2cc79d', 'Locatario 2', '93.716.138/0001-72', '2020-01-01', null, 'locatario2@email.com', '123456', 'bf485139-a6f9-4e25-8655-76083fcbf960', 'INATIVO');
