@@ -1,0 +1,3 @@
+insert into formas_pagamento(ID, TIPO) values('3786e9d2-dc0e-499d-acb5-7b98ed220810', 'CARTÃO DE CRÉDITO');
+insert into formas_pagamento(ID, TIPO) values('b69ff822-166b-41c5-a4ba-04b6d00c8f29', 'DÉBITO');
+insert into formas_pagamento(ID, TIPO) values('2c7d9ead-401d-4771-a485-3a8a631d475d', 'PIX');

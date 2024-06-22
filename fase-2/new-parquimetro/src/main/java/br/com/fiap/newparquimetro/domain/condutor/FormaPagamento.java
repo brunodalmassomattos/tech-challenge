@@ -1,4 +1,4 @@
-package br.com.fiap.newparquimetro.domain.usuario;
+package br.com.fiap.newparquimetro.domain.condutor;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,15 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "perfis")
+@Table(name = "formasPagamento")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Perfil {
+public class FormaPagamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String descricao;
+    private String tipo;
 }
