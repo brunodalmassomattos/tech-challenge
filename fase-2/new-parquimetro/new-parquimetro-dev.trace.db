@@ -1,0 +1,3 @@
+2024-06-23 19:17:28.965571-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "VEICULOJAVA" not found; SQL statement:
+select * from veiculojava [42102-224]
