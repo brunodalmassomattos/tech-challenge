@@ -27,40 +27,34 @@ Links Úteis:
 
 ## Payload ###
 
-#### Autenticação #### 
-// ```console
-// curl --location 'http://localhost:8080/auth/login' \
-// --header 'Content-Type: application/json' \
-// --data-raw '{
-//     "email": "bruno@email.com",
-//     "password": "123456" 
-// }'
-// ```
-
-#### Salva Usuario #### 
-// ```console
-// curl --location 'http://localhost:8080/user' \
-// --header 'Content-Type: application/json' \
-// --data-raw '{
-//     "nome": "Rodrigo Enrico Castro",
-//     "cpfCnpj": "989.201.571-11",
-//     "dataNascimento": "1991-03-24",
-//     "email": "rodrigoenricocastro@ornatopresentes.com.br",
-//     "senha": "OwiNwql00Z",
-//     "perfil": "LOCATARIO"
-// }'
-// ```
-### Altera Usuario ###
-// ```console
-// curl --location --request PUT 'http://localhost:8080/user/67d65233-c7b9-4264-a006-d83b79e79ce2' \
-// --header 'Content-Type: application/json' \
-// --data-raw '{
-//     "nome": "Rodrigo Enrico Castro",
-//     "cpfCnpj": "989.201.571-11",
-//     "dataNascimento": "1991-03-24",
-//     "email": "rodrigoenricocastro@ornatopresentes.com.br",
-//     "perfil": "LOCADOR",
-//     "status": "INATIVO"
-// }'
-// ```
-// 
+#### Salva Usuario ####
+```console
+curl --location 'http://localhost:8080/condutor' \
+--header 'Content-Type: application/json' \
+--data '{
+    "nome": "Oliver Theo Araújo",
+    "cpfCnpj": "553.812.214-01",
+    "dataNascimento": "1991-01-03",
+    "telefone": "(79) 98121-7117",
+    "idFormaDePagamento": "2c7d9ead-401d-4771-a485-3a8a631d475d",
+    "endereco": {
+        "logradouro": "Rua Vereador João Menezes Oliveira",
+        "numero": "278",
+        "complemento": "",
+        "bairro": "Industrial",
+        "cidade": "Aracaju",
+        "estado": "SE",
+        "cep": "49066-450"
+    },
+    "veiculos": [
+        {
+            "fabricante": "GREAT WALL",
+            "modelo": "HOVER CUV 2.4 16V 5p Mec.",
+            "placa": "KBM-4627",
+            "cor": "Marrom",
+            "ano": "2008"
+        }
+    ]
+}'
+```
+ 

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/condutor")
 @AllArgsConstructor
 public class CondutorController {
 
