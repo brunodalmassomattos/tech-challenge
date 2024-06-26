@@ -3,23 +3,23 @@ package br.com.fiap.newparquimetro.domain.veiculo;
 
 import br.com.fiap.newparquimetro.dto.AtualizaVeiculoDTO;
 import br.com.fiap.newparquimetro.dto.CadastraVeiculoDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.util.UUID;
 
 @Entity
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class VeiculoJava {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     private String fabricante;
     private String modelo;
     private String placa;
