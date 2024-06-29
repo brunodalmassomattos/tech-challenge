@@ -57,5 +57,4 @@ public class CondutorController {
                 .veiculos(VeiculoDTO.toVeiculos(condutorRequestDTO.veiculos()))
                 .build();
     }
-
 }

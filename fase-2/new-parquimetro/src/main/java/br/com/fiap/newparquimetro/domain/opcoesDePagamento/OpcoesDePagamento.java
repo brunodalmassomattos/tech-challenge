@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 @Table(name = "opcoesDePagamento")
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class OpcoesDePagamento {
 
@@ -32,14 +33,6 @@ public class OpcoesDePagamento {
     @JoinColumn(name = "condutor_id")
     private Condutor condutor;
 
-    public OpcoesDePagamento() {}
-    public OpcoesDePagamento(CriarOpcaoPagamentoDTO dados) {
-        this.tipo = dados.getTipo();
-        this.status = dados.getStatus();
-        this.valor = BigDecimal.valueOf(dados.getValor());
-        this.condutor = new Condutor();
-        this.condutor.setId(dados.getCondutor());
-    }
     public void atualizarDados(AtualizarOpcaoPagamentoDTO dados) {
         this.tipo = dados.getTipo();
         this.status = dados.getStatus();

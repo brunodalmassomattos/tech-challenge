@@ -21,6 +21,6 @@ public class AtualizarOpcaoPagamentoDTO {
     private Double valor;
 
     @NotNull(message = "O ID do condutor é obrigatório.")
-    private String condutor;
+    private String idCondutor;
 }
 
