@@ -44,4 +44,9 @@ public class CondutorService {
         Condutor condutorEncontrado = this.condutorRepository.findById(condutor.getId()).orElseThrow(() -> new ControllerNotFoundException("Usuario não encontrado"));
         this.condutorRepository.delete(condutorEncontrado);
     }
+
+    public CondutorResponseDTO find(String id) {
+        Condutor condutor = this.condutorRepository.findById(id).orElseThrow(() -> new ControllerNotFoundException("Usuario não encontrado"));
+        return CondutorResponseDTO.toDTO(condutor, this.formaPagamentoService.findById(condutor.getIdFormaPagamento()));
+    }
 }

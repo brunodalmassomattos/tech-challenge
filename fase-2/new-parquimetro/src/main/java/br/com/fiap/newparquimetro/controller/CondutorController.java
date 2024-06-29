@@ -25,14 +25,19 @@ public class CondutorController {
         return ResponseEntity.ok(this.condutorService.save(this.prepararRequest(null, condutorRequestDTO)));
     }
 
+    @GetMapping("/{idCondutor}")
+    public ResponseEntity<CondutorResponseDTO> buscarCondutor(@PathVariable String idCondutor) throws ParseException {
+        return ResponseEntity.ok(this.condutorService.find(idCondutor));
+    }
+
     @PutMapping("/{idCondutor}")
-    public ResponseEntity<CondutorResponseDTO> condutor(@PathVariable String idCondutor,
+    public ResponseEntity<CondutorResponseDTO> alterarCondutor(@PathVariable String idCondutor,
                                                         @Valid @RequestBody CondutorRequestDTO condutorRequestDTO) throws ParseException {
         return ResponseEntity.ok(this.condutorService.update(this.prepararRequest(idCondutor, condutorRequestDTO)));
     }
 
     @DeleteMapping("/{idCondutor}")
-    public ResponseEntity<Void> condutor(@PathVariable String idCondutor) throws ParseException {
+    public ResponseEntity<Void> deletarCondutor(@PathVariable String idCondutor) throws ParseException {
         this.condutorService.delete(Condutor.builder().id(idCondutor).build());
         return ResponseEntity.noContent().build();
     }
