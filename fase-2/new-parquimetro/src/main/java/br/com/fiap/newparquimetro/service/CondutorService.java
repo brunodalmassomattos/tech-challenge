@@ -7,6 +7,8 @@ import br.com.fiap.newparquimetro.repositories.CondutorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class CondutorService {
@@ -43,5 +45,9 @@ public class CondutorService {
     public void delete(Condutor condutor) {
         Condutor condutorEncontrado = this.condutorRepository.findById(condutor.getId()).orElseThrow(() -> new ControllerNotFoundException("Usuario não encontrado"));
         this.condutorRepository.delete(condutorEncontrado);
+    }
+
+    public Optional<Condutor> findById(String id) {
+        return this.condutorRepository.findById(id);
     }
 }
