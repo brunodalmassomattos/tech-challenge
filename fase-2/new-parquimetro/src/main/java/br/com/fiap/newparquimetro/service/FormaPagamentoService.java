@@ -1,6 +1,6 @@
 package br.com.fiap.newparquimetro.service;
 
-import br.com.fiap.newparquimetro.domain.condutor.FormaPagamento;
+import br.com.fiap.newparquimetro.domain.formapagamento.FormaPagamento;
 import br.com.fiap.newparquimetro.dto.FormaPagamentoResponseDTO;
 import br.com.fiap.newparquimetro.repositories.FormaPagamentoRepository;
 import lombok.AllArgsConstructor;
