@@ -28,6 +28,9 @@ spring:
     init:
       mode: always
 
+springdoc:
+  swagger-ui:
+    operationsSorter: method
 
 api:
   security:
