@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class VeiculoService {
@@ -34,10 +33,13 @@ public class VeiculoService {
     }
 
     @Transactional
-    public VeiculoJava atualizar(AtualizaVeiculoDTO dado) {
-        VeiculoJava veiculo = veiculoRepository.getReferenceById(dado.id());
+    public VeiculoJava atualizar(String id, AtualizaVeiculoDTO dado) {
+        VeiculoJava veiculo = veiculoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Veículo não encontrado"));
+
         veiculo.atualizarInformacoes(dado);
-        return veiculo;
+
+        return veiculoRepository.save(veiculo);
     }
 
     @Transactional

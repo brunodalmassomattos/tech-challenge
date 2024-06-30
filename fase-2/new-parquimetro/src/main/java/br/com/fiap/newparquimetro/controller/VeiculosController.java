@@ -39,9 +39,9 @@ public class VeiculosController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping
-    public ResponseEntity<Void> atualizar(@RequestBody @Valid AtualizaVeiculoDTO dado) {
-        veiculoService.atualizar(dado);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizar(@PathVariable String id, @RequestBody @Valid AtualizaVeiculoDTO dado) {
+        veiculoService.atualizar(id, dado);
         return ResponseEntity.ok().build();
     }
 

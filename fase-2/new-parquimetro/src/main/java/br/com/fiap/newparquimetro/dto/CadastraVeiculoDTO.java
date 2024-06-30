@@ -12,8 +12,6 @@ public record CadastraVeiculoDTO(
     String placa,
     @NotBlank(message = "Cor é obrigatório!")
     String cor,
-    @NotBlank(message = "Renavam é obrigatório!")
-    String renavam,
     @NotNull(message = "Ano é obrigatório!")
     int ano){
 }

@@ -24,7 +24,6 @@ public class VeiculoJava {
     private String modelo;
     private String placa;
     private String cor;
-    private String renavam;
     private int ano;
 
     public VeiculoJava(CadastraVeiculoDTO dado) {
@@ -32,28 +31,34 @@ public class VeiculoJava {
         this.modelo = dado.modelo();
         this.placa = dado.placa();
         this.cor = dado.cor();
-        this.renavam = dado.renavam();
         this.ano = dado.ano();
     }
 
     public void atualizarInformacoes(AtualizaVeiculoDTO dado) {
-        if(dado.fabricante() != null){
-            this.fabricante = dado.fabricante();
-        }
-        if(dado.modelo() != null){
-            this.modelo = dado.modelo();
-        }
-        if(dado.placa() != null){
-            this.placa = dado.placa();
-        }
-        if(dado.cor() != null){
-            this.cor = dado.cor();
-        }
-        if(dado.renavam() != null){
-            this.renavam = dado.renavam();
-        }
-        if(dado.ano() != 0){
-            this.ano = dado.ano();
-        }
+        dado.fabricante().ifPresent(f -> {
+            if (!f.isEmpty()) {
+                this.fabricante = f;
+            }
+        });
+        dado.modelo().ifPresent(m -> {
+            if (!m.isEmpty()) {
+                this.modelo = m;
+            }
+        });
+        dado.placa().ifPresent(p -> {
+            if (!p.isEmpty()) {
+                this.placa = p;
+            }
+        });
+        dado.cor().ifPresent(c -> {
+            if (!c.isEmpty()) {
+                this.cor = c;
+            }
+        });
+        dado.ano().ifPresent(a -> {
+            if (a != 0) {
+                this.ano = a;
+            }
+        });
     }
 }

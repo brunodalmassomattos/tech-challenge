@@ -3,9 +3,22 @@ package br.com.fiap.newparquimetro.dto;
 import br.com.fiap.newparquimetro.domain.veiculo.VeiculoJava;
 import jakarta.validation.constraints.NotNull;
 
-public record AtualizaVeiculoDTO(@NotNull String id, String fabricante, String modelo, String placa, String cor, String renavam, int ano) {
+import java.util.Optional;
 
-    public AtualizaVeiculoDTO(VeiculoJava veiculo){
-        this(veiculo.getId(), veiculo.getFabricante(), veiculo.getModelo(), veiculo.getPlaca(), veiculo.getCor(), veiculo.getRenavam(), veiculo.getAno());
+public record AtualizaVeiculoDTO(
+        Optional<String> fabricante,
+        Optional<String> modelo,
+        Optional<String> placa,
+        Optional<String> cor,
+        Optional<Integer> ano) {
+
+    public AtualizaVeiculoDTO(VeiculoJava veiculo) {
+        this(
+                Optional.ofNullable(veiculo.getFabricante()),
+                Optional.ofNullable(veiculo.getModelo()),
+                Optional.ofNullable(veiculo.getPlaca()),
+                Optional.ofNullable(veiculo.getCor()),
+                Optional.ofNullable(veiculo.getAno())
+        );
     }
 }
