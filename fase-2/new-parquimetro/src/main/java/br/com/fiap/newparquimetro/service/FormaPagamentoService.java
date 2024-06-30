@@ -22,7 +22,7 @@ public class FormaPagamentoService {
 
     public FormaPagamentoResponseDTO update(FormaPagamento formaPagamento) {
         FormaPagamento formaPagamentoEncontrado = this.formaPagamentoRepository.findById(formaPagamento.getId()).orElse(null);
-        formaPagamentoEncontrado.setTipo(formaPagamento.getTipo() != null ? formaPagamento.getTipo() : formaPagamento.getTipo());
+        formaPagamentoEncontrado.setTipo(formaPagamento.getTipo() != null ? formaPagamento.getTipo() : formaPagamentoEncontrado.getTipo());
 
         return FormaPagamentoResponseDTO.toDTO(this.formaPagamentoRepository.save(formaPagamentoEncontrado));
     }

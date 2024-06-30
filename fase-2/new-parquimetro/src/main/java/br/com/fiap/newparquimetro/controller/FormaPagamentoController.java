@@ -23,7 +23,7 @@ public class FormaPagamentoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FormaPagamentoResponseDTO> BuscarFormaPagamento(@Valid @PathVariable String id) throws ParseException {
+    public ResponseEntity<FormaPagamentoResponseDTO> buscarFormaPagamento(@Valid @PathVariable String id) throws ParseException {
         return ResponseEntity.ok(FormaPagamentoResponseDTO.toDTO(this.formaPagamentoService.findById(id)));
     }
 
