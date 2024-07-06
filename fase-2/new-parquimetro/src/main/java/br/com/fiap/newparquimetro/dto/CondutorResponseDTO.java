@@ -2,7 +2,7 @@ package br.com.fiap.newparquimetro.dto;
 
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
 import br.com.fiap.newparquimetro.domain.condutor.Endereco;
-import br.com.fiap.newparquimetro.domain.condutor.FormaPagamento;
+import br.com.fiap.newparquimetro.domain.formapagamento.FormaPagamento;
 import br.com.fiap.newparquimetro.domain.condutor.Veiculo;
 
 import java.io.Serializable;

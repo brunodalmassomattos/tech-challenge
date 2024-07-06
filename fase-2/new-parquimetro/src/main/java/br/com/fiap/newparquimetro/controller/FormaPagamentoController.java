@@ -1,6 +1,6 @@
 package br.com.fiap.newparquimetro.controller;
 
-import br.com.fiap.newparquimetro.domain.condutor.FormaPagamento;
+import br.com.fiap.newparquimetro.domain.formapagamento.FormaPagamento;
 import br.com.fiap.newparquimetro.dto.FormaPagamentoResponseDTO;
 import br.com.fiap.newparquimetro.service.FormaPagamentoService;
 import jakarta.validation.Valid;
@@ -20,6 +20,11 @@ public class FormaPagamentoController {
     @PostMapping
     public ResponseEntity<FormaPagamentoResponseDTO> formaPagamento(@Valid @RequestHeader String tipoPagamento) throws ParseException {
         return ResponseEntity.ok(this.formaPagamentoService.save(FormaPagamento.builder().tipo(tipoPagamento).build()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FormaPagamentoResponseDTO> buscarFormaPagamento(@Valid @PathVariable String id) throws ParseException {
+        return ResponseEntity.ok(FormaPagamentoResponseDTO.toDTO(this.formaPagamentoService.findById(id)));
     }
 
     @PutMapping("/{id}")
