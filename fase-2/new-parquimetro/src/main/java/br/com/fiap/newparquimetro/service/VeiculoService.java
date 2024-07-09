@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class VeiculoService {
@@ -19,10 +20,9 @@ public class VeiculoService {
     private VeiculoRepository veiculoRepository;
 
     @Transactional
-    public String cadastrarVeiculo(CadastraVeiculoDTO dado) {
+    public VeiculoJava cadastrarVeiculo(CadastraVeiculoDTO dado) {
         VeiculoJava veiculo = new VeiculoJava(dado);
-        veiculoRepository.save(veiculo);
-        return veiculo.getId();
+        return veiculoRepository.save(veiculo);
     }
 
     public Page<VeiculoJava> listar(Pageable paginacao) {

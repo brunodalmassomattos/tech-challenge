@@ -4,6 +4,7 @@ import br.com.fiap.newparquimetro.domain.veiculo.VeiculoJava;
 import br.com.fiap.newparquimetro.dto.AtualizaVeiculoDTO;
 import br.com.fiap.newparquimetro.dto.CadastraVeiculoDTO;
 import br.com.fiap.newparquimetro.dto.ListaVeiculoDTO;
+import br.com.fiap.newparquimetro.dto.VeiculoResponseDTO;
 import br.com.fiap.newparquimetro.service.VeiculoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,10 @@ public class VeiculosController {
     private VeiculoService veiculoService;
 
     @PostMapping
-    public ResponseEntity<Void> cadastrarVeiculo(@RequestBody @Valid CadastraVeiculoDTO dado, UriComponentsBuilder uriBuilder) {
-        String id = veiculoService.cadastrarVeiculo(dado);
-        var uri = uriBuilder.path("/veiculos/{id}").buildAndExpand(id).toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<VeiculoResponseDTO> cadastrarVeiculo(@RequestBody @Valid CadastraVeiculoDTO dado, UriComponentsBuilder uriBuilder) {
+        VeiculoJava veiculo = veiculoService.cadastrarVeiculo(dado);
+        var uri = uriBuilder.path("/veiculos/{id}").buildAndExpand(veiculo.getId()).toUri();
+        return ResponseEntity.created(uri).body(new VeiculoResponseDTO(veiculo));
     }
 
     @GetMapping
@@ -42,9 +43,9 @@ public class VeiculosController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable String id, @RequestBody @Valid AtualizaVeiculoDTO dado) {
-        veiculoService.atualizar(id, dado);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<VeiculoResponseDTO> atualizar(@PathVariable String id, @RequestBody @Valid AtualizaVeiculoDTO dado) {
+        VeiculoJava veiculoAtualizado = veiculoService.atualizar(id, dado);
+        return ResponseEntity.ok(new VeiculoResponseDTO(veiculoAtualizado));
     }
 
     @DeleteMapping("/{id}")
