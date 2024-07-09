@@ -10,7 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "condutores")
+@Table(name = "condutores", uniqueConstraints = {@UniqueConstraint(columnNames = "CPF_CNPJ")})
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -23,7 +24,7 @@ public class Condutor {
 
     private String nome;
 
-    @Column(name = "CPF_CNPJ")
+    @Column(name = "CPF_CNPJ", unique = true)
     private String cpfCnpj;
 
     @Temporal(TemporalType.DATE)
@@ -31,15 +32,13 @@ public class Condutor {
 
     private String telefone;
 
-    @OneToOne(cascade=CascadeType.PERSIST)
+    private String idFormaPagamento;
+
+    @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
-    @OneToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "formaPagamento_id")
-    private FormaPagamento formaPagamento;
-
-    @OneToMany(cascade=CascadeType.PERSIST)
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     @JoinColumn(name = "condutor_id")
     private List<Veiculo> veiculos;
 }
