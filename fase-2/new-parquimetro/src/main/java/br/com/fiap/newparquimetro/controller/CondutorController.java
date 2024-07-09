@@ -43,4 +43,25 @@ public class CondutorController {
         return ResponseEntity.noContent().build();
     }
 
+    private Condutor prepararRequest(String idCondutor, CondutorRequestDTO condutorRequestDTO) throws ParseException {
+        return Condutor.builder()
+                .id(idCondutor)
+                .nome(condutorRequestDTO.nome())
+                .cpfCnpj(condutorRequestDTO.cpfCnpj())
+                .dataNascimento(CondutorRequestDTO.parseDate(condutorRequestDTO.dataNascimento()))
+                .telefone(condutorRequestDTO.telefone())
+                .idFormaPagamento(condutorRequestDTO.idFormaDePagamento())
+                .endereco(Endereco.builder()
+                        .logradouro(condutorRequestDTO.endereco().logradouro())
+                        .numero(condutorRequestDTO.endereco().numero())
+                        .complemento(condutorRequestDTO.endereco().complemento())
+                        .bairro(condutorRequestDTO.endereco().bairro())
+                        .cidade(condutorRequestDTO.endereco().cidade())
+                        .cep(condutorRequestDTO.endereco().cep())
+                        .estado(condutorRequestDTO.endereco().estado())
+                        .build())
+                .veiculos(VeiculoDTO.toVeiculos(condutorRequestDTO.veiculos()))
+                .build();
+    }
+    
 }
