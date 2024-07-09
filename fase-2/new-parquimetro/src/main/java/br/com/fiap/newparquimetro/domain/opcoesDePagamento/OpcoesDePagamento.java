@@ -37,9 +37,10 @@ public class OpcoesDePagamento {
         this.tipo = dados.getTipo();
         this.status = dados.getStatus();
         this.valor = BigDecimal.valueOf(dados.getValor());
-        if (!this.condutor.getId().equals(dados.getCondutor())) {
+
+        if (!this.condutor.getId().equals(dados.getIdCondutor())) {
             this.condutor = new Condutor();
-            this.condutor.setId(dados.getCondutor());
+            this.condutor.setId(dados.getIdCondutor());
         }
     }
 }
