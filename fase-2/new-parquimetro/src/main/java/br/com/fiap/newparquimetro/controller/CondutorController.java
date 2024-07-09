@@ -2,6 +2,7 @@ package br.com.fiap.newparquimetro.controller;
 
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
 import br.com.fiap.newparquimetro.domain.condutor.Endereco;
+import br.com.fiap.newparquimetro.dto.AlteracaoCondutorRequestDTO;
 import br.com.fiap.newparquimetro.dto.CondutorRequestDTO;
 import br.com.fiap.newparquimetro.dto.CondutorResponseDTO;
 import br.com.fiap.newparquimetro.dto.VeiculoDTO;
@@ -22,40 +23,24 @@ public class CondutorController {
 
     @PostMapping
     public ResponseEntity<CondutorResponseDTO> condutor(@Valid @RequestBody CondutorRequestDTO condutorRequestDTO) throws ParseException {
-        return ResponseEntity.ok(this.condutorService.save(this.prepararRequest(null, condutorRequestDTO)));
+        return ResponseEntity.ok(this.condutorService.save(CondutorRequestDTO.prepararRequest(null, condutorRequestDTO) ));
+    }
+
+    @GetMapping("/{idCondutor}")
+    public ResponseEntity<CondutorResponseDTO> buscarCondutor(@PathVariable String idCondutor) throws ParseException {
+        return ResponseEntity.ok(this.condutorService.find(idCondutor));
     }
 
     @PutMapping("/{idCondutor}")
-    public ResponseEntity<CondutorResponseDTO> condutor(@PathVariable String idCondutor,
-                                                        @Valid @RequestBody CondutorRequestDTO condutorRequestDTO) throws ParseException {
-        return ResponseEntity.ok(this.condutorService.update(this.prepararRequest(idCondutor, condutorRequestDTO)));
+    public ResponseEntity<CondutorResponseDTO> alterarCondutor(@PathVariable String idCondutor,
+                                                        @Valid @RequestBody AlteracaoCondutorRequestDTO condutorRequestDTO) throws ParseException {
+        return ResponseEntity.ok(this.condutorService.update(AlteracaoCondutorRequestDTO.prepararRequest(idCondutor, condutorRequestDTO)));
     }
 
     @DeleteMapping("/{idCondutor}")
-    public ResponseEntity<Void> condutor(@PathVariable String idCondutor) throws ParseException {
+    public ResponseEntity<Void> deletarCondutor(@PathVariable String idCondutor) throws ParseException {
         this.condutorService.delete(Condutor.builder().id(idCondutor).build());
         return ResponseEntity.noContent().build();
-    }
-
-    private Condutor prepararRequest(String idCondutor, CondutorRequestDTO condutorRequestDTO) throws ParseException {
-        return Condutor.builder()
-                .id(idCondutor)
-                .nome(condutorRequestDTO.nome())
-                .cpfCnpj(condutorRequestDTO.cpfCnpj())
-                .dataNascimento(CondutorRequestDTO.parseDate(condutorRequestDTO.dataNascimento()))
-                .telefone(condutorRequestDTO.telefone())
-                .idFormaPagamento(condutorRequestDTO.idFormaDePagamento())
-                .endereco(Endereco.builder()
-                        .logradouro(condutorRequestDTO.endereco().logradouro())
-                        .numero(condutorRequestDTO.endereco().numero())
-                        .complemento(condutorRequestDTO.endereco().complemento())
-                        .bairro(condutorRequestDTO.endereco().bairro())
-                        .cidade(condutorRequestDTO.endereco().cidade())
-                        .cep(condutorRequestDTO.endereco().cep())
-                        .estado(condutorRequestDTO.endereco().estado())
-                        .build())
-                .veiculos(VeiculoDTO.toVeiculos(condutorRequestDTO.veiculos()))
-                .build();
     }
 
 }

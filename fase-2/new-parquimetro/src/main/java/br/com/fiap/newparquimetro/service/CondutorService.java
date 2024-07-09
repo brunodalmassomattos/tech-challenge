@@ -2,12 +2,11 @@ package br.com.fiap.newparquimetro.service;
 
 import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
+import br.com.fiap.newparquimetro.domain.formapagamento.FormaPagamento;
 import br.com.fiap.newparquimetro.dto.CondutorResponseDTO;
 import br.com.fiap.newparquimetro.repositories.CondutorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -30,16 +29,15 @@ public class CondutorService {
 
     public CondutorResponseDTO update(Condutor condutor) {
         Condutor condutorEncontrado = this.condutorRepository.findById(condutor.getId()).orElseThrow(() -> new ControllerNotFoundException("Usuario não encontrado"));
+        condutorEncontrado.setNome(condutor.getNome() != null ? condutor.getNome() : condutorEncontrado.getNome());
+        condutorEncontrado.setCpfCnpj(condutor.getCpfCnpj() != null ? condutor.getCpfCnpj() : condutorEncontrado.getCpfCnpj());
+        condutorEncontrado.setDataNascimento(condutor.getDataNascimento() != null ? condutor.getDataNascimento() : condutorEncontrado.getDataNascimento());
+        condutorEncontrado.setTelefone(condutor.getTelefone() != null ? condutor.getTelefone() : condutorEncontrado.getTelefone());
+        condutorEncontrado.setIdFormaPagamento(condutor.getIdFormaPagamento() != null ? condutor.getIdFormaPagamento() : condutorEncontrado.getIdFormaPagamento());
+        condutorEncontrado.setEndereco(condutor.getEndereco() != null ? condutor.getEndereco() : condutorEncontrado.getEndereco());
+        condutorEncontrado.setVeiculos(condutor.getVeiculos() != null ? condutor.getVeiculos() : condutorEncontrado.getVeiculos());
 
-        condutorEncontrado.setNome(condutor.getNome() != null ? condutor.getNome() : null);
-        condutorEncontrado.setCpfCnpj(condutor.getCpfCnpj() != null ? condutor.getCpfCnpj() : null);
-        condutorEncontrado.setDataNascimento(condutor.getDataNascimento() != null ? condutor.getDataNascimento() : null);
-        condutorEncontrado.setTelefone(condutor.getTelefone() != null ? condutor.getTelefone() : null);
-        condutorEncontrado.setIdFormaPagamento(condutor.getIdFormaPagamento() != null ? condutor.getIdFormaPagamento() : null);
-        condutorEncontrado.setEndereco(condutor.getEndereco() != null ? condutor.getEndereco() : null);
-        condutorEncontrado.setVeiculos(condutor.getVeiculos() != null ? condutor.getVeiculos() : null);
-
-        return CondutorResponseDTO.toDTO(this.condutorRepository.save(condutorEncontrado), this.formaPagamentoService.findById(condutor.getIdFormaPagamento()));
+        return CondutorResponseDTO.toDTO(this.condutorRepository.save(condutorEncontrado), this.formaPagamentoService.findById(condutorEncontrado.getIdFormaPagamento()));
     }
 
     public void delete(Condutor condutor) {
@@ -47,7 +45,8 @@ public class CondutorService {
         this.condutorRepository.delete(condutorEncontrado);
     }
 
-    public Optional<Condutor> findById(String id) {
-        return this.condutorRepository.findById(id);
+    public CondutorResponseDTO find(String id) {
+        Condutor condutor = this.condutorRepository.findById(id).orElseThrow(() -> new ControllerNotFoundException("Usuario não encontrado"));
+        return CondutorResponseDTO.toDTO(condutor, this.formaPagamentoService.findById(condutor.getIdFormaPagamento()));
     }
 }

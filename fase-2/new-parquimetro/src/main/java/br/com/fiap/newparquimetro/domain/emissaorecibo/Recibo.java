@@ -1,11 +1,8 @@
 package br.com.fiap.newparquimetro.domain.emissaorecibo;
 
-import br.com.fiap.newparquimetro.domain.condutor.Condutor;
+import br.com.fiap.newparquimetro.domain.condutor.Tempo;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.sql.Time;
-import java.util.UUID;
 
 
 @Builder
@@ -20,20 +17,22 @@ public class Recibo {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    private UUID id;
+    private String id;
 
     @Temporal(TemporalType.TIME)
     @Column(name = "tempo")
-    private Time tempo;
+    private Long tempo;
 
     @Column(name = "valor_total")
     private Double valorTotal;
 
-    @ManyToOne
-    @JoinColumn(name = "condutor_id")
-    private Condutor condutor;
+    @Column(name = "condutor_id")
+    private String idCondutor;
 
-    @OneToOne
+    @Column(name = "tempo_id")
+    private String idTempo;
+
+    @ManyToOne
     @JoinColumn(name = "tarifa_id")
     private Tarifa tarifa;
 }

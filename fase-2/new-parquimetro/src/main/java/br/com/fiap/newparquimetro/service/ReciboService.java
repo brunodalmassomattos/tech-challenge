@@ -1,19 +1,16 @@
 package br.com.fiap.newparquimetro.service;
 
-import br.com.fiap.newparquimetro.domain.condutor.Condutor;
+import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.emissaorecibo.Recibo;
-import br.com.fiap.newparquimetro.domain.emissaorecibo.Tarifa;
-import br.com.fiap.newparquimetro.dto.ReciboDTO;
-import br.com.fiap.newparquimetro.dto.ReciboRequestDTO;
+import br.com.fiap.newparquimetro.dto.*;
 import br.com.fiap.newparquimetro.repositories.ReciboRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ReciboService {
@@ -27,52 +24,58 @@ public class ReciboService {
     @Autowired
     private CondutorService condutorService;
 
-    public ReciboDTO emitirRecibo(String condutorId) {
-        Optional<Recibo> recibo = reciboRepository.findByCondutorId(condutorId);
-        ReciboDTO.ReciboDTOBuilder reciboDTOBuilder = ReciboDTO.builder();
+    @Autowired
+    private ControleTempoService controleTempoService;
 
-        recibo.ifPresent(reciboEncontrado -> toDto(reciboEncontrado, reciboDTOBuilder));
+    public List<ReciboResponseDTO> emitirRecibo(String condutorId) {
+        CondutorResponseDTO condutorDto = condutorService.find(condutorId);
+        List<Recibo> recibos = reciboRepository.findByIdCondutor(condutorId);
 
-        return reciboDTOBuilder.build();
+        return ReciboResponseDTO.toDtoList(recibos, condutorDto);
     }
 
-    public ReciboDTO save(ReciboRequestDTO reciboDTO) {
-        Recibo recibo = toEntity(reciboDTO);
-        ReciboDTO.ReciboDTOBuilder reciboDTORegistrado = ReciboDTO.builder();
+    public List<ReciboResponseDTO> save(String idCondutor, String idTarifa) {
+        CondutorResponseDTO condutorDto = condutorService.find(idCondutor);
+        List<ControleTempoResponseDTO> listaControleTempoDto = controleTempoService.buscaTempo(condutorDto.id(), "FECHADO");
+        TarifaResponseDTO tarfifaDto = tarifaService.get(idTarifa);
 
-        toDto(reciboRepository.save(recibo), reciboDTORegistrado);
+        List<Recibo> recibos = new ArrayList<>();
+        listaControleTempoDto.forEach(controleTempoDto -> recibos.add(createRecibo(controleTempoDto, tarfifaDto)));
+        reciboRepository.saveAll(recibos);
 
-        return reciboDTORegistrado.build();
+        return ReciboResponseDTO.toDtoList(recibos, condutorDto);
     }
 
-    private void toDto(Recibo recibo, ReciboDTO.ReciboDTOBuilder reciboDTOBuilder) {
-        reciboDTOBuilder
-                .tempo(recibo.getTempo().toLocalTime())
-                .cpfCnpjCondutor(recibo.getCondutor().getCpfCnpj())
-                .nomeCondutor(recibo.getCondutor().getNome())
-                .valorTotal(recibo.getValorTotal())
-                .tarifa(tarifaService.toDto(recibo.getTarifa()));
-    }
-
-    private Recibo toEntity(ReciboRequestDTO reciboDTO) {
+    private Recibo createRecibo(ControleTempoResponseDTO controleTempoDto,
+                                TarifaResponseDTO tarifaDto) {
+        Long tempoEstacionado = getTempoEstacionado(controleTempoDto);
         return Recibo.builder()
-                .tempo(getTempoFormatado(reciboDTO.tempo()))
-                .valorTotal(reciboDTO.valorTotal())
-                .condutor(getCondutorById(reciboDTO.condutorId()))
-                .tarifa(getTarifaById(reciboDTO.tarifa()))
+                       .valorTotal(calcularValorTotal(tempoEstacionado, tarifaDto.valor()))
+                       .tempo(tempoEstacionado)
+                       .idCondutor(controleTempoDto.idCondutor())
+                       .idTempo(controleTempoDto.id())
+                       .tarifa(TarifaResponseDTO.toEntity(tarifaDto))
                 .build();
     }
 
-    private Time getTempoFormatado(String tempo) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        return Time.valueOf(LocalTime.parse(tempo, formatter));
+    private Long getTempoEstacionado(ControleTempoResponseDTO controleTempoDto) {
+        LocalTime horaInicial = controleTempoDto.hrInicio();
+        LocalTime horaFinal = controleTempoDto.hrFim();
+        return horaInicial.until(horaFinal, ChronoUnit.MINUTES);
     }
 
-    private Condutor getCondutorById(String condutorId) {
-        return condutorService.findById(condutorId).orElse(null);
-    }
+    private Double calcularValorTotal(Long tempo, Double valorTarifa) {
+        if (tempo <= 60) {
+            return valorTarifa;
+        }
 
-    private Tarifa getTarifaById(UUID tarifaId) {
-        return tarifaService.findById(tarifaId).orElse(null);
+        long horas = tempo / 60;
+        long minutosRestantes = tempo % 60;
+
+        if (minutosRestantes > 30) {
+            horas++;
+        }
+
+        return horas * valorTarifa;
     }
 }

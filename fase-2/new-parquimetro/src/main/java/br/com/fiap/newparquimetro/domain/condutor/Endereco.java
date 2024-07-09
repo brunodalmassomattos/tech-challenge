@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Endereco {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

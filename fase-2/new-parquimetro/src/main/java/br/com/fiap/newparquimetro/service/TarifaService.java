@@ -1,13 +1,14 @@
 package br.com.fiap.newparquimetro.service;
 
+import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.emissaorecibo.Tarifa;
-import br.com.fiap.newparquimetro.dto.TarifaDTO;
+import br.com.fiap.newparquimetro.dto.TarifaRequestDTO;
+import br.com.fiap.newparquimetro.dto.TarifaResponseDTO;
 import br.com.fiap.newparquimetro.repositories.TarifaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 public class TarifaService {
@@ -15,26 +16,34 @@ public class TarifaService {
     @Autowired
     private TarifaRepository tarifaRepository;
 
-    public TarifaDTO save(TarifaDTO tarifaDTO) {
-        Tarifa tarifaRegistrada = tarifaRepository.save(toEntity(tarifaDTO));
-        return toDto(tarifaRegistrada);
+    public TarifaResponseDTO save(TarifaRequestDTO tarifaDto) {
+        Tarifa tarifa = tarifaRepository.save(TarifaRequestDTO.toEntity(tarifaDto));
+        return TarifaResponseDTO.toDto(tarifa);
     }
 
-    public Optional<Tarifa> findById(UUID id) {
-        return tarifaRepository.findById(id);
+    public TarifaResponseDTO update(String tarifaId, TarifaRequestDTO tarifaDto) {
+        Tarifa tarifa = findById(tarifaId);
+        tarifa.setValor(tarifaDto.valor());
+        tarifa.setTipo(tarifaDto.tipo());
+        tarifaRepository.save(tarifa);
+        return TarifaResponseDTO.toDto(tarifa);
     }
 
-    public TarifaDTO toDto(Tarifa tarifa) {
-        return TarifaDTO.builder()
-                .tipo(tarifa.getTipo())
-                .valor(tarifa.getValor())
-                .build();
+    public TarifaResponseDTO get(String id) {
+        return TarifaResponseDTO.toDto(findById(id));
     }
 
-    public Tarifa toEntity(TarifaDTO tarifaDTO) {
-        return Tarifa.builder()
-                .tipo(tarifaDTO.tipo())
-                .valor(tarifaDTO.valor())
-                .build();
+    public List<TarifaResponseDTO> getAll() {
+        List<Tarifa> tarifas = tarifaRepository.findAll();
+        return tarifas.stream().map(TarifaResponseDTO::toDto).toList();
+    }
+
+    public void delete(String id) {
+        tarifaRepository.deleteById(id);
+    }
+
+    private Tarifa findById(String id) {
+        return tarifaRepository.findById(id)
+                .orElseThrow(() -> new ControllerNotFoundException("Tarifa não encontrada"));
     }
 }
