@@ -19,9 +19,10 @@ public class VeiculoService {
     private VeiculoRepository veiculoRepository;
 
     @Transactional
-    public VeiculoJava cadastrarVeiculo(CadastraVeiculoDTO dado) {
+    public String cadastrarVeiculo(CadastraVeiculoDTO dado) {
         VeiculoJava veiculo = new VeiculoJava(dado);
-        return veiculoRepository.save(veiculo);
+        veiculoRepository.save(veiculo);
+        return veiculo.getId();
     }
 
     public Page<VeiculoJava> listar(Pageable paginacao) {

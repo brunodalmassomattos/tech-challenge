@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Optional;
 
@@ -22,9 +23,10 @@ public class VeiculosController {
     private VeiculoService veiculoService;
 
     @PostMapping
-    public ResponseEntity<Void> cadastrarVeiculo(@RequestBody @Valid CadastraVeiculoDTO dado) {
-        veiculoService.cadastrarVeiculo(dado);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> cadastrarVeiculo(@RequestBody @Valid CadastraVeiculoDTO dado, UriComponentsBuilder uriBuilder) {
+        String id = veiculoService.cadastrarVeiculo(dado);
+        var uri = uriBuilder.path("/veiculos/{id}").buildAndExpand(id).toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @GetMapping
