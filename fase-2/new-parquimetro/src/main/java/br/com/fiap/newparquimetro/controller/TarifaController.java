@@ -3,6 +3,7 @@ package br.com.fiap.newparquimetro.controller;
 import br.com.fiap.newparquimetro.dto.TarifaRequestDTO;
 import br.com.fiap.newparquimetro.dto.TarifaResponseDTO;
 import br.com.fiap.newparquimetro.service.TarifaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class TarifaController {
     private TarifaService tarifaService;
 
     @PostMapping
-    public ResponseEntity<TarifaResponseDTO> createTarifa(@RequestBody TarifaRequestDTO tarifaDto) {
+    public ResponseEntity<TarifaResponseDTO> createTarifa(@Valid @RequestBody TarifaRequestDTO tarifaDto) {
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(tarifaService.save(tarifaDto));
     }
 

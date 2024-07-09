@@ -4,11 +4,13 @@ import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundExcepti
 import br.com.fiap.newparquimetro.domain.emissaorecibo.Tarifa;
 import br.com.fiap.newparquimetro.dto.TarifaRequestDTO;
 import br.com.fiap.newparquimetro.dto.TarifaResponseDTO;
+import br.com.fiap.newparquimetro.dto.enums.TipoTarifaEnum;
 import br.com.fiap.newparquimetro.repositories.TarifaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TarifaService {
@@ -23,8 +25,8 @@ public class TarifaService {
 
     public TarifaResponseDTO update(String tarifaId, TarifaRequestDTO tarifaDto) {
         Tarifa tarifa = findById(tarifaId);
-        tarifa.setValor(tarifaDto.valor());
-        tarifa.setTipo(tarifaDto.tipo());
+        tarifa.setValor(Objects.nonNull(tarifaDto.valor()) ? tarifaDto.valor() : tarifa.getValor());
+        tarifa.setTipo(TipoTarifaEnum.getByDescricao(tarifaDto.tipo()).orElse(tarifa.getTipo()));
         tarifaRepository.save(tarifa);
         return TarifaResponseDTO.toDto(tarifa);
     }

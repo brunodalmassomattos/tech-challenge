@@ -1,5 +1,6 @@
 package br.com.fiap.newparquimetro.dto;
 
+import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.emissaorecibo.Tarifa;
 import br.com.fiap.newparquimetro.dto.enums.TipoTarifaEnum;
 import lombok.Builder;
@@ -8,12 +9,12 @@ import lombok.Builder;
 public record TarifaResponseDTO(
         String id,
         Double valor,
-        TipoTarifaEnum tipo
+        String tipo
 ) {
     public static TarifaResponseDTO toDto(Tarifa tarifa) {
         return TarifaResponseDTO.builder()
                 .id(tarifa.getId())
-                .tipo(tarifa.getTipo())
+                .tipo(tarifa.getTipo().getDescricao())
                 .valor(tarifa.getValor())
                 .build();
     }
@@ -22,7 +23,8 @@ public record TarifaResponseDTO(
         return Tarifa.builder()
                        .id(tarifaDto.id())
                        .valor(tarifaDto.valor())
-                       .tipo(tarifaDto.tipo())
+                       .tipo(TipoTarifaEnum.getByDescricao(tarifaDto.tipo())
+                                     .orElseThrow(() -> new ControllerNotFoundException("Tipo inválido, insira: Fixo ou Variável")))
                        .build();
     }
 }
