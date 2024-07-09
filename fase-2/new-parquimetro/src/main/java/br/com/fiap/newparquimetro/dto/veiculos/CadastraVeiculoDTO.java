@@ -1,4 +1,4 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.veiculos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

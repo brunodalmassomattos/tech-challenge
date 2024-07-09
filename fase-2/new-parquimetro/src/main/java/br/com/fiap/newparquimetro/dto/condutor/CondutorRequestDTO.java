@@ -1,7 +1,9 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.condutor;
 
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
 import br.com.fiap.newparquimetro.domain.condutor.Endereco;
+import br.com.fiap.newparquimetro.dto.veiculos.VeiculoDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
@@ -15,6 +17,7 @@ public record CondutorRequestDTO(
         String nome,
         @NotBlank(message = "O CPF/CNPJ é obrigatorio.")
         String cpfCnpj,
+        @Schema(type = "string", pattern = "yyyy-MM-dd", example = "2020-01-31")
         String dataNascimento,
         String telefone,
         String idFormaDePagamento,

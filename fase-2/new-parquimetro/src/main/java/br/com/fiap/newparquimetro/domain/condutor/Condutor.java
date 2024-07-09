@@ -1,5 +1,6 @@
 package br.com.fiap.newparquimetro.domain.condutor;
 
+import br.com.fiap.newparquimetro.domain.veiculo.VeiculoJava;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,5 +41,5 @@ public class Condutor {
 
     @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     @JoinColumn(name = "condutor_id")
-    private List<Veiculo> veiculos;
+    private List<VeiculoJava> veiculos;
 }

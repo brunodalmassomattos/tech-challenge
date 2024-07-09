@@ -1,7 +1,7 @@
 package br.com.fiap.newparquimetro.service;
 
 import br.com.fiap.newparquimetro.domain.opcoesDePagamento.OpcoesDePagamento;
-import br.com.fiap.newparquimetro.dto.OpcoesDePagamentoDTO;
+import br.com.fiap.newparquimetro.dto.opcaopagamentos.OpcoesDePagamentoDTO;
 import br.com.fiap.newparquimetro.repositories.OpcoesDePagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

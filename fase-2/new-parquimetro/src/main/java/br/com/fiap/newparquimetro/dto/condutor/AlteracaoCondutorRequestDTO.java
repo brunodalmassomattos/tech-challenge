@@ -1,18 +1,20 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.condutor;
 
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
 import br.com.fiap.newparquimetro.domain.condutor.Endereco;
+import br.com.fiap.newparquimetro.dto.veiculos.VeiculoDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public record AlteracaoCondutorRequestDTO(
         String nome,
         String cpfCnpj,
+        @Schema(type = "string", pattern = "yyyy-MM-dd", example = "2020-01-31")
         String dataNascimento,
         String telefone,
         String idFormaDePagamento,

@@ -1,9 +1,9 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.condutor;
 
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
 import br.com.fiap.newparquimetro.domain.condutor.Endereco;
 import br.com.fiap.newparquimetro.domain.formapagamento.FormaPagamento;
-import br.com.fiap.newparquimetro.domain.condutor.Veiculo;
+import br.com.fiap.newparquimetro.domain.veiculo.VeiculoJava;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -18,7 +18,7 @@ public record CondutorResponseDTO(
         String telefone,
         FormaPagamento formaPagamento,
         Endereco endereco,
-        List<Veiculo> veiculo) implements Serializable {
+        List<VeiculoJava> veiculo) implements Serializable {
 
     public static String parseDate(Date data) {
         if (data == null) {

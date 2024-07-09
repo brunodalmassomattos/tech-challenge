@@ -1,6 +1,6 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.veiculos;
 
-import br.com.fiap.newparquimetro.domain.condutor.Veiculo;
+import br.com.fiap.newparquimetro.domain.veiculo.VeiculoJava;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.constraints.NotBlank;
 
@@ -18,7 +18,7 @@ public record VeiculoDTO(
         String cor,
         String ano) {
 
-        public static List<Veiculo> toVeiculos(List<VeiculoDTO> veiculos) {
-                return veiculos.stream().map(dto -> new ObjectMapper().convertValue(dto, Veiculo.class)).collect(Collectors.toList());
+        public static List<VeiculoJava> toVeiculos(List<VeiculoDTO> veiculos) {
+                return veiculos.stream().map(dto -> new ObjectMapper().convertValue(dto, VeiculoJava.class)).collect(Collectors.toList());
         }
 }

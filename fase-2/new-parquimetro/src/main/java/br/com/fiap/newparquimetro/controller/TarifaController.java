@@ -1,7 +1,7 @@
 package br.com.fiap.newparquimetro.controller;
 
-import br.com.fiap.newparquimetro.dto.TarifaRequestDTO;
-import br.com.fiap.newparquimetro.dto.TarifaResponseDTO;
+import br.com.fiap.newparquimetro.dto.tarifa.TarifaRequestDTO;
+import br.com.fiap.newparquimetro.dto.tarifa.TarifaResponseDTO;
 import br.com.fiap.newparquimetro.service.TarifaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

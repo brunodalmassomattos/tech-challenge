@@ -1,6 +1,6 @@
 package br.com.fiap.newparquimetro.controller;
 
-import br.com.fiap.newparquimetro.dto.ReciboResponseDTO;
+import br.com.fiap.newparquimetro.dto.recibos.ReciboResponseDTO;
 import br.com.fiap.newparquimetro.service.ReciboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;

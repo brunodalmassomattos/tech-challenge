@@ -1,8 +1,8 @@
 package br.com.fiap.newparquimetro.service;
 
 import br.com.fiap.newparquimetro.domain.veiculo.VeiculoJava;
-import br.com.fiap.newparquimetro.dto.AtualizaVeiculoDTO;
-import br.com.fiap.newparquimetro.dto.CadastraVeiculoDTO;
+import br.com.fiap.newparquimetro.dto.veiculos.AtualizaVeiculoDTO;
+import br.com.fiap.newparquimetro.dto.veiculos.CadastraVeiculoDTO;
 import br.com.fiap.newparquimetro.repositories.VeiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -2,8 +2,7 @@ package br.com.fiap.newparquimetro.service;
 
 import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
-import br.com.fiap.newparquimetro.domain.formapagamento.FormaPagamento;
-import br.com.fiap.newparquimetro.dto.CondutorResponseDTO;
+import br.com.fiap.newparquimetro.dto.condutor.CondutorResponseDTO;
 import br.com.fiap.newparquimetro.repositories.CondutorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,8 +13,6 @@ public class CondutorService {
 
     private CondutorRepository condutorRepository;
     private FormaPagamentoService formaPagamentoService;
-    private EnderecoService enderecoService;
-    private VeiculoService veiculoService;
 
     public CondutorResponseDTO save(Condutor condutor) {
         Condutor condutorSalvo = this.condutorRepository.save(condutor);

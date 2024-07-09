@@ -1,7 +1,7 @@
 package br.com.fiap.newparquimetro.controller;
 
 import br.com.fiap.newparquimetro.domain.formapagamento.FormaPagamento;
-import br.com.fiap.newparquimetro.dto.FormaPagamentoResponseDTO;
+import br.com.fiap.newparquimetro.dto.formapagamento.FormaPagamentoResponseDTO;
 import br.com.fiap.newparquimetro.service.FormaPagamentoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

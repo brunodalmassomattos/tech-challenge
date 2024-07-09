@@ -1,8 +1,8 @@
 spring:
   application:
     name: we-work
-  profiles:
-    active: dev
+#  profiles:
+#    active: dev
 
   datasource:
     url: jdbc:h2:file:./new-parquimetro-prd

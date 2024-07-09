@@ -1,7 +1,6 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.veiculos;
 
 import br.com.fiap.newparquimetro.domain.veiculo.VeiculoJava;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.Optional;
 

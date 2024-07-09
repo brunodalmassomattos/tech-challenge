@@ -1,7 +1,7 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.opcaopagamentos;
 
-import br.com.fiap.newparquimetro.domain.condutor.Condutor;
 import br.com.fiap.newparquimetro.domain.opcoesDePagamento.OpcoesDePagamento;
+import br.com.fiap.newparquimetro.dto.condutor.CondutorResponseDTO;
 import lombok.*;
 
 import java.math.BigDecimal;

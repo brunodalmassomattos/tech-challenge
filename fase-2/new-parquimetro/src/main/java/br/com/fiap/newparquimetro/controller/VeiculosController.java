@@ -1,10 +1,10 @@
 package br.com.fiap.newparquimetro.controller;
 
 import br.com.fiap.newparquimetro.domain.veiculo.VeiculoJava;
-import br.com.fiap.newparquimetro.dto.AtualizaVeiculoDTO;
-import br.com.fiap.newparquimetro.dto.CadastraVeiculoDTO;
-import br.com.fiap.newparquimetro.dto.ListaVeiculoDTO;
-import br.com.fiap.newparquimetro.dto.VeiculoResponseDTO;
+import br.com.fiap.newparquimetro.dto.veiculos.AtualizaVeiculoDTO;
+import br.com.fiap.newparquimetro.dto.veiculos.CadastraVeiculoDTO;
+import br.com.fiap.newparquimetro.dto.veiculos.ListaVeiculoDTO;
+import br.com.fiap.newparquimetro.dto.veiculos.VeiculoResponseDTO;
 import br.com.fiap.newparquimetro.service.VeiculoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

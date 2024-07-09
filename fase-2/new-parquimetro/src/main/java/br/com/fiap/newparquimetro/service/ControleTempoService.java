@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.condutor.Tempo;
-import br.com.fiap.newparquimetro.dto.ControleTempoResponseDTO;
+import br.com.fiap.newparquimetro.dto.controletempo.ControleTempoResponseDTO;
 import br.com.fiap.newparquimetro.repositories.CondutorRepository;
 import br.com.fiap.newparquimetro.repositories.ControleTempoRepository;
 import lombok.AllArgsConstructor;

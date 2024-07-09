@@ -1,4 +1,4 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.condutor;
 
 import jakarta.validation.constraints.NotBlank;
 

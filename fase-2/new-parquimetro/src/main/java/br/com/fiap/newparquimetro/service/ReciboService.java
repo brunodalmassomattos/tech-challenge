@@ -1,8 +1,10 @@
 package br.com.fiap.newparquimetro.service;
 
-import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.emissaorecibo.Recibo;
-import br.com.fiap.newparquimetro.dto.*;
+import br.com.fiap.newparquimetro.dto.condutor.CondutorResponseDTO;
+import br.com.fiap.newparquimetro.dto.controletempo.ControleTempoResponseDTO;
+import br.com.fiap.newparquimetro.dto.recibos.ReciboResponseDTO;
+import br.com.fiap.newparquimetro.dto.tarifa.TarifaResponseDTO;
 import br.com.fiap.newparquimetro.repositories.ReciboRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

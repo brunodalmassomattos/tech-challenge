@@ -1,4 +1,4 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.controletempo;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;

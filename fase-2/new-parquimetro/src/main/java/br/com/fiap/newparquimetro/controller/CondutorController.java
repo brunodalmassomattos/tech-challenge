@@ -1,11 +1,9 @@
 package br.com.fiap.newparquimetro.controller;
 
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
-import br.com.fiap.newparquimetro.domain.condutor.Endereco;
-import br.com.fiap.newparquimetro.dto.AlteracaoCondutorRequestDTO;
-import br.com.fiap.newparquimetro.dto.CondutorRequestDTO;
-import br.com.fiap.newparquimetro.dto.CondutorResponseDTO;
-import br.com.fiap.newparquimetro.dto.VeiculoDTO;
+import br.com.fiap.newparquimetro.dto.condutor.AlteracaoCondutorRequestDTO;
+import br.com.fiap.newparquimetro.dto.condutor.CondutorRequestDTO;
+import br.com.fiap.newparquimetro.dto.condutor.CondutorResponseDTO;
 import br.com.fiap.newparquimetro.service.CondutorService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,7 +21,7 @@ public class CondutorController {
 
     @PostMapping
     public ResponseEntity<CondutorResponseDTO> condutor(@Valid @RequestBody CondutorRequestDTO condutorRequestDTO) throws ParseException {
-        return ResponseEntity.ok(this.condutorService.save(CondutorRequestDTO.prepararRequest(null, condutorRequestDTO) ));
+        return ResponseEntity.ok(this.condutorService.save(CondutorRequestDTO.prepararRequest(null, condutorRequestDTO)));
     }
 
     @GetMapping("/{idCondutor}")
@@ -33,7 +31,7 @@ public class CondutorController {
 
     @PutMapping("/{idCondutor}")
     public ResponseEntity<CondutorResponseDTO> alterarCondutor(@PathVariable String idCondutor,
-                                                        @Valid @RequestBody AlteracaoCondutorRequestDTO condutorRequestDTO) throws ParseException {
+                                                               @Valid @RequestBody AlteracaoCondutorRequestDTO condutorRequestDTO) throws ParseException {
         return ResponseEntity.ok(this.condutorService.update(AlteracaoCondutorRequestDTO.prepararRequest(idCondutor, condutorRequestDTO)));
     }
 
@@ -43,25 +41,4 @@ public class CondutorController {
         return ResponseEntity.noContent().build();
     }
 
-    private Condutor prepararRequest(String idCondutor, CondutorRequestDTO condutorRequestDTO) throws ParseException {
-        return Condutor.builder()
-                .id(idCondutor)
-                .nome(condutorRequestDTO.nome())
-                .cpfCnpj(condutorRequestDTO.cpfCnpj())
-                .dataNascimento(CondutorRequestDTO.parseDate(condutorRequestDTO.dataNascimento()))
-                .telefone(condutorRequestDTO.telefone())
-                .idFormaPagamento(condutorRequestDTO.idFormaDePagamento())
-                .endereco(Endereco.builder()
-                        .logradouro(condutorRequestDTO.endereco().logradouro())
-                        .numero(condutorRequestDTO.endereco().numero())
-                        .complemento(condutorRequestDTO.endereco().complemento())
-                        .bairro(condutorRequestDTO.endereco().bairro())
-                        .cidade(condutorRequestDTO.endereco().cidade())
-                        .cep(condutorRequestDTO.endereco().cep())
-                        .estado(condutorRequestDTO.endereco().estado())
-                        .build())
-                .veiculos(VeiculoDTO.toVeiculos(condutorRequestDTO.veiculos()))
-                .build();
-    }
-    
 }

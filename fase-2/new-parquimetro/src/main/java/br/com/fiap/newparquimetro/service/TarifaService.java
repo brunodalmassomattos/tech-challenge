@@ -2,8 +2,8 @@ package br.com.fiap.newparquimetro.service;
 
 import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.emissaorecibo.Tarifa;
-import br.com.fiap.newparquimetro.dto.TarifaRequestDTO;
-import br.com.fiap.newparquimetro.dto.TarifaResponseDTO;
+import br.com.fiap.newparquimetro.dto.tarifa.TarifaRequestDTO;
+import br.com.fiap.newparquimetro.dto.tarifa.TarifaResponseDTO;
 import br.com.fiap.newparquimetro.dto.enums.TipoTarifaEnum;
 import br.com.fiap.newparquimetro.repositories.TarifaRepository;
 import org.springframework.beans.factory.annotation.Autowired;

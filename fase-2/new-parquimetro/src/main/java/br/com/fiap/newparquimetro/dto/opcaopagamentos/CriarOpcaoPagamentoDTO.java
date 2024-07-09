@@ -1,15 +1,14 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.opcaopagamentos;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
-public class AtualizarOpcaoPagamentoDTO {
-
-    @NotNull(message = "O ID do pagamento é obrigatório.")
-    private Long id;
+public class CriarOpcaoPagamentoDTO {
 
     @NotNull(message = "O tipo de pagamento é obrigatório.")
     private String tipo;
@@ -18,7 +17,7 @@ public class AtualizarOpcaoPagamentoDTO {
     private String status;
 
     @NotNull(message = "O valor do pagamento é obrigatório.")
-    private Double valor;
+    private BigDecimal valor;
 
     @NotNull(message = "O ID do condutor é obrigatório.")
     private String idCondutor;

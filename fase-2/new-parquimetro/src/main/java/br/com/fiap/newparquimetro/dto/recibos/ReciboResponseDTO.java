@@ -1,6 +1,8 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.recibos;
 
 import br.com.fiap.newparquimetro.domain.emissaorecibo.Recibo;
+import br.com.fiap.newparquimetro.dto.condutor.CondutorResponseDTO;
+import br.com.fiap.newparquimetro.dto.tarifa.TarifaResponseDTO;
 import lombok.Builder;
 
 import java.time.Duration;

@@ -2,8 +2,8 @@ package br.com.fiap.newparquimetro.controller;
 
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
 import br.com.fiap.newparquimetro.domain.opcoesDePagamento.OpcoesDePagamento;
-import br.com.fiap.newparquimetro.dto.CriarOpcaoPagamentoDTO;
-import br.com.fiap.newparquimetro.dto.OpcoesDePagamentoDTO;
+import br.com.fiap.newparquimetro.dto.opcaopagamentos.CriarOpcaoPagamentoDTO;
+import br.com.fiap.newparquimetro.dto.opcaopagamentos.OpcoesDePagamentoDTO;
 import br.com.fiap.newparquimetro.service.OpcoesDePagamentoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

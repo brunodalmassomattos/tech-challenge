@@ -1,8 +1,7 @@
 package br.com.fiap.newparquimetro.domain.opcoesDePagamento;
 
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
-import br.com.fiap.newparquimetro.dto.AtualizarOpcaoPagamentoDTO;
-import br.com.fiap.newparquimetro.dto.CriarOpcaoPagamentoDTO;
+import br.com.fiap.newparquimetro.dto.opcaopagamentos.AtualizarOpcaoPagamentoDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "opcoesDePagamento")
+@Table(name = "pagamentos")
 @Data
 @Builder
 @NoArgsConstructor

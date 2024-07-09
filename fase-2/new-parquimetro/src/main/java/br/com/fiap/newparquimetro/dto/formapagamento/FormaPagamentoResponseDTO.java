@@ -1,4 +1,4 @@
-package br.com.fiap.newparquimetro.dto;
+package br.com.fiap.newparquimetro.dto.formapagamento;
 
 import br.com.fiap.newparquimetro.domain.formapagamento.FormaPagamento;
 
