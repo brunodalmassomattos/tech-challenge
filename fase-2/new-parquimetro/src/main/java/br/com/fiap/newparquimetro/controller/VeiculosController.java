@@ -23,9 +23,9 @@ public class VeiculosController {
     @Autowired
     private VeiculoService veiculoService;
 
-    @PostMapping
-    public ResponseEntity<VeiculoResponseDTO> cadastrarVeiculo(@RequestBody @Valid CadastraVeiculoDTO dado, UriComponentsBuilder uriBuilder) {
-        VeiculoJava veiculo = veiculoService.cadastrarVeiculo(dado);
+    @PostMapping("/condutores/{idCondutor}")
+    public ResponseEntity<VeiculoResponseDTO> cadastrarVeiculo(@PathVariable String idCondutor, @RequestBody @Valid CadastraVeiculoDTO dado, UriComponentsBuilder uriBuilder) {
+        VeiculoJava veiculo = veiculoService.cadastrarVeiculo(idCondutor, dado);
         var uri = uriBuilder.path("/veiculos/{id}").buildAndExpand(veiculo.getId()).toUri();
         return ResponseEntity.created(uri).body(new VeiculoResponseDTO(veiculo));
     }

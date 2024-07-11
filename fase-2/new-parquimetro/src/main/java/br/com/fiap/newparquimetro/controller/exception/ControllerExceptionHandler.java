@@ -55,4 +55,15 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validateError);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<StandardError> handleIllegalArgument(IllegalArgumentException exception, HttpServletRequest request) {
+        this.standardError.setTimeStamp(Instant.now());
+        this.standardError.setStatus(HttpStatus.BAD_REQUEST.value());
+        this.standardError.setError("Invalid argument");
+        this.standardError.setMessage(exception.getMessage());
+        this.standardError.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(this.standardError);
+    }
+
 }
