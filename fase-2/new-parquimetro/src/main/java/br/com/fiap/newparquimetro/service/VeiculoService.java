@@ -1,5 +1,6 @@
 package br.com.fiap.newparquimetro.service;
 
+import br.com.fiap.newparquimetro.controller.exception.ControllerExceptionHandler;
 import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.veiculo.VeiculoJava;
 import br.com.fiap.newparquimetro.dto.veiculos.AtualizaVeiculoDTO;
@@ -13,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VeiculoService {
@@ -25,20 +28,30 @@ public class VeiculoService {
     private CondutorRepository condutorRepository;
 
     @Transactional
-    public VeiculoJava cadastrarVeiculo(String idConduto, @Valid CadastraVeiculoDTO dado) {
-        if (!condutorRepository.existsById(idConduto)) {
-            throw new ControllerNotFoundException("Condutor não encontrado: " + idConduto);
+    public List<VeiculoJava> cadastrarVeiculos(List<CadastraVeiculoDTO> dados, String idCondutor) {
+        if (!condutorRepository.existsById(idCondutor)) {
+            throw new ControllerNotFoundException("Condutor não encontrado");
         }
 
-        Optional<VeiculoJava> veiculoExistente = veiculoRepository.findByPlaca(dado.placa());
-        if (veiculoExistente.isPresent()) {
-            throw new ControllerNotFoundException("Veículo já cadastrado com a placa: " + dado.placa());
+        for (CadastraVeiculoDTO dto : dados) {
+            if (veiculoRepository.existsByPlaca(dto.placa())) {
+                throw new ControllerNotFoundException("Placa já cadastrada: " + dto.placa());
+            }
         }
 
-        VeiculoJava veiculo = new VeiculoJava(dado);
-        return veiculoRepository.save(veiculo);
+        List<VeiculoJava> veiculos = dados.stream()
+                .map(dto -> {
+                    VeiculoJava veiculo = new VeiculoJava();
+                    veiculo.setModelo(dto.modelo());
+                    veiculo.setPlaca(dto.placa());
+                    veiculo.setFabricante(dto.fabricante());
+                    veiculo.setCor(dto.cor());
+                    veiculo.setAno(dto.ano());
+                    return veiculo;
+                })
+                .collect(Collectors.toList());
+        return veiculoRepository.saveAll(veiculos);
     }
-
     public Page<VeiculoJava> listar(Pageable paginacao) {
         return veiculoRepository.findAll(paginacao);
     }
