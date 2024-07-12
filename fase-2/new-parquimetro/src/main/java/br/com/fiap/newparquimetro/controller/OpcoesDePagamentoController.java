@@ -24,7 +24,8 @@ public class OpcoesDePagamentoController {
     @Transactional
     public ResponseEntity<OpcoesDePagamentoDTO> criarOpcaoPagamento(@RequestBody @Valid CriarOpcaoPagamentoDTO dados) {
         OpcoesDePagamentoDTO salva = service.save(OpcoesDePagamento.builder()
-                .tipo(dados.getTipo())
+                .idTempo(dados.getIdTempo())
+                .dataPagamento(dados.getDataPagamento())
                 .status(dados.getStatus())
                 .valor(dados.getValor())
                 .condutor(Condutor.builder().id(dados.getIdCondutor()).build())
@@ -42,5 +43,10 @@ public class OpcoesDePagamentoController {
     public ResponseEntity<List<OpcoesDePagamentoDTO>> listarPorCondutorId(@PathVariable String condutorId) {
         List<OpcoesDePagamentoDTO> pagamentos = service.findAllByCondutorId(condutorId);
         return ResponseEntity.ok(pagamentos);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<OpcoesDePagamentoDTO>> getAllPagamentos() {
+        return ResponseEntity.ok(service.getAll());
     }
 }

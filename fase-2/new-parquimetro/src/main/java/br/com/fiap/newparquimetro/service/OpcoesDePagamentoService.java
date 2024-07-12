@@ -36,4 +36,8 @@ public class OpcoesDePagamentoService {
                 .map(OpcoesDePagamentoDTO::toDTO)
                 .collect(Collectors.toList());
     }
+    public List<OpcoesDePagamentoDTO> getAll() {
+        List<OpcoesDePagamento> pagamentos = repository.findAll();
+        return pagamentos.stream().map(OpcoesDePagamentoDTO::toDTO).toList();
+    }
 }
