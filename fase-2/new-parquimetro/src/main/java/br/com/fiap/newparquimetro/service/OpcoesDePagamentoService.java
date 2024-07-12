@@ -7,22 +7,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class OpcoesDePagamentoService {
 
     @Autowired
-    private OpcoesDePagamentoRepository opcoesDePagamentoRepository;
+    private OpcoesDePagamentoRepository repository;
 
     @Autowired
     private CondutorService condutorService;
 
     public OpcoesDePagamento findById(String id) {
-        return this.opcoesDePagamentoRepository.findById(id).orElse(null);
+        return this.repository.findById(id).orElse(null);
     }
     @Transactional
     public OpcoesDePagamentoDTO save(OpcoesDePagamento opcao) {
 //        OpcoesDePagamento save = this.opcoesDePagamentoRepository.save(opcao);
 //        save.setCondutor(condutorService.findById());
-        return OpcoesDePagamentoDTO.toDTO(this.opcoesDePagamentoRepository.save(opcao));
+        return OpcoesDePagamentoDTO.toDTO(this.repository.save(opcao));
+    }
+
+    @Transactional(readOnly = true)
+    public List<OpcoesDePagamentoDTO> findAllByCondutorId(String condutorId) {
+        List<OpcoesDePagamento> pagamentos = repository.findAll();
+        return pagamentos.stream()
+                .map(OpcoesDePagamentoDTO::toDTO)
+                .collect(Collectors.toList());
     }
 }

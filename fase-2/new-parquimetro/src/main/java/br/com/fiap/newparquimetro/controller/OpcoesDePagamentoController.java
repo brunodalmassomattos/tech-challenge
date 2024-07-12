@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/opcoes-pagamento")
 public class OpcoesDePagamentoController {
@@ -31,8 +33,14 @@ public class OpcoesDePagamentoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OpcoesDePagamentoDTO> buscarPorId(@PathVariable String id) {
+    public ResponseEntity<OpcoesDePagamentoDTO> buscarPorIdCondutor(@PathVariable String id) {
         OpcoesDePagamento opcao = service.findById(id);
         return ResponseEntity.ok(OpcoesDePagamentoDTO.toDTO(opcao));
+    }
+
+    @GetMapping("/by-condutor/{condutorId}")
+    public ResponseEntity<List<OpcoesDePagamentoDTO>> listarPorCondutorId(@PathVariable String condutorId) {
+        List<OpcoesDePagamentoDTO> pagamentos = service.findAllByCondutorId(condutorId);
+        return ResponseEntity.ok(pagamentos);
     }
 }
