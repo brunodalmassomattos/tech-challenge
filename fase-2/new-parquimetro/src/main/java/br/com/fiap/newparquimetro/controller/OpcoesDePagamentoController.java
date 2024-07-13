@@ -4,6 +4,7 @@ import br.com.fiap.newparquimetro.domain.condutor.Condutor;
 import br.com.fiap.newparquimetro.domain.opcoesDePagamento.OpcoesDePagamento;
 import br.com.fiap.newparquimetro.dto.opcaopagamentos.CriarOpcaoPagamentoDTO;
 import br.com.fiap.newparquimetro.dto.opcaopagamentos.OpcoesDePagamentoDTO;
+import br.com.fiap.newparquimetro.dto.opcaopagamentos.OpcoesDePagamentoListDTO;
 import br.com.fiap.newparquimetro.service.OpcoesDePagamentoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +47,11 @@ public class OpcoesDePagamentoController {
     }
 
     @GetMapping("/by-condutor/{condutorId}")
-    public ResponseEntity<List<OpcoesDePagamentoDTO>> listarPorCondutorId(@PathVariable String condutorId) {
-        List<OpcoesDePagamentoDTO> pagamentos = service.findAllByCondutorId(condutorId);
+    public ResponseEntity<List<OpcoesDePagamentoListDTO>> listarPorCondutorId(@PathVariable String condutorId) {
+        List<OpcoesDePagamentoListDTO> pagamentos = service.findAllByCondutorId(condutorId);
         return ResponseEntity.ok(pagamentos);
     }
+
 
     @GetMapping()
     public ResponseEntity<List<OpcoesDePagamentoDTO>> getAllPagamentos() {

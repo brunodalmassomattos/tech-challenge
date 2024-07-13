@@ -2,6 +2,7 @@ package br.com.fiap.newparquimetro.service;
 
 import br.com.fiap.newparquimetro.domain.opcoesDePagamento.OpcoesDePagamento;
 import br.com.fiap.newparquimetro.dto.opcaopagamentos.OpcoesDePagamentoDTO;
+import br.com.fiap.newparquimetro.dto.opcaopagamentos.OpcoesDePagamentoListDTO;
 import br.com.fiap.newparquimetro.repositories.OpcoesDePagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,13 @@ public class OpcoesDePagamentoService {
         return OpcoesDePagamentoDTO.toDTO(this.repository.save(opcao));
     }
 
-    @Transactional(readOnly = true)
-    public List<OpcoesDePagamentoDTO> findAllByCondutorId(String condutorId) {
-        List<OpcoesDePagamento> pagamentos = repository.findAll();
+    public List<OpcoesDePagamentoListDTO> findAllByCondutorId(String condutorId) {
+        List<OpcoesDePagamento> pagamentos = repository.findAllByCondutorId(condutorId);
         return pagamentos.stream()
-                .map(OpcoesDePagamentoDTO::toDTO)
+                .map(opcao -> new OpcoesDePagamentoListDTO(opcao.getId(), opcao.getStatus(), opcao.getDataPagamento()))
                 .collect(Collectors.toList());
     }
+
     public List<OpcoesDePagamentoDTO> getAll() {
         List<OpcoesDePagamento> pagamentos = repository.findAll();
         return pagamentos.stream().map(OpcoesDePagamentoDTO::toDTO).toList();
