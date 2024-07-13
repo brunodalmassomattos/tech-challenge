@@ -57,7 +57,8 @@ public class VeiculoService {
     }
 
     public Optional<VeiculoJava> buscarPorId(String id) {
-        return veiculoRepository.findById(id);
+        return Optional.ofNullable(veiculoRepository.findById(id)
+                .orElseThrow(() -> new ControllerNotFoundException("Veículo não encontrado para o ID: " + id)));
     }
 
     @Transactional
