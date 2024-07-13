@@ -15,5 +15,5 @@ public record CadastraVeiculoDTO(
     @NotBlank(message = "Cor é obrigatório!")
     String cor,
     @NotNull(message = "Ano é obrigatório!")
-    int ano){
+    String ano){
 }
