@@ -12,7 +12,8 @@ import java.math.BigDecimal;
 public class OpcoesDePagamentoDTO {
 
     private String id;
-    private String tipo;
+    private String idTempo;
+    private String dataPagamento;
     private String status;
     private BigDecimal valor;
     private CondutorResponseDTO condutor;
@@ -23,7 +24,8 @@ public class OpcoesDePagamentoDTO {
         }
         OpcoesDePagamentoDTO dto = new OpcoesDePagamentoDTO();
         dto.setId(opcao.getId());
-        dto.setTipo(opcao.getTipo());
+        dto.setIdTempo(opcao.getIdTempo());
+        dto.setDataPagamento(opcao.getDataPagamento());
         dto.setStatus(opcao.getStatus());
         dto.setValor(opcao.getValor());
         dto.setCondutor(CondutorResponseDTO.toDTO(opcao.getCondutor(), null));

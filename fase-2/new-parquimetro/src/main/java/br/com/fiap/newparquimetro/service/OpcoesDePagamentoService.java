@@ -40,4 +40,11 @@ public class OpcoesDePagamentoService {
         List<OpcoesDePagamento> pagamentos = repository.findAll();
         return pagamentos.stream().map(OpcoesDePagamentoDTO::toDTO).toList();
     }
+
+    @Transactional
+    public OpcoesDePagamentoDTO simularPagamento(String id) {
+        OpcoesDePagamento opcao = repository.findById(id).orElseThrow(() -> new RuntimeException("Pagamento não encontrado"));
+        opcao.setStatus("Pago");
+        return OpcoesDePagamentoDTO.toDTO(repository.save(opcao));
+    }
 }

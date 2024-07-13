@@ -33,6 +33,12 @@ public class OpcoesDePagamentoController {
         return ResponseEntity.ok(salva);
     }
 
+    @PostMapping("/simular-pagamento/{id}")
+    public ResponseEntity<OpcoesDePagamentoDTO> simularPagamento(@PathVariable String id) {
+        OpcoesDePagamentoDTO pagamentoSimulado = service.simularPagamento(id);
+        return ResponseEntity.ok(pagamentoSimulado);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<OpcoesDePagamentoDTO> buscarPorIdCondutor(@PathVariable String id) {
         OpcoesDePagamento opcao = service.findById(id);
