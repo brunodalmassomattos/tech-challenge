@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import br.com.fiap.newparquimetro.domain.condutor.Tempo;
 
-public record ControleTempoResponseDTO(String id,String Data,LocalTime hrInicio,LocalTime hrFim,String idCondutor,String status){
+public record ControleTempoResponseDTO(String id,String Data,LocalTime hrInicio,LocalTime hrFim,String idCondutor,String status, String idTarifa){
 	
     public static String parseDate(Date data) {
         if (data == null) {
@@ -26,7 +26,8 @@ public record ControleTempoResponseDTO(String id,String Data,LocalTime hrInicio,
     			tempo.getHrInicio(),
     			tempo.getHrFim(),
     			tempo.getIdCondutor(),
-    			tempo.getStatus());
+    			tempo.getStatus(),
+    			tempo.getIdTarifa());
     	
     }
     

@@ -25,18 +25,31 @@ public class TempoController {
 	
 	@GetMapping("/{idCondutor}")
 	public ResponseEntity<List<ControleTempoResponseDTO>> buscaTempo(@Valid @PathVariable String idCondutor, @RequestHeader String status){
-		return ResponseEntity.ok(this.controTempoService.buscaTempo(idCondutor, status));
+		
+		List<ControleTempoResponseDTO> tempos = this.controTempoService.buscaTempo(idCondutor, status);
+
+		if(tempos.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}else {
+			return ResponseEntity.ok(this.controTempoService.buscaTempo(idCondutor, status));
+		}
+		
 	}
 	
 	@PostMapping
-	public ResponseEntity<ControleTempoResponseDTO> cadastroTempo(@Valid @RequestHeader String idCondutor, @RequestHeader Long tempo){
-		return ResponseEntity.ok(this.controTempoService.save(idCondutor,tempo));
+	public ResponseEntity<ControleTempoResponseDTO> cadastroTempo(@Valid @RequestHeader String idCondutor, @RequestHeader(required = false) Long tempo, @RequestHeader String tipo){
+		return ResponseEntity.ok(this.controTempoService.save(idCondutor,tempo,tipo));
 		
 	}
 	
 	@PatchMapping("/{idCondutor}")
 	ResponseEntity<ControleTempoResponseDTO> atualizaTempo(@Valid @PathVariable String idCondutor, @RequestHeader Long tempo){
 		return ResponseEntity.ok(this.controTempoService.update(idCondutor,tempo));
+	}
+	
+	@PostMapping("/fechaTempo/{idTempo}")
+	ResponseEntity<ControleTempoResponseDTO> atualizaTempo(@Valid @PathVariable String idTempo){
+		return ResponseEntity.ok(this.controTempoService.fechaTempo(idTempo));
 	}
 	
 }

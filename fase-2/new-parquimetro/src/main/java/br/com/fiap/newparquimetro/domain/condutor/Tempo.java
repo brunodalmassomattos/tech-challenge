@@ -32,5 +32,6 @@ public class Tempo {
 	private LocalTime hrFim;
 	private String idCondutor;
 	private String status;
+	private String idTarifa;
 	
 }
