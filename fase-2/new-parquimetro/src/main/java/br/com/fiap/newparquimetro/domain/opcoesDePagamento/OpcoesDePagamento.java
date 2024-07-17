@@ -22,20 +22,22 @@ public class OpcoesDePagamento {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String tipo;
+    @Column(name = "tempo_id")
+    private String idTempo;
+
+    private String dataPagamento;
 
     private String status;
 
     private BigDecimal valor;
-
-    private String idTempo;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "condutor_id")
     private Condutor condutor;
 
     public void atualizarDados(AtualizarOpcaoPagamentoDTO dados) {
-        this.tipo = dados.getTipo();
+        this.idTempo = dados.getIdTempo();
+        this.dataPagamento = dados.getDataPagamento();
         this.status = dados.getStatus();
         this.valor = BigDecimal.valueOf(dados.getValor());
 

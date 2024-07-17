@@ -10,8 +10,11 @@ import java.math.BigDecimal;
 @Setter
 public class CriarOpcaoPagamentoDTO {
 
-    @NotNull(message = "O tipo de pagamento é obrigatório.")
-    private String tipo;
+    @NotNull(message = "O ID do Tempo é obrigatório.")
+    private String idTempo;
+
+    @NotNull(message = "A data do pagamento é obrigatório.")
+    private String dataPagamento;
 
     @NotNull(message = "O status do pagamento é obrigatório.")
     private String status;
