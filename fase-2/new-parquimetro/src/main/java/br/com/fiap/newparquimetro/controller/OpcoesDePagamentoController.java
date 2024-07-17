@@ -21,6 +21,24 @@ public class OpcoesDePagamentoController {
     @Autowired
     private OpcoesDePagamentoService service;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<OpcoesDePagamentoDTO> buscarPorIdCondutor(@PathVariable String id) {
+        OpcoesDePagamento opcao = service.findById(id);
+        return ResponseEntity.ok(OpcoesDePagamentoDTO.toDTO(opcao));
+    }
+
+    @GetMapping("/by-condutor/{condutorId}")
+    public ResponseEntity<List<OpcoesDePagamentoListDTO>> listarPorCondutorId(@PathVariable String condutorId) {
+        List<OpcoesDePagamentoListDTO> pagamentos = service.findAllByCondutorId(condutorId);
+        return ResponseEntity.ok(pagamentos);
+    }
+
+
+    @GetMapping()
+    public ResponseEntity<List<OpcoesDePagamentoDTO>> getAllPagamentos() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
     @PostMapping
     @Transactional
     public ResponseEntity<OpcoesDePagamentoDTO> criarOpcaoPagamento(@RequestBody @Valid CriarOpcaoPagamentoDTO dados) {
@@ -38,23 +56,5 @@ public class OpcoesDePagamentoController {
     public ResponseEntity<OpcoesDePagamentoDTO> simularPagamento(@PathVariable String id) {
         OpcoesDePagamentoDTO pagamentoSimulado = service.simularPagamento(id);
         return ResponseEntity.ok(pagamentoSimulado);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<OpcoesDePagamentoDTO> buscarPorIdCondutor(@PathVariable String id) {
-        OpcoesDePagamento opcao = service.findById(id);
-        return ResponseEntity.ok(OpcoesDePagamentoDTO.toDTO(opcao));
-    }
-
-    @GetMapping("/by-condutor/{condutorId}")
-    public ResponseEntity<List<OpcoesDePagamentoListDTO>> listarPorCondutorId(@PathVariable String condutorId) {
-        List<OpcoesDePagamentoListDTO> pagamentos = service.findAllByCondutorId(condutorId);
-        return ResponseEntity.ok(pagamentos);
-    }
-
-
-    @GetMapping()
-    public ResponseEntity<List<OpcoesDePagamentoDTO>> getAllPagamentos() {
-        return ResponseEntity.ok(service.getAll());
     }
 }
