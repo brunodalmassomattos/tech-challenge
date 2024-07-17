@@ -30,8 +30,6 @@ public class OpcoesDePagamento {
     private String status;
 
     private BigDecimal valor;
-
-    private String idTempo;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "condutor_id")
