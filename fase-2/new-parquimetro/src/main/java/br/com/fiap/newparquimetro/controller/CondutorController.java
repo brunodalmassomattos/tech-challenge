@@ -4,6 +4,7 @@ import br.com.fiap.newparquimetro.domain.condutor.Condutor;
 import br.com.fiap.newparquimetro.dto.condutor.AlteracaoCondutorRequestDTO;
 import br.com.fiap.newparquimetro.dto.condutor.CondutorRequestDTO;
 import br.com.fiap.newparquimetro.dto.condutor.CondutorResponseDTO;
+import br.com.fiap.newparquimetro.dto.formapagamento.FormaPagamentoResponseDTO;
 import br.com.fiap.newparquimetro.service.CondutorService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,11 @@ public class CondutorController {
     @GetMapping("/{idCondutor}")
     public ResponseEntity<CondutorResponseDTO> buscarCondutor(@PathVariable String idCondutor) throws ParseException {
         return ResponseEntity.ok(this.condutorService.find(idCondutor));
+    }
+
+    @GetMapping("/forma-pagamento/{idCondutor}")
+    public ResponseEntity<FormaPagamentoResponseDTO> buscarFormaPagamento(@PathVariable String idCondutor) throws ParseException {
+        return ResponseEntity.ok(this.condutorService.findFormaPagamentoCadastrada(idCondutor));
     }
 
     @PutMapping("/{idCondutor}")

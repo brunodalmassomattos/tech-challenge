@@ -2,7 +2,9 @@ package br.com.fiap.newparquimetro.service;
 
 import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
+import br.com.fiap.newparquimetro.domain.formapagamento.FormaPagamento;
 import br.com.fiap.newparquimetro.dto.condutor.CondutorResponseDTO;
+import br.com.fiap.newparquimetro.dto.formapagamento.FormaPagamentoResponseDTO;
 import br.com.fiap.newparquimetro.repositories.CondutorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,5 +47,10 @@ public class CondutorService {
     public CondutorResponseDTO find(String id) {
         Condutor condutor = this.condutorRepository.findById(id).orElseThrow(() -> new ControllerNotFoundException("Usuario não encontrado"));
         return CondutorResponseDTO.toDTO(condutor, this.formaPagamentoService.findById(condutor.getIdFormaPagamento()));
+    }
+
+    public FormaPagamentoResponseDTO findFormaPagamentoCadastrada(String idCondutor) {
+        var condutor = this.condutorRepository.findById(idCondutor).orElseThrow(() -> new ControllerNotFoundException("Usuario não encontrado"));
+        return FormaPagamentoResponseDTO.toDTO(this.formaPagamentoService.findById(condutor.getIdFormaPagamento()));
     }
 }
