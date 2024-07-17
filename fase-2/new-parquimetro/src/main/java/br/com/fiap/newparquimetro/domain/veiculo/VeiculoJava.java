@@ -21,7 +21,7 @@ public class VeiculoJava {
     private String modelo;
     private String placa;
     private String cor;
-    private int ano;
+    private String ano;
 
     public VeiculoJava(CadastraVeiculoDTO dado) {
         this.fabricante = dado.fabricante();
@@ -53,7 +53,7 @@ public class VeiculoJava {
             }
         });
         dado.ano().ifPresent(a -> {
-            if (a != 0) {
+            if (!a.isEmpty()) {
                 this.ano = a;
             }
         });

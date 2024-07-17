@@ -14,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/veiculos")
@@ -23,11 +26,22 @@ public class VeiculosController {
     @Autowired
     private VeiculoService veiculoService;
 
+
     @PostMapping("/condutores/{idCondutor}")
-    public ResponseEntity<VeiculoResponseDTO> cadastrarVeiculo(@PathVariable String idCondutor, @RequestBody @Valid CadastraVeiculoDTO dado, UriComponentsBuilder uriBuilder) {
-        VeiculoJava veiculo = veiculoService.cadastrarVeiculo(idCondutor, dado);
-        var uri = uriBuilder.path("/veiculos/{id}").buildAndExpand(veiculo.getId()).toUri();
-        return ResponseEntity.created(uri).body(new VeiculoResponseDTO(veiculo));
+    public ResponseEntity<List<VeiculoResponseDTO>> cadastrarVeiculo(@PathVariable String idCondutor, @RequestBody @Valid List<CadastraVeiculoDTO> dados, UriComponentsBuilder uriBuilder) {
+        try {
+            List<VeiculoJava> veiculos = veiculoService.cadastrarVeiculos(dados, idCondutor);
+            List<VeiculoResponseDTO> responseDTOs = veiculos.stream()
+                    .map(VeiculoResponseDTO::new)
+                    .collect(Collectors.toList());
+
+            // Construindo URI usando a URI do primeiro veículo cadastrado (apenas como exemplo)
+            URI uri = uriBuilder.path("/veiculos/{id}").buildAndExpand(veiculos.get(0).getId()).toUri();
+
+            return ResponseEntity.created(uri).body(responseDTOs);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping

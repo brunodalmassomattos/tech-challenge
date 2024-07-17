@@ -9,7 +9,7 @@ public record AtualizaVeiculoDTO(
         Optional<String> modelo,
         Optional<String> placa,
         Optional<String> cor,
-        Optional<Integer> ano) {
+        Optional<String> ano) {
 
     public AtualizaVeiculoDTO(VeiculoJava veiculo) {
         this(

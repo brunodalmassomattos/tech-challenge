@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface VeiculoRepository extends JpaRepository<VeiculoJava, String> {
     Optional<VeiculoJava> findByPlaca(String placa);
+
+    boolean existsByPlaca(String placa);
 }
