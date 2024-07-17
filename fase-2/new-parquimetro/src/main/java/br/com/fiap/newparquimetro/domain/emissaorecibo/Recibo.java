@@ -1,8 +1,10 @@
 package br.com.fiap.newparquimetro.domain.emissaorecibo;
 
-import br.com.fiap.newparquimetro.domain.condutor.Tempo;
+import br.com.fiap.newparquimetro.domain.opcoesDePagamento.OpcoesDePagamento;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 
 @Builder
@@ -19,20 +21,10 @@ public class Recibo {
     @Column(name = "id", nullable = false)
     private String id;
 
-    @Temporal(TemporalType.TIME)
-    @Column(name = "tempo")
-    private Long tempo;
+    @Column(name = "data")
+    private LocalDateTime data;
 
-    @Column(name = "valor_total")
-    private Double valorTotal;
-
-    @Column(name = "condutor_id")
-    private String idCondutor;
-
-    @Column(name = "tempo_id")
-    private String idTempo;
-
-    @ManyToOne
-    @JoinColumn(name = "tarifa_id")
-    private Tarifa tarifa;
+    @OneToOne
+    @JoinColumn(name = "pagamento_id")
+    private OpcoesDePagamento pagamento;
 }

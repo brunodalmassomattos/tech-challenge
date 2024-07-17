@@ -1,45 +1,20 @@
 package br.com.fiap.newparquimetro.dto.recibos;
 
-import br.com.fiap.newparquimetro.domain.emissaorecibo.Recibo;
-import br.com.fiap.newparquimetro.dto.condutor.CondutorResponseDTO;
 import br.com.fiap.newparquimetro.dto.tarifa.TarifaResponseDTO;
 import lombok.Builder;
 
-import java.time.Duration;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
 @Builder
 public record ReciboResponseDTO(
         String id,
         LocalTime tempo,
-        Double valorTotal,
+        BigDecimal valorTotal,
         String nomeCondutor,
         String cpfCnpjCondutor,
-        TarifaResponseDTO tarifa
+        TarifaResponseDTO tarifa,
+        LocalDateTime data
 ) {
-    public static List<ReciboResponseDTO> toDtoList(List<Recibo> recibos, CondutorResponseDTO condutorDto) {
-        return recibos.stream()
-                       .map(recibo -> toDto(recibo, condutorDto))
-                       .toList();
-    }
-
-    public static ReciboResponseDTO toDto(Recibo recibo, CondutorResponseDTO condutorDto) {
-        return ReciboResponseDTO.builder()
-                       .id(recibo.getId())
-                       .tempo(getTempoFormatado(recibo.getTempo()))
-                       .cpfCnpjCondutor(condutorDto.cpfCnpj())
-                       .nomeCondutor(condutorDto.nome())
-                       .valorTotal(recibo.getValorTotal())
-                       .tarifa(TarifaResponseDTO.toDto(recibo.getTarifa()))
-                       .build();
-    }
-
-
-    private static LocalTime getTempoFormatado(Long tempo) {
-        Duration minutos = Duration.ofMinutes(tempo);
-        long horas = minutos.toHours();
-        long minutosRestantes = minutos.minusHours(horas).toMinutes();
-        return LocalTime.of((int) horas, (int) minutosRestantes);
-    }
 }
