@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "formasPagamento")
+
 @Data
 @Builder
 @NoArgsConstructor

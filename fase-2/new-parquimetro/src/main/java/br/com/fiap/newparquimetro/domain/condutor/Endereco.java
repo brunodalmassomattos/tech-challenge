@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "enderecos")
+
 @Data
 @Builder
 @NoArgsConstructor

@@ -20,40 +20,38 @@ import java.util.List;
 
 @Service
 public class ReciboService {
-
     private ReciboRepository reciboRepository;
     private ControleTempoRepository controleTempoRepository;
+
     private TarifaService tarifaService;
-    private CondutorService condutorService;
-    private FormaPagamentoService formaPagamentoService;
-    private ControleTempoService controleTempoService;
-    private OpcoesDePagamentoService opcoesDePagamentoService;
+    private PagamentoService pagamentoService;
 
     @Autowired
-    public ReciboService(ReciboRepository reciboRepository, ControleTempoRepository controleTempoRepository, TarifaService tarifaService, CondutorService condutorService, FormaPagamentoService formaPagamentoService, ControleTempoService controleTempoService,@Lazy OpcoesDePagamentoService opcoesDePagamentoService) {
+    public ReciboService(ReciboRepository reciboRepository,
+                         ControleTempoRepository controleTempoRepository,
+                         TarifaService tarifaService,
+                         @Lazy PagamentoService pagamentoService) {
         this.reciboRepository = reciboRepository;
         this.controleTempoRepository = controleTempoRepository;
         this.tarifaService = tarifaService;
-        this.condutorService = condutorService;
-        this.formaPagamentoService = formaPagamentoService;
-        this.controleTempoService = controleTempoService;
-        this.opcoesDePagamentoService = opcoesDePagamentoService;
+        this.pagamentoService = pagamentoService;
     }
 
     public List<ReciboResponseDTO> emitirRecibo(String condutorId, String dataInicial, String dataFinal) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime dataInicioFormatada = LocalDateTime.parse(dataInicial, formatter);
-        LocalDateTime dataFimFormatada = LocalDateTime.parse(dataFinal, formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        var dataInicioFormatada = LocalDateTime.parse(dataInicial, formatter);
+        var dataFimFormatada = LocalDateTime.parse(dataFinal, formatter);
+
         List<Recibo> recibos = reciboRepository.consultarPorIdCondutorEDataInicioEDataFim(
                 condutorId, dataInicioFormatada, dataFimFormatada);
 
         return recibos.stream().
-                       map(recibo -> createReciboDto(recibo, buscarTempo(recibo.getPagamento().getIdTempo())))
-                       .toList();
+                map(recibo -> createReciboDto(recibo, buscarTempo(recibo.getPagamento().getIdTempo())))
+                .toList();
     }
 
     public ReciboResponseDTO gerarRecibo(String idPagamento) {
-        OpcoesDePagamento opcoesDePagamento = opcoesDePagamentoService.findById(idPagamento);
+        OpcoesDePagamento opcoesDePagamento = pagamentoService.findById(idPagamento);
         Tempo tempo = buscarTempo(opcoesDePagamento.getIdTempo());
 
         Recibo recibo = reciboRepository.save(createRecibo(opcoesDePagamento));
@@ -68,21 +66,21 @@ public class ReciboService {
 
     private Recibo createRecibo(OpcoesDePagamento opcoesDePagamento) {
         return Recibo.builder()
-                       .pagamento(opcoesDePagamento)
-                       .data(LocalDateTime.now())
-                       .build();
+                .pagamento(opcoesDePagamento)
+                .data(LocalDateTime.now())
+                .build();
     }
 
     private ReciboResponseDTO createReciboDto(Recibo recibo, Tempo tempo) {
         return ReciboResponseDTO.builder()
-                       .id(recibo.getId())
-                       .tarifa(tarifaService.get(tempo.getIdTarifa()))
-                       .nomeCondutor(recibo.getPagamento().getCondutor().getNome())
-                       .cpfCnpjCondutor(recibo.getPagamento().getCondutor().getCpfCnpj())
-                       .tempo(getTempoFormatado(tempo.getHrInicio(), tempo.getHrFim()))
-                       .valorTotal(recibo.getPagamento().getValor())
-                       .data(recibo.getData())
-                       .build();
+                .id(recibo.getId())
+                .tarifa(tarifaService.get(tempo.getIdTarifa()))
+                .nomeCondutor(recibo.getPagamento().getCondutor().getNome())
+                .cpfCnpjCondutor(recibo.getPagamento().getCondutor().getCpfCnpj())
+                .tempo(getTempoFormatado(tempo.getHrInicio(), tempo.getHrFim()))
+                .valorTotal(recibo.getPagamento().getValor())
+                .data(recibo.getData())
+                .build();
     }
 
     private static LocalTime getTempoFormatado(LocalTime horaInicial, LocalTime horaFinal) {

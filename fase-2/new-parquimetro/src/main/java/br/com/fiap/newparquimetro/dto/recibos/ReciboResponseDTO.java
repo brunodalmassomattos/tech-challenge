@@ -15,6 +15,5 @@ public record ReciboResponseDTO(
         String nomeCondutor,
         String cpfCnpjCondutor,
         TarifaResponseDTO tarifa,
-        LocalDateTime data
-) {
+        LocalDateTime data) {
 }

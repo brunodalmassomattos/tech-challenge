@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OpcoesDePagamentoDTO {
-
     private String id;
     private String idTempo;
     private String dataPagamento;

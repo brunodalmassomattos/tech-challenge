@@ -1,13 +1,13 @@
 package br.com.fiap.newparquimetro.dto.opcaopagamentos;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
 public class CriarOpcaoPagamentoDTO {
 
     @NotNull(message = "O ID do Tempo é obrigatório.")

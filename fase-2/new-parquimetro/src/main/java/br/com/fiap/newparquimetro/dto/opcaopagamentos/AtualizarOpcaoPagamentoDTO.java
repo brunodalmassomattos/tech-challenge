@@ -1,11 +1,11 @@
 package br.com.fiap.newparquimetro.dto.opcaopagamentos;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class AtualizarOpcaoPagamentoDTO {
 
     @NotNull(message = "O ID do pagamento é obrigatório.")

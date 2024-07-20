@@ -7,13 +7,13 @@ import org.apache.catalina.filters.RemoteCIDRFilter;
 
 import java.util.UUID;
 
-@Getter
-@Setter
+@Entity
+@Table(name = "tarifa")
+
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "tarifa")
 public class Tarifa {
 
     @Id

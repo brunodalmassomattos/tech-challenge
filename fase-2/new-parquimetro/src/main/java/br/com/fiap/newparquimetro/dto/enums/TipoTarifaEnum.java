@@ -9,9 +9,7 @@ import java.util.Optional;
 @Getter
 @AllArgsConstructor
 public enum TipoTarifaEnum {
-
     FIXO("FIXO"),
-
     VARIAVEL("VARIAVEL");
 
     private String descricao;

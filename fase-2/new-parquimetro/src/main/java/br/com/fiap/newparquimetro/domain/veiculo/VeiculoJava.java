@@ -8,6 +8,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "veiculos")
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,14 +23,6 @@ public class VeiculoJava {
     private String placa;
     private String cor;
     private String ano;
-
-    public VeiculoJava(CadastraVeiculoDTO dado) {
-        this.fabricante = dado.fabricante();
-        this.modelo = dado.modelo();
-        this.placa = dado.placa();
-        this.cor = dado.cor();
-        this.ano = dado.ano();
-    }
 
     public void atualizarInformacoes(AtualizaVeiculoDTO dado) {
         dado.fabricante().ifPresent(f -> {

@@ -26,9 +26,10 @@ public class VeiculosController {
     @Autowired
     private VeiculoService veiculoService;
 
-
     @PostMapping("/condutores/{idCondutor}")
-    public ResponseEntity<List<VeiculoResponseDTO>> cadastrarVeiculo(@PathVariable String idCondutor, @RequestBody @Valid List<CadastraVeiculoDTO> dados, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<List<VeiculoResponseDTO>> cadastrarVeiculo(@PathVariable String idCondutor,
+                                                                     @RequestBody @Valid List<CadastraVeiculoDTO> dados,
+                                                                     UriComponentsBuilder uriBuilder) {
         try {
             List<VeiculoJava> veiculos = veiculoService.cadastrarVeiculos(dados, idCondutor);
             List<VeiculoResponseDTO> responseDTOs = veiculos.stream()

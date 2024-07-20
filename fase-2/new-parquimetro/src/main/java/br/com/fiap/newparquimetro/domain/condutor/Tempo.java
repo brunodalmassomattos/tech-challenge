@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tempo")
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -26,6 +27,7 @@ public class Tempo {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
     @Temporal(TemporalType.DATE)
     private Date data;
 	private LocalTime hrInicio;

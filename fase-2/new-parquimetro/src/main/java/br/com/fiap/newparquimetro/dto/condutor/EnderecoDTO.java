@@ -3,7 +3,6 @@ package br.com.fiap.newparquimetro.dto.condutor;
 import jakarta.validation.constraints.NotBlank;
 
 public record EnderecoDTO(
-
         @NotBlank(message = "O Lougradouro é obrigatorio!")
         String logradouro,
         @NotBlank(message = "O número é obrigatorio! Se não tiver número inserir S/N")

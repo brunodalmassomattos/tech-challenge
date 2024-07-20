@@ -19,8 +19,7 @@ public record AlteracaoCondutorRequestDTO(
         String telefone,
         String idFormaDePagamento,
         EnderecoDTO endereco,
-        List<VeiculoDTO> veiculos
-) implements Serializable {
+        List<VeiculoDTO> veiculos) implements Serializable {
 
     public static Date parseDate(String date) throws ParseException {
         if (date == null) {

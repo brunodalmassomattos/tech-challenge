@@ -5,7 +5,7 @@ import br.com.fiap.newparquimetro.domain.opcoesDePagamento.OpcoesDePagamento;
 import br.com.fiap.newparquimetro.dto.opcaopagamentos.CriarOpcaoPagamentoDTO;
 import br.com.fiap.newparquimetro.dto.opcaopagamentos.OpcoesDePagamentoDTO;
 import br.com.fiap.newparquimetro.dto.opcaopagamentos.OpcoesDePagamentoListDTO;
-import br.com.fiap.newparquimetro.service.OpcoesDePagamentoService;
+import br.com.fiap.newparquimetro.service.PagamentoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pagamento")
-public class OpcoesDePagamentoController {
+public class PagamentoController {
 
     @Autowired
-    private OpcoesDePagamentoService service;
+    private PagamentoService service;
 
     @GetMapping("/{id}")
     public ResponseEntity<OpcoesDePagamentoDTO> buscarPorIdCondutor(@PathVariable String id) {
@@ -35,7 +35,7 @@ public class OpcoesDePagamentoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<OpcoesDePagamentoDTO> criarOpcaoPagamento(@RequestBody @Valid CriarOpcaoPagamentoDTO dados) {
+    public ResponseEntity<OpcoesDePagamentoDTO> criarPagamento(@RequestBody @Valid CriarOpcaoPagamentoDTO dados) {
         OpcoesDePagamentoDTO salva = service.save(OpcoesDePagamento.builder()
                 .idTempo(dados.getIdTempo())
                 .dataPagamento(dados.getDataPagamento())
