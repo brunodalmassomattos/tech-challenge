@@ -8,6 +8,7 @@ import br.com.fiap.newparquimetro.dto.recibos.ReciboResponseDTO;
 import br.com.fiap.newparquimetro.repositories.ControleTempoRepository;
 import br.com.fiap.newparquimetro.repositories.ReciboRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -20,26 +21,24 @@ import java.util.List;
 @Service
 public class ReciboService {
 
-    @Autowired
     private ReciboRepository reciboRepository;
-
-    @Autowired
     private ControleTempoRepository controleTempoRepository;
-
-    @Autowired
     private TarifaService tarifaService;
-
-    @Autowired
     private CondutorService condutorService;
-
-    @Autowired
     private FormaPagamentoService formaPagamentoService;
-
-    @Autowired
     private ControleTempoService controleTempoService;
+    private OpcoesDePagamentoService opcoesDePagamentoService;
 
     @Autowired
-    private OpcoesDePagamentoService opcoesDePagamentoService;
+    public ReciboService(ReciboRepository reciboRepository, ControleTempoRepository controleTempoRepository, TarifaService tarifaService, CondutorService condutorService, FormaPagamentoService formaPagamentoService, ControleTempoService controleTempoService,@Lazy OpcoesDePagamentoService opcoesDePagamentoService) {
+        this.reciboRepository = reciboRepository;
+        this.controleTempoRepository = controleTempoRepository;
+        this.tarifaService = tarifaService;
+        this.condutorService = condutorService;
+        this.formaPagamentoService = formaPagamentoService;
+        this.controleTempoService = controleTempoService;
+        this.opcoesDePagamentoService = opcoesDePagamentoService;
+    }
 
     public List<ReciboResponseDTO> emitirRecibo(String condutorId, String dataInicial, String dataFinal) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

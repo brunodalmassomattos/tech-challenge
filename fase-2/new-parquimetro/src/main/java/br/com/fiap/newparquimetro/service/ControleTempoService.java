@@ -1,17 +1,5 @@
 package br.com.fiap.newparquimetro.service;
 
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
-import br.com.fiap.newparquimetro.controller.exception.ControllerExceptionHandler;
 import br.com.fiap.newparquimetro.controller.exception.ControllerNotFoundException;
 import br.com.fiap.newparquimetro.domain.condutor.Condutor;
 import br.com.fiap.newparquimetro.domain.condutor.Tempo;
@@ -24,6 +12,15 @@ import br.com.fiap.newparquimetro.repositories.ControleTempoRepository;
 import br.com.fiap.newparquimetro.repositories.OpcoesDePagamentoRepository;
 import br.com.fiap.newparquimetro.repositories.TarifaRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -119,7 +116,7 @@ public class ControleTempoService {
 		BigDecimal valor = BigDecimal.valueOf(minutosTrabalhadas).multiply(BigDecimal.valueOf(tarifa.getValor()/60));
 		
 		this.opcoesDePagamentoRepository.save(OpcoesDePagamento.builder()
-				.tipo(this.tarifaRepository.findTipoById(tempo.getIdTarifa()))
+//				.tipo(this.tarifaRepository.findTipoById(tempo.getIdTarifa()))
 				.status("PENDENTE")
 				.valor(valor)
 				.idTempo(tempo.getId())
