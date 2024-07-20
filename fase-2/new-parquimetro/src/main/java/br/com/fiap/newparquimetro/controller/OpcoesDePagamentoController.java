@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/opcoes-pagamento")
+@RequestMapping("/pagamento")
 public class OpcoesDePagamentoController {
 
     @Autowired
@@ -27,16 +27,10 @@ public class OpcoesDePagamentoController {
         return ResponseEntity.ok(OpcoesDePagamentoDTO.toDTO(opcao));
     }
 
-    @GetMapping("/by-condutor/{condutorId}")
-    public ResponseEntity<List<OpcoesDePagamentoListDTO>> listarPorCondutorId(@PathVariable String condutorId) {
-        List<OpcoesDePagamentoListDTO> pagamentos = service.findAllByCondutorId(condutorId);
+    @GetMapping("/pendentes/by-condutor/{condutorId}")
+    public ResponseEntity<List<OpcoesDePagamentoListDTO>> listarPendentesPorCondutorId(@PathVariable String condutorId) {
+        List<OpcoesDePagamentoListDTO> pagamentos = service.findPendentesByCondutorId(condutorId);
         return ResponseEntity.ok(pagamentos);
-    }
-
-
-    @GetMapping()
-    public ResponseEntity<List<OpcoesDePagamentoDTO>> getAllPagamentos() {
-        return ResponseEntity.ok(service.getAll());
     }
 
     @PostMapping
