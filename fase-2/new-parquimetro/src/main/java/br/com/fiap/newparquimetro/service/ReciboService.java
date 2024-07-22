@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -38,10 +39,9 @@ public class ReciboService {
     }
 
     public List<ReciboResponseDTO> emitirRecibo(String condutorId, String dataInicial, String dataFinal) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        var dataInicioFormatada = LocalDateTime.parse(dataInicial, formatter);
-        var dataFimFormatada = LocalDateTime.parse(dataFinal, formatter);
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime dataInicioFormatada = LocalDate.parse(dataInicial, formatter).atStartOfDay();
+        LocalDateTime dataFimFormatada = LocalDate.parse(dataFinal, formatter).atStartOfDay().plusHours(24);
         List<Recibo> recibos = reciboRepository.consultarPorIdCondutorEDataInicioEDataFim(
                 condutorId, dataInicioFormatada, dataFimFormatada);
 

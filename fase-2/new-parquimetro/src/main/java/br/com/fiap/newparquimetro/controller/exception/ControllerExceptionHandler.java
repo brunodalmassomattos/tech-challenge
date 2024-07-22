@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.Instant;
+import java.time.format.DateTimeParseException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -60,6 +61,17 @@ public class ControllerExceptionHandler {
         this.standardError.setTimeStamp(Instant.now());
         this.standardError.setStatus(HttpStatus.BAD_REQUEST.value());
         this.standardError.setError("Invalid argument");
+        this.standardError.setMessage(exception.getMessage());
+        this.standardError.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(this.standardError);
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<StandardError> handleDateTimeParse(DateTimeParseException exception, HttpServletRequest request) {
+        this.standardError.setTimeStamp(Instant.now());
+        this.standardError.setStatus(HttpStatus.BAD_REQUEST.value());
+        this.standardError.setError("Invalid date format");
         this.standardError.setMessage(exception.getMessage());
         this.standardError.setPath(request.getRequestURI());
 
