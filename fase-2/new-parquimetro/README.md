@@ -27,34 +27,7 @@ Links Úteis:
 
 ## Payload ###
 
-#### Salva Usuario ####
-```console
-curl --location 'http://localhost:8080/condutor' \
---header 'Content-Type: application/json' \
---data '{
-    "nome": "Oliver Theo Araújo",
-    "cpfCnpj": "553.812.214-01",
-    "dataNascimento": "1991-01-03",
-    "telefone": "(79) 98121-7117",
-    "idFormaDePagamento": "2c7d9ead-401d-4771-a485-3a8a631d475d",
-    "endereco": {
-        "logradouro": "Rua Vereador João Menezes Oliveira",
-        "numero": "278",
-        "complemento": "",
-        "bairro": "Industrial",
-        "cidade": "Aracaju",
-        "estado": "SE",
-        "cep": "49066-450"
-    },
-    "veiculos": [
-        {
-            "fabricante": "GREAT WALL",
-            "modelo": "HOVER CUV 2.4 16V 5p Mec.",
-            "placa": "KBM-4627",
-            "cor": "Marrom",
-            "ano": "2008"
-        }
-    ]
-}'
-```
+Disponibilizamos o Swagger com os endpoints criados, para acessa-los deve-se utilizar o seguinte link:
+http://localhost:8080/swagger-ui/index.html#/
  
+![img_1.png](img_1.png)
