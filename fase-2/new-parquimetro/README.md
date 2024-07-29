@@ -22,7 +22,7 @@ Tecnologias Utilizadas:
   - H2;
   - Lombok
   
-Para subir rodar o projeto local:
+Para rodar o projeto local:
   - mvn clean package.
   - No terminal rodar os comandos:
     - docker build -t new-parquimetro .
