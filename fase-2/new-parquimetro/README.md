@@ -19,11 +19,15 @@ Ao refazer a solução, você deve considerar os seguintes requisitos:
 Tecnologias Utilizadas:
   - Java 17;
   - Spring framework 3.2.5;
-  - Spring Security;
   - H2;
   - Lombok
   
-Links Úteis:
+Para rodar o projeto local:
+  - mvn clean package.
+  - No terminal rodar os comandos:
+    - docker build -t new-parquimetro .
+    - Aguardar a finalização...
+    - docker run -dp 8080:8080 new-parquimetro
 
 ## Payload ###
 
