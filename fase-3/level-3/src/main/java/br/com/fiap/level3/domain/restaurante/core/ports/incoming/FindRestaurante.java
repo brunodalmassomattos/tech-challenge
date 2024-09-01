@@ -1,4 +1,4 @@
-package br.com.fiap.level3.domain.restaurante.core.ports.outcoming;
+package br.com.fiap.level3.domain.restaurante.core.ports.incoming;
 
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
 
@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface RestauranteDatabase {
+public interface FindRestaurante {
     Optional<Restaurante> getRestauranteById(UUID id);
     List<Restaurante> getRestaurantes();
-    void save(Restaurante restaurante);
 }

@@ -16,7 +16,7 @@ public record EnderecoDTO(String id,
                 endereco.getNumero(),
                 endereco.getBairro(),
                 endereco.getCidade(),
-                endereco.getUf());
+                endereco.getEstado());
     }
 
 }

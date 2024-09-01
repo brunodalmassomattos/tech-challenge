@@ -32,7 +32,7 @@ public class RestauranteRowMapper implements RowMapper<Restaurante> {
                                 .numero(rs.getString("numero"))
                                 .bairro(rs.getString("bairro"))
                                 .cidade(rs.getString("cidade"))
-                                .uf(rs.getString("estado"))
+                                .estado(rs.getString("estado"))
                                 .cep(rs.getString("cep"))
                                 .build())
                 .build();

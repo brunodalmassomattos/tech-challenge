@@ -14,4 +14,8 @@ import java.util.UUID;
 public class TipoRestaurante {
     private UUID id;
     private String descricao;
+
+    public TipoRestaurante(UUID id) {
+        this.id = id;
+    }
 }

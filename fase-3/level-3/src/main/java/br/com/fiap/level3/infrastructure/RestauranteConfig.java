@@ -1,7 +1,9 @@
 package br.com.fiap.level3.infrastructure;
 
 import br.com.fiap.level3.domain.restaurante.core.RestauranteFacade;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindByIdRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.outcoming.RestauranteDatabase;
 import br.com.fiap.level3.domain.restaurante.infrastructure.RestauranteDatabaseAdapter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,8 +18,14 @@ public class RestauranteConfig {
     }
 
     @Bean
-    @Qualifier("FindByIdRestaurante")
-    public FindByIdRestaurante findByIdRestaurante(RestauranteDatabase database) {
+    @Qualifier("FindRestaurante")
+    public FindRestaurante findRestaurante(RestauranteDatabase database) {
+        return new RestauranteFacade(database);
+    }
+
+    @Bean
+    @Qualifier("AddRestaurante")
+    public AddRestaurante addRestaurante(RestauranteDatabase database) {
         return new RestauranteFacade(database);
     }
 }
