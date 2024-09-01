@@ -1,4 +1,4 @@
-package br.com.fiap.level3.domain.restaurante.core.domain.exception;
+package br.com.fiap.level3.domain.exception;
 
 public class ControllerNotFoundException extends RuntimeException {
 

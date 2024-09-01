@@ -1,4 +1,4 @@
-package br.com.fiap.level3.domain.restaurante.application.controller;
+package br.com.fiap.level3.domain.restaurante.application;
 
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.RestauranteDTO;
