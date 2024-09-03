@@ -1,7 +1,6 @@
 package br.com.fiap.level3.infrastructure;
 
 import br.com.fiap.level3.domain.restaurante.core.RestauranteFacade;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.outcoming.RestauranteDatabase;

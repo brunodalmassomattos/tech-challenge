@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public interface RestauranteDatabase {
     Optional<Restaurante> getRestauranteById(UUID id);
+    List<Restaurante> getRestauranteByNome(String nome);
     List<Restaurante> getRestaurantes();
+
     void save(Restaurante restaurante);
 }

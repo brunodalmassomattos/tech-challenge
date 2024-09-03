@@ -17,13 +17,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RestauranteDatabaseAdapter implements RestauranteDatabase {
 
-    private static final String INSERT_ENDERECO = """
-                    INSERT INTO enderecos 
-                        (rua, numero, bairro, cidade, estado, cep) 
-                    VALUES 
-                        (?, ?, ?, ?, ?, ?)
-                """;
-
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -35,13 +28,31 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
                                       SELECT *
                                         FROM restaurantes r
                                         LEFT JOIN tipos_restaurantes tr ON r.tipo_restaurante_id = tr.id
-                                        LEFT JOIN enderecos e ON r.endereco_id = e.id\s
+                                        LEFT JOIN enderecos e ON r.endereco_id = e.id
                                        WHERE r.id = ?
                                     """,
                             new RestauranteRowMapper(),
                             id));
         } catch (DataAccessException e) {
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<Restaurante> getRestauranteByNome(String nome) {
+        try {
+            return jdbcTemplate.query(
+                            """
+                                      SELECT *
+                                        FROM restaurantes r
+                                        LEFT JOIN tipos_restaurantes tr ON r.tipo_restaurante_id = tr.id
+                                        LEFT JOIN enderecos e ON r.endereco_id = e.id
+                                       WHERE r.nome like ?
+                                    """,
+                            new Object[] { "%" + nome.trim() + "%"},
+                            new RestauranteRowMapper());
+        } catch (DataAccessException e) {
+            return new ArrayList<>();
         }
     }
 
@@ -53,7 +64,7 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
                             SELECT *
                               FROM restaurantes r
                               LEFT JOIN tipos_restaurantes tr ON r.tipo_restaurante_id = tr.id
-                              LEFT JOIN enderecos e ON r.endereco_id = e.id\s
+                              LEFT JOIN enderecos e ON r.endereco_id = e.id
                             """,
                     new RestauranteRowMapper());
         } catch (DataAccessException e) {
@@ -63,17 +74,24 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
 
     @Override
     public void save(Restaurante restaurante) {
-        Map<String, Object> enderecoId = addEndereco(restaurante);
+        String enderecoId = addEndereco(restaurante);
         addRestaurante(restaurante, enderecoId);
     }
 
-    private Map<String, Object> addEndereco(Restaurante restaurante) {
+    private String addEndereco(Restaurante restaurante) {
+        final String INSERT_ENDERECO = """
+                    INSERT INTO enderecos 
+                        (rua, numero, bairro, cidade, estado, cep) 
+                    VALUES 
+                        (?, ?, ?, ?, ?, ?)
+                """;
+
         GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
 
         this.jdbcTemplate.update(
                 new PreparedStatementCreator() {
                     public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                        PreparedStatement ps = connection.prepareStatement(INSERT_ENDERECO, new String[] { "id" });
+                        PreparedStatement ps = connection.prepareStatement(INSERT_ENDERECO, new String[]{"id"});
                         ps.setString(1, restaurante.getEndereco().getLogradouro());
                         ps.setString(2, restaurante.getEndereco().getNumero());
                         ps.setString(3, restaurante.getEndereco().getBairro());
@@ -83,23 +101,23 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
                         return ps;
                     }
                 }, generatedKeyHolder);
-        return generatedKeyHolder.getKeyList().get(0);
+        return generatedKeyHolder.getKeyList().get(0).get("id").toString();
     }
 
-    private void addRestaurante(Restaurante restaurante, Map<String, Object> enderecoId) {
+    private void addRestaurante(Restaurante restaurante, String enderecoId) {
         try {
             this.jdbcTemplate.update(
                     """
-                        INSERT INTO restaurantes 
-                            (nome, tipo_restaurante_id, horario_funcionamento, capacidade, endereco_id) 
-                        VALUES
-                            (?, ?, ?, ?, ?)
-                    """,
+                                INSERT INTO restaurantes 
+                                    (nome, tipo_restaurante_id, horario_funcionamento, capacidade, endereco_id) 
+                                VALUES
+                                    (?, ?, ?, ?, ?)
+                            """,
                     restaurante.getNome(),
                     restaurante.getTipoRestaurante().getId(),
                     restaurante.getHorarioFuncionamento(),
                     restaurante.getCapacidade(),
-                    enderecoId.get("id"));
+                    UUID.fromString(enderecoId));
         } catch (DataAccessException e) {
             System.out.println();
         }
