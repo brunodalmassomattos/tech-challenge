@@ -15,7 +15,7 @@ public class ControllerException {
     private StandardError standardError = new StandardError();
 
     @ExceptionHandler(AddRestauranteException.class)
-    public ResponseEntity<StandardError> entityNotFound(AddRestauranteException exception,
+    public ResponseEntity<StandardError> validation(AddRestauranteException exception,
                                                         HttpServletRequest request) {
         this.standardError.setTimeStamp(Instant.now());
         this.standardError.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -24,6 +24,18 @@ public class ControllerException {
         this.standardError.setPath(request.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(this.standardError);
+    }
+
+    @ExceptionHandler(ControllerNotFoundException.class)
+    public ResponseEntity<StandardError> entityNotFound(ControllerNotFoundException exception,
+                                                        HttpServletRequest request) {
+        this.standardError.setTimeStamp(Instant.now());
+        this.standardError.setStatus(HttpStatus.NOT_FOUND.value());
+        this.standardError.setError("Entity not found");
+        this.standardError.setMessage(exception.getMessage());
+        this.standardError.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(this.standardError);
     }
 
 }
