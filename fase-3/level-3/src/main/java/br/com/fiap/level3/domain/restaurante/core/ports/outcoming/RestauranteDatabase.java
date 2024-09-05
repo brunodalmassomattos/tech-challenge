@@ -12,4 +12,5 @@ public interface RestauranteDatabase {
     List<Restaurante> getRestaurantes();
 
     void save(Restaurante restaurante);
+    void update(Restaurante restaurante);
 }

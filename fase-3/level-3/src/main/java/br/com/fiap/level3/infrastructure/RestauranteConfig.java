@@ -2,6 +2,7 @@ package br.com.fiap.level3.infrastructure;
 
 import br.com.fiap.level3.domain.restaurante.core.RestauranteFacade;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.outcoming.RestauranteDatabase;
 import br.com.fiap.level3.domain.restaurante.infrastructure.RestauranteDatabaseAdapter;
@@ -25,6 +26,12 @@ public class RestauranteConfig {
     @Bean
     @Qualifier("AddRestaurante")
     public AddRestaurante addRestaurante(RestauranteDatabase database) {
+        return new RestauranteFacade(database);
+    }
+
+    @Bean
+    @Qualifier("AlterRestaurante")
+    public AlterRestaurante alterRestaurante(RestauranteDatabase database) {
         return new RestauranteFacade(database);
     }
 }

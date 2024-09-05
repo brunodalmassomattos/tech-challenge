@@ -73,9 +73,29 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
     }
 
     @Override
+    public void update(Restaurante restaurante) {
+        try {
+            this.jdbcTemplate.update(
+                    """
+                                UPDATE restaurantes 
+                                   SET nome = ?, 
+                                       horario_funcionamento = ?, 
+                                       capacidade = ?
+                                 WHERE id = ?
+                            """,
+                    restaurante.getNome(),
+                    restaurante.getHorarioFuncionamento(),
+                    restaurante.getCapacidade(),
+                    restaurante.getId());
+        } catch (DataAccessException e) {
+            System.out.println();
+        }
+    }
+
+    @Override
     public void save(Restaurante restaurante) {
         String enderecoId = addEndereco(restaurante);
-        addRestaurante(restaurante, enderecoId);
+        addRestaurante(restaurante, UUID.fromString(enderecoId));
     }
 
     private String addEndereco(Restaurante restaurante) {
@@ -104,7 +124,7 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
         return generatedKeyHolder.getKeyList().get(0).get("id").toString();
     }
 
-    private void addRestaurante(Restaurante restaurante, String enderecoId) {
+    private void addRestaurante(Restaurante restaurante, UUID enderecoId) {
         try {
             this.jdbcTemplate.update(
                     """
@@ -117,7 +137,7 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
                     restaurante.getTipoRestaurante().getId(),
                     restaurante.getHorarioFuncionamento(),
                     restaurante.getCapacidade(),
-                    UUID.fromString(enderecoId));
+                    enderecoId);
         } catch (DataAccessException e) {
             System.out.println();
         }

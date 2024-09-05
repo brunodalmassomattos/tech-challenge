@@ -1,5 +1,6 @@
 package br.com.fiap.level3.domain.restaurante.core;
 
+import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.exception.AddRestauranteException;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 public class RestauranteFacade implements FindRestaurante, AddRestaurante, AlterRestaurante {
 
-    private RestauranteDatabase database;
+    private final RestauranteDatabase database;
 
     public RestauranteFacade(RestauranteDatabase database) {
         this.database = database;
@@ -21,7 +22,8 @@ public class RestauranteFacade implements FindRestaurante, AddRestaurante, Alter
 
     @Override
     public Optional<Restaurante> getRestauranteById(UUID id) {
-        return this.database.getRestauranteById(id);
+        return Optional.ofNullable(this.database.getRestauranteById(id)
+                .orElseThrow(() -> new ControllerNotFoundException("Restaurante não encontrado!")));
     }
 
     @Override
@@ -42,8 +44,12 @@ public class RestauranteFacade implements FindRestaurante, AddRestaurante, Alter
 
     @Override
     public void alterRestaurante(Restaurante restaurante) {
-        validaDados(restaurante);
-        this.database.save(restaurante);
+        var restautanteSalvo = this.getRestauranteById(restaurante.getId()).get();
+        restautanteSalvo.setNome(restaurante.getNome() == null ? restautanteSalvo.getNome() : restaurante.getNome());
+        restautanteSalvo.setHorarioFuncionamento(restaurante.getHorarioFuncionamento() == null ? restautanteSalvo.getHorarioFuncionamento() : restaurante.getHorarioFuncionamento());
+        restautanteSalvo.setCapacidade(restaurante.getCapacidade() == 0 ? restautanteSalvo.getCapacidade() : restaurante.getCapacidade());
+
+        this.database.update(restautanteSalvo);
     }
 
     private static void validaDados(Restaurante restaurante) {
