@@ -27,7 +27,7 @@ public class RestauranteRowMapper implements RowMapper<Restaurante> {
                 )
                 .endereco(
                         Endereco.builder()
-                                .id(UUID.fromString(rs.getString("id")))
+                                .id(UUID.fromString(rs.getString("endereco_id")))
                                 .logradouro(rs.getString("rua"))
                                 .numero(rs.getString("numero"))
                                 .bairro(rs.getString("bairro"))

@@ -5,9 +5,7 @@ import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco
 import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestauranteDTO;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -19,27 +17,27 @@ public record RestauranteDTO(String id,
                              TipoRestauranteDTO tipoRestaurante,
                              EnderecoDTO endereco) {
 
-    public static RestauranteDTO fromRestaurante(Optional<Restaurante> restaurante) {
+    public static RestauranteDTO fromRestaurante(Restaurante restaurante) {
         return new RestauranteDTO(
-                restaurante.get().getId().toString(),
-                restaurante.get().getNome(),
-                restaurante.get().getHorarioFuncionamento(),
-                restaurante.get().getCapacidade(),
-                restaurante.get().isStatus(),
-                TipoRestauranteDTO.fromTipoRestaurante(restaurante.get().getTipoRestaurante()),
-                EnderecoDTO.fromEndereco(restaurante.get().getEndereco()));
+                restaurante.getId().toString(),
+                restaurante.getNome(),
+                restaurante.getHorarioFuncionamento(),
+                restaurante.getCapacidade(),
+                restaurante.isStatus(),
+                TipoRestauranteDTO.fromTipoRestaurante(restaurante.getTipoRestaurante()),
+                EnderecoDTO.fromEndereco(restaurante.getEndereco()));
     }
 
     public static List<RestauranteDTO> fromRestaurantes(List<Restaurante> restaurantes) {
        return restaurantes
                .stream()
-               .map(restaurante -> RestauranteDTO.fromRestaurante(Optional.ofNullable(restaurante)))
-               .collect(Collectors.toList())
-               ;
+               .map(RestauranteDTO::fromRestaurante)
+               .collect(Collectors.toList());
     }
 
-    public static Restaurante toRestaurante(RestauranteDTO restaurante) {
+    public static Restaurante toRestaurante(String id, RestauranteDTO restaurante) {
         return new Restaurante(
+                (id != null) ? UUID.fromString(id) : null,
                 restaurante.nome,
                 restaurante.horarioFuncionamento,
                 restaurante.capacidade,

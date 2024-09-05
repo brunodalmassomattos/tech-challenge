@@ -2,11 +2,14 @@ package br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante;
 
 import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestaurante;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,5 +34,15 @@ public class Restaurante {
         this.status = status;
         this.tipoRestaurante = tipoRestaurante;
         this.endereco = endereco;
+    }
+
+    public Restaurante(UUID id,
+                       String nome,
+                       String horarioFuncionamento,
+                       int capacidade) {
+        this.id = id;
+        this.nome = nome;
+        this.horarioFuncionamento = horarioFuncionamento;
+        this.capacidade = capacidade;
     }
 }
