@@ -1,9 +1,9 @@
-package br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante;
+package br.com.fiap.level3.domain.restaurante.core.model.restaurante;
 
-import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.EnderecoDTO;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestaurante;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestauranteDTO;
+import br.com.fiap.level3.domain.restaurante.core.model.endereco.Endereco;
+import br.com.fiap.level3.domain.restaurante.core.model.endereco.EnderecoDTO;
+import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestauranteDTO;
 
 import java.util.List;
 import java.util.UUID;

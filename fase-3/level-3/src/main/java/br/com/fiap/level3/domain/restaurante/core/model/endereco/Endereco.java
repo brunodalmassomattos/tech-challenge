@@ -1,5 +1,6 @@
-package br.com.fiap.level3.domain.restaurante.core.domain.model.endereco;
+package br.com.fiap.level3.domain.restaurante.core.model.endereco;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

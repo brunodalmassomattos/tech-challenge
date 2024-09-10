@@ -1,7 +1,7 @@
-package br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante;
+package br.com.fiap.level3.domain.restaurante.core.model.restaurante;
 
-import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.endereco.Endereco;
+import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestaurante;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
