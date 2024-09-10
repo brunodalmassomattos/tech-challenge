@@ -1,4 +1,4 @@
-package br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante;
+package br.com.fiap.level3.domain.restaurante.core.model.restaurante;
 
 import java.util.UUID;
 

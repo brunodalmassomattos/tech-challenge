@@ -1,6 +1,7 @@
 package br.com.fiap.level3.domain.restaurante.core.ports.incoming;
 
-import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestaurante;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,4 +12,5 @@ public interface FindRestaurante {
 
     List<Restaurante> getRestauranteByNome(String nome);
     List<Restaurante> getRestaurantes();
+    List<Restaurante> getRestaurantesByTipoRestaurante(TipoRestaurante tipoRestaurante);
 }

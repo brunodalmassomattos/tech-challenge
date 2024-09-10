@@ -1,10 +1,12 @@
 package br.com.fiap.level3.domain.restaurante.application;
 
-import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.AlterarRestauranteDTO;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.RestauranteDTO;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.AlterarRestauranteDTO;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.RestauranteDTO;
+import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.DeleteRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
 
 import jakarta.validation.Valid;
@@ -18,7 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/restaurantes")
+@RequestMapping("/restaurantes/v1")
 public class RestauranteController {
 
     @Qualifier("FindRestaurante")
@@ -30,12 +32,17 @@ public class RestauranteController {
     @Qualifier("AlterRestaurante")
     private final AlterRestaurante alterRestaurante;
 
+    @Qualifier("DeleteRestaurante")
+    private final DeleteRestaurante deleteRestaurante;
+
     public RestauranteController(FindRestaurante findRestaurante,
                                  AddRestaurante addRestaurante,
-                                 AlterRestaurante alterRestaurante) {
+                                 AlterRestaurante alterRestaurante,
+                                 DeleteRestaurante deleteRestaurante) {
         this.findRestaurante = findRestaurante;
         this.addRestaurante = addRestaurante;
         this.alterRestaurante = alterRestaurante;
+        this.deleteRestaurante = deleteRestaurante;
     }
 
     @GetMapping()
@@ -65,6 +72,21 @@ public class RestauranteController {
         return ResponseEntity.ok(RestauranteDTO.fromRestaurantes(restaurantes));
     }
 
+    @GetMapping("/tipo-restaurante")
+    public ResponseEntity<List<RestauranteDTO>> buscarRestaurantePorTipo(
+            @RequestParam(required = false) String id,
+            @RequestParam(required = false) String descricao) {
+
+        List<Restaurante> restaurantes = this.findRestaurante.getRestaurantesByTipoRestaurante(
+                TipoRestauranteDTO.toTipoRestaurante(id, descricao));
+
+        if (restaurantes.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(RestauranteDTO.fromRestaurantes(restaurantes));
+    }
+
     @PostMapping
     public ResponseEntity<String> adicionarRestaurante(@RequestBody RestauranteDTO restaurante) {
         this.addRestaurante.save(RestauranteDTO.toRestaurante(null, restaurante));
@@ -78,4 +100,11 @@ public class RestauranteController {
         this.alterRestaurante.alterRestaurante(AlterarRestauranteDTO.toRestaurante(id, restaurante));
         return new ResponseEntity<>("Restaurante Alterado", HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> alteraRestaurante(@PathVariable String id) {
+        this.deleteRestaurante.deleteRestaurante(UUID.fromString(id));
+        return new ResponseEntity<>("Restaurante Alterado", HttpStatus.NO_CONTENT);
+    }
+
 }
