@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/restaurantes/v1")
+@RequestMapping("/v1/restaurantes")
 public class RestauranteController {
 
     @Qualifier("FindRestaurante")
@@ -102,7 +102,7 @@ public class RestauranteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> alteraRestaurante(@PathVariable String id) {
+    public ResponseEntity<String> deletaRestaurante(@PathVariable String id) {
         this.deleteRestaurante.deleteRestaurante(UUID.fromString(id));
         return new ResponseEntity<>("Restaurante Alterado", HttpStatus.NO_CONTENT);
     }
