@@ -1,4 +1,4 @@
-package br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante;
+package br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
