@@ -1,4 +1,4 @@
-package br.com.fiap.level3.domain.restaurante.core.domain.model.endereco;
+package br.com.fiap.level3.domain.restaurante.core.model.endereco;
 
 public record EnderecoDTO(String id,
                           String cep,
@@ -16,7 +16,7 @@ public record EnderecoDTO(String id,
                 endereco.getNumero(),
                 endereco.getBairro(),
                 endereco.getCidade(),
-                endereco.getUf());
+                endereco.getEstado());
     }
 
 }

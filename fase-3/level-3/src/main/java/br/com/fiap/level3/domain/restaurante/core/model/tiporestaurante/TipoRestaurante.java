@@ -1,4 +1,4 @@
-package br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante;
+package br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,4 +14,8 @@ import java.util.UUID;
 public class TipoRestaurante {
     private UUID id;
     private String descricao;
+
+    public TipoRestaurante(UUID id) {
+        this.id = id;
+    }
 }
