@@ -4,6 +4,7 @@ import br.com.fiap.level3.domain.tiporestaurante.core.ports.TipoRestauranteFacad
 import br.com.fiap.level3.domain.tiporestaurante.core.ports.incoming.AddTipoRestaurante;
 import br.com.fiap.level3.domain.tiporestaurante.core.ports.incoming.AlterTipoRestaurante;
 import br.com.fiap.level3.domain.tiporestaurante.core.ports.incoming.DeleteTipoRestaurante;
+import br.com.fiap.level3.domain.tiporestaurante.core.ports.incoming.FindTipoRestaurante;
 import br.com.fiap.level3.domain.tiporestaurante.core.ports.outcoming.TipoRestauranteDatabase;
 import br.com.fiap.level3.domain.tiporestaurante.infrastructure.TipoRestauranteDatabaseAdapter;
 import br.com.fiap.level3.domain.tiporestaurante.infrastructure.TipoRestauranteRepository;
@@ -14,6 +15,11 @@ public class TipoRestauranteDomainConfig {
     @Bean
     public TipoRestauranteDatabase tipoRestauranteDatabase(TipoRestauranteRepository tipoRestauranteRepository) {
         return new TipoRestauranteDatabaseAdapter(tipoRestauranteRepository);
+    }
+
+    @Bean
+    public FindTipoRestaurante findTipoRestaurante(TipoRestauranteDatabase tipoRestauranteDatabase) {
+        return new TipoRestauranteFacade(tipoRestauranteDatabase);
     }
 
     @Bean
