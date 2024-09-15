@@ -1,5 +1,10 @@
 package br.com.fiap.level3.domain.restaurante.application;
 
+import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
+import br.com.fiap.level3.domain.restaurante.core.EnderecoFacade;
+import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.AlterarEnderecoDTO;
+import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco;
+import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.EnderecoDTO;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.AlterarRestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.RestauranteDTO;
@@ -30,12 +35,16 @@ public class RestauranteController {
     @Qualifier("AlterRestaurante")
     private final AlterRestaurante alterRestaurante;
 
+    @Qualifier("AlterEndereco")
+    private final EnderecoFacade enderecoFacade;
+
     public RestauranteController(FindRestaurante findRestaurante,
                                  AddRestaurante addRestaurante,
-                                 AlterRestaurante alterRestaurante) {
+                                 AlterRestaurante alterRestaurante, EnderecoFacade enderecoFacade) {
         this.findRestaurante = findRestaurante;
         this.addRestaurante = addRestaurante;
         this.alterRestaurante = alterRestaurante;
+        this.enderecoFacade = enderecoFacade;
     }
 
     @GetMapping()
@@ -77,5 +86,22 @@ public class RestauranteController {
             @Valid @RequestBody AlterarRestauranteDTO restaurante) {
         this.alterRestaurante.alterRestaurante(AlterarRestauranteDTO.toRestaurante(id, restaurante));
         return new ResponseEntity<>("Restaurante Alterado", HttpStatus.OK);
+    }
+    @PatchMapping("/{idRestaurante}/endereco/{idEndereco}")
+    public ResponseEntity<String> alteraEndereco(
+            @PathVariable String idRestaurante,
+            @PathVariable String idEndereco,
+            @Valid @RequestBody AlterarEnderecoDTO enderecoDTO) {
+        try {
+            Endereco endereco = AlterarEnderecoDTO.toEndereco(idEndereco, enderecoDTO);
+
+            enderecoFacade.alterEndereco(UUID.fromString(idEndereco), endereco);
+
+            return new ResponseEntity<>("Endereço atualizado com sucesso", HttpStatus.OK);
+        } catch (ControllerNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Erro ao atualizar o endereço", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
