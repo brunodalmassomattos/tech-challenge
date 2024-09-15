@@ -190,4 +190,9 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
             return Optional.empty();
         }
     }
+    @Override
+    public void updateTipoRestaurante(Restaurante restaurante) {
+        final String SQL_UPDATE_TIPO = "UPDATE restaurantes SET tipo_restaurante_id = ? WHERE id = ?";
+        jdbcTemplate.update(SQL_UPDATE_TIPO, restaurante.getTipoRestaurante().getId(), restaurante.getId());
+    }
 }

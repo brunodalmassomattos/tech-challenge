@@ -8,6 +8,7 @@ import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.AlterarRestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.RestauranteDTO;
+import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.AlterarTipoRestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.*;
 

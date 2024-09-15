@@ -16,4 +16,5 @@ public interface RestauranteDatabase {
     void save(Restaurante restaurante);
     void update(Restaurante restaurante);
     void updateEndereco(Endereco endereco);
+    void updateTipoRestaurante(Restaurante restaurante);
 }

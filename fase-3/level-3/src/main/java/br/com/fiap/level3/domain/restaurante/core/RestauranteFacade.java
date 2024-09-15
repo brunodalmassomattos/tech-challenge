@@ -3,6 +3,7 @@ package br.com.fiap.level3.domain.restaurante.core;
 import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.exception.AddRestauranteException;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
@@ -64,5 +65,14 @@ public class RestauranteFacade implements FindRestaurante, AddRestaurante, Alter
         if (restaurante.getEndereco() == null) {
             throw new AddRestauranteException("Endereço é obrigatorio");
         }
+    }
+    public void alterTipoRestaurante(UUID idRestaurante, TipoRestaurante tipoRestaurante) {
+        Optional<Restaurante> restaurante = database.getRestauranteById(idRestaurante);
+        if (restaurante.isEmpty()) {
+            throw new ControllerNotFoundException("Restaurante não encontrado!");
+        }
+
+        restaurante.get().setTipoRestaurante(tipoRestaurante);
+        database.updateTipoRestaurante(restaurante.get());
     }
 }
