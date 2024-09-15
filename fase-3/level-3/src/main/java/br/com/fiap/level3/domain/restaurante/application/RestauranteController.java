@@ -9,6 +9,7 @@ import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Alter
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.RestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterEndereco;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
 
@@ -36,15 +37,15 @@ public class RestauranteController {
     private final AlterRestaurante alterRestaurante;
 
     @Qualifier("AlterEndereco")
-    private final EnderecoFacade enderecoFacade;
+    private final AlterEndereco alterEndereco;
 
     public RestauranteController(FindRestaurante findRestaurante,
                                  AddRestaurante addRestaurante,
-                                 AlterRestaurante alterRestaurante, EnderecoFacade enderecoFacade) {
+                                 AlterRestaurante alterRestaurante, AlterEndereco alterEndereco) {
         this.findRestaurante = findRestaurante;
         this.addRestaurante = addRestaurante;
         this.alterRestaurante = alterRestaurante;
-        this.enderecoFacade = enderecoFacade;
+        this.alterEndereco = alterEndereco;
     }
 
     @GetMapping()
@@ -95,7 +96,7 @@ public class RestauranteController {
         try {
             Endereco endereco = AlterarEnderecoDTO.toEndereco(idEndereco, enderecoDTO);
 
-            enderecoFacade.alterEndereco(UUID.fromString(idEndereco), endereco);
+            this.alterEndereco.alterEndereco(UUID.fromString(idEndereco), endereco);
 
             return new ResponseEntity<>("Endereço atualizado com sucesso", HttpStatus.OK);
         } catch (ControllerNotFoundException e) {
