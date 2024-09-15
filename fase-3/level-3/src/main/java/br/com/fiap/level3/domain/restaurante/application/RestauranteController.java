@@ -8,10 +8,8 @@ import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.AlterarRestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.RestauranteDTO;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterEndereco;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterRestaurante;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.*;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,23 +27,24 @@ public class RestauranteController {
 
     @Qualifier("FindRestaurante")
     private final FindRestaurante findRestaurante;
-
     @Qualifier("AddRestaurante")
     private final AddRestaurante addRestaurante;
-
     @Qualifier("AlterRestaurante")
     private final AlterRestaurante alterRestaurante;
-
     @Qualifier("AlterEndereco")
     private final AlterEndereco alterEndereco;
+    @Qualifier("AlterTipoRestaurante")
+    private final AlterTipoRestaurante alterTipoRestaurante;
+
 
     public RestauranteController(FindRestaurante findRestaurante,
                                  AddRestaurante addRestaurante,
-                                 AlterRestaurante alterRestaurante, AlterEndereco alterEndereco) {
+                                 AlterRestaurante alterRestaurante, AlterEndereco alterEndereco, AlterTipoRestaurante alterTipoRestaurante) {
         this.findRestaurante = findRestaurante;
         this.addRestaurante = addRestaurante;
         this.alterRestaurante = alterRestaurante;
         this.alterEndereco = alterEndereco;
+        this.alterTipoRestaurante = alterTipoRestaurante;
     }
 
     @GetMapping()
@@ -103,6 +102,21 @@ public class RestauranteController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("Erro ao atualizar o endereço", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PatchMapping("/{idRestaurante}/tipo/{idTipoRestaurante}")
+    public ResponseEntity<String> alteraTipoRestaurante(
+            @PathVariable String idRestaurante,
+            @PathVariable String idTipoRestaurante,
+            @Valid @RequestBody AlterarTipoRestauranteDTO tipoRestauranteDTO) {
+        try {
+            TipoRestaurante tipoRestaurante = AlterarTipoRestauranteDTO.toTipoRestaurante(idTipoRestaurante, tipoRestauranteDTO);
+            this.alterTipoRestaurante.alterTipoRestaurante(UUID.fromString(idRestaurante), tipoRestaurante);
+            return new ResponseEntity<>("Tipo de restaurante atualizado com sucesso", HttpStatus.OK);
+        } catch (ControllerNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Erro ao atualizar o tipo de restaurante", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
