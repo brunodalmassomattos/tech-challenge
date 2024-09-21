@@ -13,14 +13,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
+import br.com.fiap.level3.domain.reserva.core.model.restaurante.Restaurante;
+import java.time.LocalTime;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
-
+import br.com.fiap.level3.domain.reserva.core.model.reserva.ReservaRestauranteDTO;
+import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import br.com.fiap.level3.domain.reserva.core.model.usuario.Usuario;
 
 public class ReservaFacadeTest {
 
@@ -222,5 +227,219 @@ public class ReservaFacadeTest {
         assertThatThrownBy(() -> reservaFacade.createNewReserva(novaReserva))
                 .isInstanceOf(ControllerNotFoundException.class)
                 .hasMessage("Deve ser informado horário com pelo menos 30 minutos de antececência!");
+    }
+
+    @Test
+    void listarReservasPorRestaurante_Success() {
+        // Arrange
+        UUID restauranteId = UUID.randomUUID();
+        Restaurante restaurante = new Restaurante(restauranteId, "Test Restaurant", 10);
+        Reserva reserva1 = new Reserva(UUID.randomUUID(), LocalDate.now(), LocalTime.now(), 2, restaurante, new Usuario(), StatusEnum.CRIADA.getDescricao());
+        Reserva reserva2 = new Reserva(UUID.randomUUID(), LocalDate.now(), LocalTime.now().plusHours(1), 3, restaurante, new Usuario(), StatusEnum.CRIADA.getDescricao());
+
+        when(reservaDatabase.listarReservasPorRestaurante(restauranteId)).thenReturn(Arrays.asList(reserva1, reserva2));
+        when(reservaDatabase.getCapacidadeRestaurante(restauranteId)).thenReturn(10);
+
+        // Act
+        ReservaRestauranteDTO result = reservaFacade.listarReservasPorRestaurante(restauranteId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.reservas().size());
+        assertEquals(5, result.totalPessoas());
+        assertEquals(10, result.capacidadeRestaurante());
+        assertTrue(result.podeAceitarMaisReservas());
+    }
+
+    @Test
+    void listarReservasPorRestaurante_EmptyList() {
+        // Arrange
+        UUID restauranteId = UUID.randomUUID();
+        when(reservaDatabase.listarReservasPorRestaurante(restauranteId)).thenReturn(Arrays.asList());
+        when(reservaDatabase.getCapacidadeRestaurante(restauranteId)).thenReturn(10);
+
+        // Act
+        ReservaRestauranteDTO result = reservaFacade.listarReservasPorRestaurante(restauranteId);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.reservas().isEmpty());
+        assertEquals(0, result.totalPessoas());
+        assertEquals(10, result.capacidadeRestaurante());
+        assertTrue(result.podeAceitarMaisReservas());
+    }
+
+    @Test
+    void listarReservasPorRestaurante_RestauranteNaoExiste() {
+        // Arrange
+        UUID restauranteId = UUID.randomUUID();
+        when(reservaDatabase.listarReservasPorRestaurante(restauranteId)).thenReturn(Collections.emptyList());
+        when(reservaDatabase.getCapacidadeRestaurante(restauranteId)).thenReturn(0);
+
+        // Act
+        ReservaRestauranteDTO result = reservaFacade.listarReservasPorRestaurante(restauranteId);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.reservas().isEmpty());
+        assertEquals(0, result.totalPessoas());
+        assertEquals(0, result.capacidadeRestaurante());
+        assertFalse(result.podeAceitarMaisReservas()); // Mudamos para assertFalse
+    }
+
+    @Test
+    void listarReservasPorRestaurante_CapacidadeMaximaAtingida() {
+        // Arrange
+        UUID restauranteId = UUID.randomUUID();
+        Restaurante restaurante = new Restaurante(restauranteId, "Test Restaurant", 10);
+        Reserva reserva = new Reserva(UUID.randomUUID(), LocalDate.now(), LocalTime.now(), 10, restaurante, new Usuario(), StatusEnum.CRIADA.getDescricao());
+
+        when(reservaDatabase.listarReservasPorRestaurante(restauranteId)).thenReturn(Collections.singletonList(reserva));
+        when(reservaDatabase.getCapacidadeRestaurante(restauranteId)).thenReturn(10);
+
+        // Act
+        ReservaRestauranteDTO result = reservaFacade.listarReservasPorRestaurante(restauranteId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.reservas().size());
+        assertEquals(10, result.totalPessoas());
+        assertEquals(10, result.capacidadeRestaurante());
+        assertFalse(result.podeAceitarMaisReservas());
+    }
+
+    @Test
+    void listarReservaPorId_Success() {
+        // Arrange
+        UUID reservaId = UUID.randomUUID();
+        Reserva reserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CRIADA.getDescricao());
+
+        when(reservaDatabase.getReservaPorId(reservaId)).thenReturn(Optional.of(reserva));
+
+        // Act
+        Optional<ReservaDTO> result = reservaFacade.listarReservaPorId(reservaId);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals(reservaId, result.get().id()); // Comparando UUID diretamente
+        assertEquals(StatusEnum.CRIADA.getDescricao(), result.get().status());
+    }
+
+    @Test
+    void listarReservaPorId_NotFound() {
+        // Arrange
+        UUID reservaId = UUID.randomUUID();
+        when(reservaDatabase.getReservaPorId(reservaId)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<ReservaDTO> result = reservaFacade.listarReservaPorId(reservaId);
+
+        // Assert
+        assertFalse(result.isPresent());
+    }
+    @Test
+    void listarReservaPorId_ReservaComStatusCancelado() {
+        // Arrange
+        UUID reservaId = UUID.randomUUID();
+        Reserva reserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CANCELADA.getDescricao());
+
+        when(reservaDatabase.getReservaPorId(reservaId)).thenReturn(Optional.of(reserva));
+
+        // Act
+        Optional<ReservaDTO> result = reservaFacade.listarReservaPorId(reservaId);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals(reservaId, result.get().id());
+        assertEquals(StatusEnum.CANCELADA.getDescricao(), result.get().status());
+    }
+
+    @Test
+    void listarReservaPorId_ReservaComDataPassada() {
+        // Arrange
+        UUID reservaId = UUID.randomUUID();
+        Reserva reserva = new Reserva(reservaId, LocalDate.now().minusDays(1), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CONCLUIDA.getDescricao());
+
+        when(reservaDatabase.getReservaPorId(reservaId)).thenReturn(Optional.of(reserva));
+
+        // Act
+        Optional<ReservaDTO> result = reservaFacade.listarReservaPorId(reservaId);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals(reservaId, result.get().id());
+        assertEquals(StatusEnum.CONCLUIDA.getDescricao(), result.get().status());
+        assertTrue(result.get().data().isBefore(LocalDate.now()));
+    }
+
+
+    @Test
+    void atualizarStatusReserva_Success() {
+        // Arrange
+        UUID reservaId = UUID.randomUUID();
+        Reserva reserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CRIADA.getDescricao());
+        Reserva updatedReserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CONFIRMADA.getDescricao());
+
+        when(reservaDatabase.atualizarStatusReserva(reservaId, StatusEnum.CONFIRMADA)).thenReturn(Optional.of(updatedReserva));
+
+        // Act
+        Optional<ReservaDTO> result = reservaFacade.atualizarStatusReserva(reservaId, StatusEnum.CONFIRMADA);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals(StatusEnum.CONFIRMADA.getDescricao(), result.get().status());
+    }
+
+    @Test
+    void atualizarStatusReserva_NotFound() {
+        // Arrange
+        UUID reservaId = UUID.randomUUID();
+        when(reservaDatabase.atualizarStatusReserva(reservaId, StatusEnum.CONFIRMADA)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<ReservaDTO> result = reservaFacade.atualizarStatusReserva(reservaId, StatusEnum.CONFIRMADA);
+
+        // Assert
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    void atualizarStatusReserva_DeConfirmadaParaCancelada() {
+        // Arrange
+        UUID reservaId = UUID.randomUUID();
+        Reserva reservaOriginal = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CONFIRMADA.getDescricao());
+        Reserva reservaAtualizada = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CANCELADA.getDescricao());
+
+        when(reservaDatabase.atualizarStatusReserva(reservaId, StatusEnum.CANCELADA)).thenReturn(Optional.of(reservaAtualizada));
+
+        // Act
+        Optional<ReservaDTO> result = reservaFacade.atualizarStatusReserva(reservaId, StatusEnum.CANCELADA);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals(StatusEnum.CANCELADA.getDescricao(), result.get().status());
+    }
+
+    @Test
+    void atualizarStatusReserva_ParaStatusInvalido() {
+        // Arrange
+        UUID reservaId = UUID.randomUUID();
+        when(reservaDatabase.atualizarStatusReserva(reservaId, null)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> reservaFacade.atualizarStatusReserva(reservaId, null));
+    }
+
+    @Test
+    void atualizarStatusReserva_ReservaNaoExistente() {
+        // Arrange
+        UUID reservaId = UUID.randomUUID();
+        when(reservaDatabase.atualizarStatusReserva(reservaId, StatusEnum.CONFIRMADA)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<ReservaDTO> result = reservaFacade.atualizarStatusReserva(reservaId, StatusEnum.CONFIRMADA);
+
+        // Assert
+        assertFalse(result.isPresent());
     }
 }
