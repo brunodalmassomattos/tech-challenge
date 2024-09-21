@@ -1,5 +1,6 @@
 package br.com.fiap.level3.domain;
 
+import br.com.fiap.level3.domain.reserva.core.model.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "reservas")
-public class Reserva {
+public class ReservaRestaurante {
     @Id
     @GeneratedValue
     private UUID id;

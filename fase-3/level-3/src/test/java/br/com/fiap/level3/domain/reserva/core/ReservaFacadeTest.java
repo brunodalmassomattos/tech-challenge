@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import br.com.fiap.level3.domain.reserva.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.reserva.core.model.restaurante.RestauranteReserva;
 import java.time.LocalTime;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -233,7 +233,7 @@ public class ReservaFacadeTest {
     void listarReservasPorRestaurante_Success() {
         // Arrange
         UUID restauranteId = UUID.randomUUID();
-        Restaurante restaurante = new Restaurante(restauranteId, "Test Restaurant", 10);
+        RestauranteReserva restaurante = new RestauranteReserva(restauranteId, "Test Restaurant", 10);
         Reserva reserva1 = new Reserva(UUID.randomUUID(), LocalDate.now(), LocalTime.now(), 2, restaurante, new Usuario(), StatusEnum.CRIADA.getDescricao());
         Reserva reserva2 = new Reserva(UUID.randomUUID(), LocalDate.now(), LocalTime.now().plusHours(1), 3, restaurante, new Usuario(), StatusEnum.CRIADA.getDescricao());
 
@@ -291,7 +291,7 @@ public class ReservaFacadeTest {
     void listarReservasPorRestaurante_CapacidadeMaximaAtingida() {
         // Arrange
         UUID restauranteId = UUID.randomUUID();
-        Restaurante restaurante = new Restaurante(restauranteId, "Test Restaurant", 10);
+        RestauranteReserva restaurante = new RestauranteReserva(restauranteId, "Test Restaurant", 10);
         Reserva reserva = new Reserva(UUID.randomUUID(), LocalDate.now(), LocalTime.now(), 10, restaurante, new Usuario(), StatusEnum.CRIADA.getDescricao());
 
         when(reservaDatabase.listarReservasPorRestaurante(restauranteId)).thenReturn(Collections.singletonList(reserva));
@@ -312,7 +312,7 @@ public class ReservaFacadeTest {
     void listarReservaPorId_Success() {
         // Arrange
         UUID reservaId = UUID.randomUUID();
-        Reserva reserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CRIADA.getDescricao());
+        Reserva reserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new RestauranteReserva(), new Usuario(), StatusEnum.CRIADA.getDescricao());
 
         when(reservaDatabase.getReservaPorId(reservaId)).thenReturn(Optional.of(reserva));
 
@@ -341,7 +341,7 @@ public class ReservaFacadeTest {
     void listarReservaPorId_ReservaComStatusCancelado() {
         // Arrange
         UUID reservaId = UUID.randomUUID();
-        Reserva reserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CANCELADA.getDescricao());
+        Reserva reserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new RestauranteReserva(), new Usuario(), StatusEnum.CANCELADA.getDescricao());
 
         when(reservaDatabase.getReservaPorId(reservaId)).thenReturn(Optional.of(reserva));
 
@@ -358,7 +358,7 @@ public class ReservaFacadeTest {
     void listarReservaPorId_ReservaComDataPassada() {
         // Arrange
         UUID reservaId = UUID.randomUUID();
-        Reserva reserva = new Reserva(reservaId, LocalDate.now().minusDays(1), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CONCLUIDA.getDescricao());
+        Reserva reserva = new Reserva(reservaId, LocalDate.now().minusDays(1), LocalTime.now(), 2, new RestauranteReserva(), new Usuario(), StatusEnum.CONCLUIDA.getDescricao());
 
         when(reservaDatabase.getReservaPorId(reservaId)).thenReturn(Optional.of(reserva));
 
@@ -377,8 +377,8 @@ public class ReservaFacadeTest {
     void atualizarStatusReserva_Success() {
         // Arrange
         UUID reservaId = UUID.randomUUID();
-        Reserva reserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CRIADA.getDescricao());
-        Reserva updatedReserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CONFIRMADA.getDescricao());
+        Reserva reserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new RestauranteReserva(), new Usuario(), StatusEnum.CRIADA.getDescricao());
+        Reserva updatedReserva = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new RestauranteReserva(), new Usuario(), StatusEnum.CONFIRMADA.getDescricao());
 
         when(reservaDatabase.atualizarStatusReserva(reservaId, StatusEnum.CONFIRMADA)).thenReturn(Optional.of(updatedReserva));
 
@@ -407,8 +407,8 @@ public class ReservaFacadeTest {
     void atualizarStatusReserva_DeConfirmadaParaCancelada() {
         // Arrange
         UUID reservaId = UUID.randomUUID();
-        Reserva reservaOriginal = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CONFIRMADA.getDescricao());
-        Reserva reservaAtualizada = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new Restaurante(), new Usuario(), StatusEnum.CANCELADA.getDescricao());
+        Reserva reservaOriginal = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new RestauranteReserva(), new Usuario(), StatusEnum.CONFIRMADA.getDescricao());
+        Reserva reservaAtualizada = new Reserva(reservaId, LocalDate.now(), LocalTime.now(), 2, new RestauranteReserva(), new Usuario(), StatusEnum.CANCELADA.getDescricao());
 
         when(reservaDatabase.atualizarStatusReserva(reservaId, StatusEnum.CANCELADA)).thenReturn(Optional.of(reservaAtualizada));
 

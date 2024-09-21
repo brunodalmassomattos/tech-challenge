@@ -2,7 +2,7 @@ package br.com.fiap.level3.domain.reserva.infrastructure;
 
 import br.com.fiap.level3.domain.reserva.core.model.enums.StatusEnum;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.Reserva;
-import br.com.fiap.level3.domain.reserva.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.reserva.core.model.restaurante.RestauranteReserva;
 import br.com.fiap.level3.domain.reserva.core.model.usuario.Usuario;
 import br.com.fiap.level3.domain.reserva.core.ports.outgoing.ReservaDatabase;
 import jakarta.persistence.EntityManager;
@@ -63,8 +63,8 @@ public class ReservaDatabaseAdapter implements ReservaDatabase {
     }
 
     @Override
-    public Optional<Restaurante> getRestauranteById(UUID id) {
-        return Optional.ofNullable(entityManager.find(Restaurante.class, id));
+    public Optional<RestauranteReserva> getRestauranteById(UUID id) {
+        return Optional.ofNullable(entityManager.find(RestauranteReserva.class, id));
     }
 
     @Override
@@ -87,7 +87,7 @@ public class ReservaDatabaseAdapter implements ReservaDatabase {
     public int getCapacidadeRestaurante(UUID restauranteId) {
         String query = """
                 SELECT r.capacidade
-                FROM Restaurante r
+                FROM RestauranteReserva r
                 WHERE r.id = :restauranteId
                 """;
 

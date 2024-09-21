@@ -5,7 +5,7 @@ import br.com.fiap.level3.domain.reserva.core.model.enums.StatusEnum;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.Reserva;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.ReservaDTO;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.ReservaRestauranteDTO;
-import br.com.fiap.level3.domain.reserva.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.reserva.core.model.restaurante.RestauranteReserva;
 import br.com.fiap.level3.domain.reserva.core.model.usuario.Usuario;
 import br.com.fiap.level3.domain.reserva.core.ports.incoming.CreateNewReserva;
 import br.com.fiap.level3.domain.reserva.core.ports.outgoing.ReservaDatabase;
@@ -24,7 +24,7 @@ public class ReservaFacade implements CreateNewReserva {
     @Override
     public ReservaDTO createNewReserva(ReservaDTO reservaDTO) {
         Usuario usuario = getUsuarioById(reservaDTO.usuarioId());
-        Restaurante restaurante = getRestauranteById(reservaDTO.restauranteId());
+        RestauranteReserva restaurante = getRestauranteById(reservaDTO.restauranteId());
 
         Reserva reserva = Reserva.criarReserva(reservaDTO, restaurante, usuario, StatusEnum.CRIADA);
 
@@ -40,7 +40,7 @@ public class ReservaFacade implements CreateNewReserva {
                        .orElseThrow(() -> new ControllerNotFoundException("Usuário não encontrado para o ID: " + usuarioId));
     }
 
-    private Restaurante getRestauranteById(UUID restauranteId) {
+    private RestauranteReserva getRestauranteById(UUID restauranteId) {
         return reservaDatabase.getRestauranteById(restauranteId)
                        .orElseThrow(() -> new ControllerNotFoundException("Restaurante não encontrado para o ID: " + restauranteId));
     }
@@ -55,7 +55,7 @@ public class ReservaFacade implements CreateNewReserva {
         }
     }
 
-    private void atingiuCapacidadeRestaurante(Restaurante restaurante, Reserva novaReserva) {
+    private void atingiuCapacidadeRestaurante(RestauranteReserva restaurante, Reserva novaReserva) {
 
         Long quantidadeLugaresOcupados = reservaDatabase.getQuantidadeLugaresReservadosByRestaurante(restaurante.getId());
         int totalLugaresOcupados = Integer.sum(novaReserva.getQuantidadePessoas(), quantidadeLugaresOcupados.intValue());

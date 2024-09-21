@@ -1,5 +1,6 @@
 package br.com.fiap.level3.domain;
 
+import br.com.fiap.level3.domain.reserva.core.model.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.Data;
 
