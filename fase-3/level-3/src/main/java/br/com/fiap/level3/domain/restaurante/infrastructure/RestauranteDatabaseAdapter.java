@@ -2,6 +2,8 @@ package br.com.fiap.level3.domain.restaurante.infrastructure;
 
 import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco;
 import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.outcoming.RestauranteDatabase;
 import br.com.fiap.level3.domain.restaurante.infrastructure.mapper.RestauranteRowMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +15,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class RestauranteDatabaseAdapter implements RestauranteDatabase {
@@ -31,6 +36,7 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
                                         LEFT JOIN tipos_restaurantes tr ON r.tipo_restaurante_id = tr.id
                                         LEFT JOIN enderecos e ON r.endereco_id = e.id
                                        WHERE r.id = ?
+                                         AND r.status = true
                                     """,
                             new RestauranteRowMapper(),
                             id));
@@ -43,15 +49,52 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
     public List<Restaurante> getRestauranteByNome(String nome) {
         try {
             return jdbcTemplate.query(
-                            """
-                                      SELECT *
-                                        FROM restaurantes r
-                                        LEFT JOIN tipos_restaurantes tr ON r.tipo_restaurante_id = tr.id
-                                        LEFT JOIN enderecos e ON r.endereco_id = e.id
-                                       WHERE r.nome like ?
-                                    """,
-                            new Object[] { "%" + nome.trim() + "%"},
-                            new RestauranteRowMapper());
+                    """
+                              SELECT *
+                                FROM restaurantes r
+                                LEFT JOIN tipos_restaurantes tr ON r.tipo_restaurante_id = tr.id
+                                LEFT JOIN enderecos e ON r.endereco_id = e.id
+                               WHERE r.nome like ?
+                                 AND r.status = true
+                            """,
+                    new Object[]{"%" + nome.trim() + "%"},
+                    new RestauranteRowMapper());
+        } catch (DataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public List<Restaurante> getRestaurantesByTipoRestauranteById(TipoRestaurante tipoRestaurante) {
+        try {
+            return jdbcTemplate.query(
+                    """
+                              SELECT *
+                                FROM restaurantes r
+                                LEFT JOIN tipos_restaurantes tr ON r.tipo_restaurante_id = tr.id
+                                LEFT JOIN enderecos e ON r.endereco_id = e.id
+                               WHERE r.tipo_restaurante_id = ?
+                            """,
+                    new RestauranteRowMapper(),
+                    tipoRestaurante.getId());
+        } catch (DataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public List<Restaurante> getRestaurantesByTipoRestauranteByDescricao(TipoRestaurante tipoRestaurante) {
+        try {
+            return jdbcTemplate.query(
+                    """
+                              SELECT *
+                                FROM restaurantes r
+                                LEFT JOIN tipos_restaurantes tr ON r.tipo_restaurante_id = tr.id
+                                LEFT JOIN enderecos e ON r.endereco_id = e.id
+                               WHERE tr.descricao like ?
+                            """,
+                    new Object[]{"%" + tipoRestaurante.getDescricao().trim() + "%"},
+                    new RestauranteRowMapper());
         } catch (DataAccessException e) {
             return new ArrayList<>();
         }
@@ -88,6 +131,21 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
                     restaurante.getHorarioFuncionamento(),
                     restaurante.getCapacidade(),
                     restaurante.getId());
+        } catch (DataAccessException e) {
+            System.out.println();
+        }
+    }
+
+    @Override
+    public void delete(UUID id) {
+        try {
+            this.jdbcTemplate.update(
+                    """
+                            UPDATE restaurantes 
+                               SET status = false 
+                             WHERE id = ?
+                        """,
+                    id);
         } catch (DataAccessException e) {
             System.out.println();
         }

@@ -1,16 +1,13 @@
 package br.com.fiap.level3.domain.restaurante.application;
 
-import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
-import br.com.fiap.level3.domain.restaurante.core.EnderecoFacade;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.AlterarEnderecoDTO;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.EnderecoDTO;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.AlterarRestauranteDTO;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.RestauranteDTO;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.AlterarTipoRestauranteDTO;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestaurante;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.*;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.AlterarRestauranteDTO;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.RestauranteDTO;
+import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestauranteDTO;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.DeleteRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,13 +20,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/restaurantes")
+@RequestMapping("/v1/restaurantes")
 public class RestauranteController {
 
     @Qualifier("FindRestaurante")
     private final FindRestaurante findRestaurante;
+
     @Qualifier("AddRestaurante")
     private final AddRestaurante addRestaurante;
+
     @Qualifier("AlterRestaurante")
     private final AlterRestaurante alterRestaurante;
     @Qualifier("AlterEndereco")
@@ -38,14 +37,19 @@ public class RestauranteController {
     private final AlterTipoRestaurante alterTipoRestaurante;
 
 
+    @Qualifier("DeleteRestaurante")
+    private final DeleteRestaurante deleteRestaurante;
+
     public RestauranteController(FindRestaurante findRestaurante,
                                  AddRestaurante addRestaurante,
-                                 AlterRestaurante alterRestaurante, AlterEndereco alterEndereco, AlterTipoRestaurante alterTipoRestaurante) {
+                                 AlterRestaurante alterRestaurante,
+                                 DeleteRestaurante deleteRestaurante) {
         this.findRestaurante = findRestaurante;
         this.addRestaurante = addRestaurante;
         this.alterRestaurante = alterRestaurante;
         this.alterEndereco = alterEndereco;
         this.alterTipoRestaurante = alterTipoRestaurante;
+        this.deleteRestaurante = deleteRestaurante;
     }
 
     @GetMapping()
@@ -72,6 +76,21 @@ public class RestauranteController {
         if (restaurantes.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(RestauranteDTO.fromRestaurantes(restaurantes));
+    }
+
+    @GetMapping("/tipo-restaurante")
+    public ResponseEntity<List<RestauranteDTO>> buscarRestaurantePorTipo(
+            @RequestParam(required = false) String id,
+            @RequestParam(required = false) String descricao) {
+
+        List<Restaurante> restaurantes = this.findRestaurante.getRestaurantesByTipoRestaurante(
+                TipoRestauranteDTO.toTipoRestaurante(id, descricao));
+
+        if (restaurantes.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(RestauranteDTO.fromRestaurantes(restaurantes));
     }
 
@@ -120,4 +139,11 @@ public class RestauranteController {
             return new ResponseEntity<>("Erro ao atualizar o tipo de restaurante", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletaRestaurante(@PathVariable String id) {
+        this.deleteRestaurante.deleteRestaurante(UUID.fromString(id));
+        return new ResponseEntity<>("Restaurante Alterado", HttpStatus.NO_CONTENT);
+    }
+
 }

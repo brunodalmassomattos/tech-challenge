@@ -1,9 +1,9 @@
 package br.com.fiap.level3.domain.restaurante.infrastructure.mapper;
 
-import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.endereco.Endereco;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
 
-import br.com.fiap.level3.domain.restaurante.core.domain.model.tiporestaurante.TipoRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestaurante;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
