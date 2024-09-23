@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "restaurantes")
-public class Restaurante {
+public class RestauranteReserva {
 
     @Id
     @Column(name = "id", nullable = false)

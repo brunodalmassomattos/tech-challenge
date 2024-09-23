@@ -2,7 +2,7 @@ package br.com.fiap.level3.domain.reserva.core.model.reserva;
 
 import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
 import br.com.fiap.level3.domain.reserva.core.model.enums.StatusEnum;
-import br.com.fiap.level3.domain.reserva.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.reserva.core.model.restaurante.RestauranteReserva;
 import br.com.fiap.level3.domain.reserva.core.model.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,7 +37,7 @@ public class Reserva {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurante_id")
-    private Restaurante restaurante;
+    private RestauranteReserva restaurante;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
@@ -46,7 +46,7 @@ public class Reserva {
     @Column(name = "status_reserva", nullable = false)
     private String status;
 
-    public static Reserva criarReserva(ReservaDTO reservaDTO, Restaurante restaurante, Usuario usuario, StatusEnum status) {
+    public static Reserva criarReserva(ReservaDTO reservaDTO, RestauranteReserva restaurante, Usuario usuario, StatusEnum status) {
         validarCriacaoReserva(reservaDTO);
         return Reserva.builder()
                        .data(reservaDTO.data())
