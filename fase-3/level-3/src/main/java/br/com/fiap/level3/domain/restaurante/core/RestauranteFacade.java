@@ -82,5 +82,4 @@ public class RestauranteFacade implements FindRestaurante, AddRestaurante, Alter
             throw new AddRestauranteException("Endereço é obrigatorio");
         }
     }
-
 }
