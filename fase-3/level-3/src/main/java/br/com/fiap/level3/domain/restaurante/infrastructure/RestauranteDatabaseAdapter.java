@@ -35,7 +35,6 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
                                         LEFT JOIN tipos_restaurantes tr ON r.tipo_restaurante_id = tr.id
                                         LEFT JOIN enderecos e ON r.endereco_id = e.id
                                        WHERE r.id = ?
-                                         AND r.status = true
                                     """,
                             new RestauranteRowMapper(),
                             id));
@@ -54,7 +53,6 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
                                 LEFT JOIN tipos_restaurantes tr ON r.tipo_restaurante_id = tr.id
                                 LEFT JOIN enderecos e ON r.endereco_id = e.id
                                WHERE r.nome like ?
-                                 AND r.status = true
                             """,
                     new Object[]{"%" + nome.trim() + "%"},
                     new RestauranteRowMapper());

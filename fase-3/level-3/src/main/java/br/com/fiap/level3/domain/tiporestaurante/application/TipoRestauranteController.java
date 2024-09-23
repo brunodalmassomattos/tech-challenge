@@ -7,7 +7,6 @@ import br.com.fiap.level3.domain.tiporestaurante.core.ports.incoming.DeleteTipoR
 import br.com.fiap.level3.domain.tiporestaurante.core.ports.incoming.FindTipoRestaurante;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

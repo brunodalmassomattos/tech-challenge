@@ -13,6 +13,7 @@ import br.com.fiap.level3.domain.restaurante.core.ports.incoming.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/v1/restaurantes")
+@RequestMapping(value = "/v1/restaurantes",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteController {
 
     @Qualifier("FindRestaurante")
@@ -99,13 +102,13 @@ public class RestauranteController {
             @PathVariable String id,
             @Valid @RequestBody AlterarRestauranteDTO restaurante) {
         this.alterRestaurante.alterRestaurante(AlterarRestauranteDTO.toRestaurante(id, restaurante));
-        return new ResponseEntity<>("Restaurante Alterado", HttpStatus.OK);
+        return new ResponseEntity<>("Restaurante Alterado", HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletaRestaurante(@PathVariable String id) {
         this.deleteRestaurante.deleteRestaurante(UUID.fromString(id));
-        return new ResponseEntity<>("Restaurante Alterado", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Restaurante Alterado", HttpStatus.OK);
     }
     @PatchMapping("/{idRestaurante}/endereco/{idEndereco}")
     public ResponseEntity<String> alteraEndereco(
