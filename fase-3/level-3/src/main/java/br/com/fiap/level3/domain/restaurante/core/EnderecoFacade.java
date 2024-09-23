@@ -2,21 +2,20 @@ package br.com.fiap.level3.domain.restaurante.core;
 
 import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
 import br.com.fiap.level3.domain.restaurante.core.model.endereco.Endereco;
-import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterEndereco;
 import br.com.fiap.level3.domain.restaurante.core.ports.outcoming.RestauranteDatabase;
 
-import java.util.Optional;
 import java.util.UUID;
 
-public class EnderecoFacade {
+public class EnderecoFacade implements AlterEndereco {
 
     private final RestauranteDatabase database;
 
     public EnderecoFacade(RestauranteDatabase database) {
         this.database = database;
     }
-
-    public void alterEndereco(UUID idEndereco, Endereco novoEndereco) {
+    @Override
+    public void alterEndereco(UUID idRestaurante, UUID idEndereco, Endereco novoEndereco) {
         Endereco enderecoSalvo = database.getEnderecoById(idEndereco)
                 .orElseThrow(() -> new ControllerNotFoundException("Endereço não encontrado!"));
 
