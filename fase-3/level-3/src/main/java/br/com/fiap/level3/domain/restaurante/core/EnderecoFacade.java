@@ -1,8 +1,8 @@
 package br.com.fiap.level3.domain.restaurante.core;
 
 import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.endereco.Endereco;
-import br.com.fiap.level3.domain.restaurante.core.domain.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.endereco.Endereco;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.outcoming.RestauranteDatabase;
 
 import java.util.Optional;

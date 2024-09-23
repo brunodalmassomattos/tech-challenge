@@ -1,13 +1,14 @@
 package br.com.fiap.level3.domain.restaurante.application;
 
+import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
+import br.com.fiap.level3.domain.restaurante.core.model.endereco.AlterarEnderecoDTO;
+import br.com.fiap.level3.domain.restaurante.core.model.endereco.Endereco;
+import br.com.fiap.level3.domain.restaurante.core.model.endereco.EnderecoDTO;
 import br.com.fiap.level3.domain.restaurante.core.model.restaurante.AlterarRestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.model.restaurante.RestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestauranteDTO;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterRestaurante;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.DeleteRestaurante;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.*;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,31 +26,24 @@ public class RestauranteController {
 
     @Qualifier("FindRestaurante")
     private final FindRestaurante findRestaurante;
-
     @Qualifier("AddRestaurante")
     private final AddRestaurante addRestaurante;
-
     @Qualifier("AlterRestaurante")
     private final AlterRestaurante alterRestaurante;
-    @Qualifier("AlterEndereco")
-    private final AlterEndereco alterEndereco;
-    @Qualifier("AlterTipoRestaurante")
-    private final AlterTipoRestaurante alterTipoRestaurante;
-
-
     @Qualifier("DeleteRestaurante")
     private final DeleteRestaurante deleteRestaurante;
+    @Qualifier("AlterEndereco")
+    private final AlterEndereco alterEndereco;
 
     public RestauranteController(FindRestaurante findRestaurante,
                                  AddRestaurante addRestaurante,
                                  AlterRestaurante alterRestaurante,
-                                 DeleteRestaurante deleteRestaurante) {
+                                 DeleteRestaurante deleteRestaurante, AlterEndereco alterEndereco) {
         this.findRestaurante = findRestaurante;
         this.addRestaurante = addRestaurante;
         this.alterRestaurante = alterRestaurante;
-        this.alterEndereco = alterEndereco;
-        this.alterTipoRestaurante = alterTipoRestaurante;
         this.deleteRestaurante = deleteRestaurante;
+        this.alterEndereco = alterEndereco;
     }
 
     @GetMapping()
@@ -107,6 +101,12 @@ public class RestauranteController {
         this.alterRestaurante.alterRestaurante(AlterarRestauranteDTO.toRestaurante(id, restaurante));
         return new ResponseEntity<>("Restaurante Alterado", HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletaRestaurante(@PathVariable String id) {
+        this.deleteRestaurante.deleteRestaurante(UUID.fromString(id));
+        return new ResponseEntity<>("Restaurante Alterado", HttpStatus.NO_CONTENT);
+    }
     @PatchMapping("/{idRestaurante}/endereco/{idEndereco}")
     public ResponseEntity<String> alteraEndereco(
             @PathVariable String idRestaurante,
@@ -114,9 +114,7 @@ public class RestauranteController {
             @Valid @RequestBody AlterarEnderecoDTO enderecoDTO) {
         try {
             Endereco endereco = AlterarEnderecoDTO.toEndereco(idEndereco, enderecoDTO);
-
-            this.alterEndereco.alterEndereco(UUID.fromString(idEndereco), endereco);
-
+            this.alterEndereco.alterEndereco(UUID.fromString(idRestaurante), UUID.fromString(idEndereco), endereco);
             return new ResponseEntity<>("Endereço atualizado com sucesso", HttpStatus.OK);
         } catch (ControllerNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -124,26 +122,4 @@ public class RestauranteController {
             return new ResponseEntity<>("Erro ao atualizar o endereço", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PatchMapping("/{idRestaurante}/tipo/{idTipoRestaurante}")
-    public ResponseEntity<String> alteraTipoRestaurante(
-            @PathVariable String idRestaurante,
-            @PathVariable String idTipoRestaurante,
-            @Valid @RequestBody AlterarTipoRestauranteDTO tipoRestauranteDTO) {
-        try {
-            TipoRestaurante tipoRestaurante = AlterarTipoRestauranteDTO.toTipoRestaurante(idTipoRestaurante, tipoRestauranteDTO);
-            this.alterTipoRestaurante.alterTipoRestaurante(UUID.fromString(idRestaurante), tipoRestaurante);
-            return new ResponseEntity<>("Tipo de restaurante atualizado com sucesso", HttpStatus.OK);
-        } catch (ControllerNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Erro ao atualizar o tipo de restaurante", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletaRestaurante(@PathVariable String id) {
-        this.deleteRestaurante.deleteRestaurante(UUID.fromString(id));
-        return new ResponseEntity<>("Restaurante Alterado", HttpStatus.NO_CONTENT);
-    }
-
 }
