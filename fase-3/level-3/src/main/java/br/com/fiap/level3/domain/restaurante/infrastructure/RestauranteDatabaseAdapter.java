@@ -1,5 +1,6 @@
 package br.com.fiap.level3.domain.restaurante.infrastructure;
 
+import br.com.fiap.level3.domain.restaurante.core.model.endereco.Endereco;
 import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.ports.outcoming.RestauranteDatabase;
@@ -111,6 +112,53 @@ public class RestauranteDatabaseAdapter implements RestauranteDatabase {
                     new RestauranteRowMapper());
         } catch (DataAccessException e) {
             return new ArrayList<>();
+        }
+    }
+    @Override
+    public Optional<Endereco> getEnderecoById(UUID id) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    "SELECT * FROM enderecos WHERE id = ?",
+                    new Object[]{id},
+                    (rs, rowNum) -> new Endereco(
+                            rs.getString("cep"),
+                            rs.getString("logradouro"),
+                            rs.getString("numero"),
+                            rs.getString("bairro"),
+                            rs.getString("cidade"),
+                            rs.getString("estado")
+                    )));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public void updateEndereco(Endereco endereco) {
+        final String SQL_UPDATE_ENDERECO = """
+            UPDATE enderecos SET 
+                cep = ?, 
+                logradouro = ?, 
+                numero = ?, 
+                bairro = ?, 
+                cidade = ?, 
+                estado = ?
+            WHERE id = ?
+        """;
+
+        int updated = jdbcTemplate.update(
+                SQL_UPDATE_ENDERECO,
+                endereco.getCep(),
+                endereco.getLogradouro(),
+                endereco.getNumero(),
+                endereco.getBairro(),
+                endereco.getCidade(),
+                endereco.getEstado(),
+                endereco.getId()
+        );
+
+        if (updated != 1) {
+            throw new DataAccessException("Falha ao atualizar o endereço: Nenhuma linha afetada.") {};
         }
     }
 
