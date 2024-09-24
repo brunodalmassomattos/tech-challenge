@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 @Import({
 		RestauranteDomainConfig.class,
 		TipoRestauranteDomainConfig.class,
+		AvaliacaoConfig.class,
         ReservaConfig.class
 })
 public class Level3Application {
