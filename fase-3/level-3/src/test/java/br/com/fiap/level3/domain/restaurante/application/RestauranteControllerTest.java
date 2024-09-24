@@ -1,15 +1,13 @@
 package br.com.fiap.level3.domain.restaurante.application;
 
+import br.com.fiap.level3.domain.reserva.mocks.RestauranteTestMock;
 import br.com.fiap.level3.domain.restaurante.core.model.endereco.Endereco;
 import br.com.fiap.level3.domain.restaurante.core.model.endereco.EnderecoDTO;
 import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.model.restaurante.RestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestauranteDTO;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterRestaurante;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.DeleteRestaurante;
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +15,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -48,6 +47,9 @@ class RestauranteControllerTest {
     @Mock
     private DeleteRestaurante deleteRestaurante;
 
+    @Mock
+    private AlterEndereco alterEndereco;
+
     @BeforeEach
     void setUp() {
         openMocks = MockitoAnnotations.openMocks(this);
@@ -56,14 +58,10 @@ class RestauranteControllerTest {
                 findRestaurante,
                 addRestaurante,
                 alterRestaurante,
-                deleteRestaurante);
+                deleteRestaurante,
+                alterEndereco);
 
         mockMvc = MockMvcBuilders.standaloneSetup(restauranteController)
-//                .setControllerAdvice(new GlobalExceptionHandler())
-//                .addFilter((request, response, chain) -> {
-//                    response.setCharacterEncoding("UTF-8");
-//                    chain.doFilter(request, response);
-//                }, "/*")
                 .build();
     }
 
@@ -82,7 +80,7 @@ class RestauranteControllerTest {
             mockMvc.perform(
                     post("/v1/restaurantes")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(buildRestauranteDTO()))
+                        .content(asJsonString(RestauranteTestMock.buildRestauranteDTO()))
             ).andExpect(status().isCreated());
 
             verify(addRestaurante, times(1)).save(any(Restaurante.class));
@@ -101,7 +99,7 @@ class RestauranteControllerTest {
             mockMvc.perform(
                     patch("/v1/restaurantes/{id}", idRestaurante)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(buildRestauranteDTO()))
+                        .content(asJsonString(RestauranteTestMock.buildRestauranteDTO()))
             ).andExpect(status().isAccepted());
 
             verify(alterRestaurante, times(1)).alterRestaurante(any(Restaurante.class));
@@ -131,7 +129,7 @@ class RestauranteControllerTest {
 
         @Test
         void deveBuscarRestaurante() throws Exception {
-            when(findRestaurante.getRestaurantes()).thenReturn(buildRestaurantes());
+            when(findRestaurante.getRestaurantes()).thenReturn(RestauranteTestMock.buildRestaurantes());
 
             mockMvc.perform(get("/v1/restaurantes").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk());
@@ -150,63 +148,11 @@ class RestauranteControllerTest {
         }
 
         @Test
-        void deveBuscarRestaurantePorId() throws Exception {
-            var id = UUID.fromString("37ae4e3c-bdf9-4390-915e-220d5d3348ec");
-
-            when(findRestaurante.getRestauranteById(id)).thenReturn(Optional.ofNullable(buildRestaurante(id)));
-
-            mockMvc.perform(get("/v1/restaurantes/{id}", id).contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk());
-
-            verify(findRestaurante, times(1)).getRestauranteById(any(UUID.class));
-        }
-
-        @Test
-        void deveRetornarVazioQuandoIdErradoBuscarRestaurantePorId() throws Exception {
-            var id = UUID.fromString("37ae4e3c-bdf9-4390-915e-220d5d3348ed");
-
-            when(findRestaurante.getRestauranteById(id)).thenReturn(Optional.empty());
-
-            mockMvc.perform(get("/v1/restaurantes/{id}", id).contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound());
-
-            verify(findRestaurante, times(1)).getRestauranteById(any(UUID.class));
-        }
-
-        @Test
-        void deveBuscarRestaurantePorNome() throws Exception {
-            var nome = "TESTE NOME";
-            when(findRestaurante.getRestauranteByNome(nome)).thenReturn(buildRestaurantes());
-
-            mockMvc.perform(
-                    get("/v1/restaurantes/nome")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("nome", nome))
-                .andExpect(status().isOk());
-
-            verify(findRestaurante, times(1)).getRestauranteByNome(anyString());
-        }
-
-        @Test
-        void deveRetornarVazioQuandoNomeErradoRestaurantePorNome() throws Exception {
-            var nome = "TESTE";
-            when(findRestaurante.getRestauranteByNome(nome)).thenReturn(new ArrayList<>());
-
-            mockMvc.perform(
-                    get("/v1/restaurantes/nome")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("nome", nome))
-                .andExpect(status().isNotFound());
-
-            verify(findRestaurante, times(1)).getRestauranteByNome(anyString());
-        }
-
-        @Test
         void devebuscarRestaurantePorTipo() throws Exception {
             var id = "9cbf57e1-52b0-41a3-8fb7-ccc102658bbd";
             var descricao = "TESTE DESCRICAO";
 
-            when(findRestaurante.getRestaurantesByTipoRestaurante(any(TipoRestaurante.class))).thenReturn(buildRestaurantes());
+            when(findRestaurante.getRestaurantesByTipoRestaurante(any(TipoRestaurante.class))).thenReturn(RestauranteTestMock.buildRestaurantes());
 
             mockMvc.perform(
                             get("/v1/restaurantes/tipo-restaurante")
@@ -236,65 +182,12 @@ class RestauranteControllerTest {
         }
     }
 
-    private List<Restaurante> buildRestaurantes() {
-        return List.of(buildRestaurante(null));
-    }
-
-    private Restaurante buildRestaurante(final UUID id) {
-        return Restaurante.builder()
-                .id(id == null ? UUID.fromString("37ae4e3c-bdf9-4390-915e-220d5d3348ec") : id)
-                .nome("TESTE NOME")
-                .horarioFuncionamento("TESTE HORARIO FUNCIONAMENTO")
-                .capacidade(100)
-                .status(true)
-                .tipoRestaurante(buildTipoRestaurante())
-                .endereco(
-                        Endereco.builder()
-                                .id(UUID.fromString("f592e67c-ba51-4207-9bf5-954393f04365"))
-                                .cep("12345678")
-                                .logradouro("TESTE RUA")
-                                .numero("TESTE NUMERO")
-                                .bairro("TESTE BAIRRO")
-                                .cidade("TESTE CIDADE")
-                                .estado("TE")
-                                .build())
-                .build();
-    }
-
-    private static TipoRestaurante buildTipoRestaurante() {
-        return TipoRestaurante.builder()
-                .id(UUID.fromString("9cbf57e1-52b0-41a3-8fb7-ccc102658bbd"))
-                .descricao("TESTE DESCRICAO")
-                .build();
-    }
-
-    private RestauranteDTO buildRestauranteDTO() {
-        return new RestauranteDTO(
-                null,
-                "TESTE RESTAURANTE",
-                "TESTE HORARIO",
-                1,
-                true,
-                new TipoRestauranteDTO(
-                        UUID.randomUUID().toString(),
-                        "TESTE DESCRICAO"
-                ),
-                new EnderecoDTO(
-                        null,
-                        "Teste CEP",
-                        "TESTE RUA",
-                        "TESTE NUMERO",
-                        "TESTE BAIRRO",
-                        "TESTE CIDADE",
-                        "TESTE ESTADO")
-        );
-    }
-
-    private static String asJsonString(final Object obj) {
+    public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
 }

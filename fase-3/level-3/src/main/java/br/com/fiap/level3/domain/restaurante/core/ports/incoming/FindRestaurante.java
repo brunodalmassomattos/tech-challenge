@@ -8,9 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface FindRestaurante {
-    Optional<Restaurante> getRestauranteById(UUID id);
-
-    List<Restaurante> getRestauranteByNome(String nome);
     List<Restaurante> getRestaurantes();
     List<Restaurante> getRestaurantesByTipoRestaurante(TipoRestaurante tipoRestaurante);
 }
