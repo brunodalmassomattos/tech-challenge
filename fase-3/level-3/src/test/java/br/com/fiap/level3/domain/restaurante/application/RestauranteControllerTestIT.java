@@ -1,73 +1,70 @@
 package br.com.fiap.level3.domain.restaurante.application;
 
-import br.com.fiap.level3.domain.restaurante.core.ports.incoming.*;
-import br.com.fiap.level3.domain.tiporestaurante.core.ports.incoming.FindTipoRestaurante;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.qameta.allure.restassured.AllureRestAssured;
-import io.restassured.RestAssured;
+import br.com.fiap.level3.domain.reserva.mocks.RestauranteTestMock;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.restaurante.core.model.restaurante.RestauranteDTO;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AddRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.DeleteRestaurante;
+import br.com.fiap.level3.domain.restaurante.core.ports.incoming.AlterEndereco;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static io.restassured.RestAssured.given;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import java.util.UUID;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"/restaurantes.sql"})
-@Sql(scripts = {"/clean.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 class RestauranteControllerTestIT {
 
-    @MockBean
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
     private FindRestaurante findRestaurante;
 
-    @MockBean
+    @Autowired
     private AddRestaurante addRestaurante;
 
-    @MockBean
+    @Autowired
     private AlterRestaurante alterRestaurante;
 
-    @MockBean
+    @Autowired
     private DeleteRestaurante deleteRestaurante;
 
-    @MockBean
+    @Autowired
     private AlterEndereco alterEndereco;
 
+    private Restaurante restaurante;
+
     @BeforeEach
-    public void setup() {
+    public void setUp() {
+        restaurante = RestauranteTestMock.buildRestaurante(UUID.randomUUID());
+        addRestaurante.save(restaurante);
     }
 
-    @Nested
-    class BuscarMensagem {
+    @Test
+    public void testAdicionarRestaurante() throws Exception {
+        RestauranteDTO dto = RestauranteTestMock.buildRestauranteDTO();
 
-        @Test
-        void devePermitirBuscarMensagem() {
-            var id = "ce2f69e4-88c7-4134-91eb-302b0ce8edf5";
+        mockMvc.perform(post("/v1/restaurantes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"nome\": \"Novo Restaurante\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(content().string("Novo Restaurante cadastrado"));
 
-            given()
-                    .filter(new AllureRestAssured())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .when()
-                    .get("/v1/restaurantes")
-                    .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .body(matchesJsonSchemaInClasspath(""/*""./schemas/MensagemResponseSchema.json"*/));
-        }
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        verify(addRestaurante, times(1)).save(any(Restaurante.class));
     }
 
 }

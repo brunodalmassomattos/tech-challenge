@@ -1,5 +1,6 @@
 package br.com.fiap.level3.domain.restaurante.application;
 
+import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
 import br.com.fiap.level3.domain.reserva.mocks.RestauranteTestMock;
 import br.com.fiap.level3.domain.restaurante.core.model.endereco.Endereco;
 import br.com.fiap.level3.domain.restaurante.core.model.endereco.EnderecoDTO;
@@ -16,7 +17,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -24,7 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import br.com.fiap.level3.domain.restaurante.core.model.endereco.AlterarEnderecoDTO;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -103,6 +108,39 @@ class RestauranteControllerTest {
             ).andExpect(status().isAccepted());
 
             verify(alterRestaurante, times(1)).alterRestaurante(any(Restaurante.class));
+        }
+
+        @Test
+        public void testAlteraEndereco_Sucesso() throws Exception {
+            String idRestaurante = UUID.randomUUID().toString();
+            String idEndereco = UUID.randomUUID().toString();
+
+            doNothing().when(alterEndereco).alterEndereco(any(UUID.class), any(UUID.class), any(Endereco.class));
+
+            mockMvc.perform(
+                    patch("/v1/restaurantes/{idRestaurante}/endereco/{idEndereco}", idRestaurante, idEndereco)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(RestauranteTestMock.buildEndereco()))
+            ).andExpect(status().isOk());
+
+            verify(alterEndereco, times(1)).alterEndereco(any(UUID.class), any(UUID.class), any(Endereco.class));
+
+        }
+
+        @Test
+        public void testAlteraEndereco_RestauranteNaoEncontrado() throws Exception {
+            String idRestaurante = UUID.randomUUID().toString();
+            String idEndereco = UUID.randomUUID().toString();
+
+            doThrow(ControllerNotFoundException.class).when(alterEndereco).alterEndereco(any(UUID.class), any(UUID.class), any(Endereco.class));
+
+            mockMvc.perform(
+                    patch("/v1/restaurantes/{idRestaurante}/endereco/{idEndereco}", idRestaurante, idEndereco)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(RestauranteTestMock.buildEndereco()))
+            ).andExpect(status().isNotFound());
+
+            verify(alterEndereco, times(1)).alterEndereco(any(UUID.class), any(UUID.class), any(Endereco.class));
         }
     }
 

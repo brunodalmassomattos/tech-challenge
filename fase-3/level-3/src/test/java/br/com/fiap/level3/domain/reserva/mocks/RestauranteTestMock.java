@@ -7,7 +7,6 @@ import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.model.restaurante.RestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestaurante;
 import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestauranteDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.UUID;
@@ -76,4 +75,16 @@ public class RestauranteTestMock {
         );
     }
 
+    public static EnderecoDTO buildEndereco() {
+        var id = UUID.randomUUID().toString();
+        return new EnderecoDTO(
+                id,
+                "Teste CEP",
+                "TESTE RUA",
+                "TESTE NUMERO",
+                "TESTE BAIRRO",
+                "TESTE CIDADE",
+                "TESTE ESTADO"
+        );
+    }
 }
