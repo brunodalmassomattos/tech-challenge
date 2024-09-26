@@ -1,5 +1,6 @@
 package br.com.fiap.level3.domain.reserva.core.model.reserva;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 
@@ -12,8 +13,10 @@ import java.util.UUID;
 public record ReservaDTO(
 
         UUID id,
-        LocalDate data,
-        LocalTime hora,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        String data,
+        @JsonFormat(pattern = "HH:mm")
+        String hora,
         Integer quantidadePessoas,
         UUID restauranteId,
         UUID usuarioId,
@@ -23,8 +26,8 @@ public record ReservaDTO(
     public static ReservaDTO convertFromReserva(Reserva reserva) {
         return ReservaDTO.builder()
                        .id(reserva.getId())
-                       .data(reserva.getData())
-                       .hora(reserva.getHora())
+                       .data(reserva.getData().toString())
+                       .hora(reserva.getHora().toString())
                        .quantidadePessoas(reserva.getQuantidadePessoas())
                        .restauranteId(reserva.getRestaurante().getId())
                        .usuarioId(reserva.getUsuario().getId())

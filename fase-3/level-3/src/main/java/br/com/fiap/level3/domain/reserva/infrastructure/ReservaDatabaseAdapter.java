@@ -6,6 +6,7 @@ import br.com.fiap.level3.domain.reserva.core.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.reserva.core.model.usuario.Usuario;
 import br.com.fiap.level3.domain.reserva.core.ports.outgoing.ReservaDatabase;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +28,8 @@ public class ReservaDatabaseAdapter implements ReservaDatabase {
 
     @Override
     public Optional<Reserva> getReservaAbertaByUsuarioAndData(UUID usuarioId, LocalDate data) {
-        String query = """
+        try {
+            String query = """
                 SELECT r
                 FROM Reserva r
                 WHERE r.usuario.id = :usuarioId
@@ -35,15 +37,18 @@ public class ReservaDatabaseAdapter implements ReservaDatabase {
                 AND r.status IN (:reservasNaoFinalizadas)
                 """;
 
-        return Optional.ofNullable(entityManager.createQuery(query, Reserva.class)
-                       .setParameter("usuarioId", usuarioId)
-                       .setParameter("data", data)
-                       .setParameter("reservasNaoFinalizadas", StatusEnum.getStatusNaoFinalizados())
-                       .getSingleResult());
+            return Optional.ofNullable(entityManager.createQuery(query, Reserva.class)
+                                               .setParameter("usuarioId", usuarioId)
+                                               .setParameter("data", data)
+                                               .setParameter("reservasNaoFinalizadas", StatusEnum.getStatusNaoFinalizados())
+                                               .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Long getQuantidadeLugaresReservadosByRestaurante(UUID restauranteId) {
+    public Optional<Long> getQuantidadeLugaresReservadosByRestaurante(UUID restauranteId) {
         String query = """
                 SELECT sum(r.quantidadePessoas)
                 FROM Reserva r
@@ -51,10 +56,10 @@ public class ReservaDatabaseAdapter implements ReservaDatabase {
                 AND r.status IN (:reservasNaoFinalizadas)
                 """;
 
-        return entityManager.createQuery(query, Long.class)
+        return Optional.ofNullable(entityManager.createQuery(query, Long.class)
                        .setParameter("restauranteId", restauranteId)
                        .setParameter("reservasNaoFinalizadas", StatusEnum.getStatusNaoFinalizados())
-                       .getSingleResult();
+                       .getSingleResult());
     }
 
     @Override
