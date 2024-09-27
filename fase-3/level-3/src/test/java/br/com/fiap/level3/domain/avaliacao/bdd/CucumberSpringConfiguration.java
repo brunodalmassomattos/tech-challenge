@@ -1,0 +1,10 @@
+package br.com.fiap.level3.domain.avaliacao.bdd;
+
+import io.cucumber.spring.CucumberContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@CucumberContextConfiguration
+@SpringBootTest
+public class CucumberSpringConfiguration {
+    // Esta classe pode ficar vazia, ela serve apenas para configuração
+}

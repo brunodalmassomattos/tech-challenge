@@ -10,8 +10,8 @@ public interface FindAvaliacao {
 
     Optional<Avaliacao> getAvaliacaoById(UUID id);
     
-    List<Avaliacao> getAvaliacaoByRestauranteId(UUID restauranteId);
-    List<Avaliacao> getAvaliacaoByUsuarioId(UUID usuarioId);
+    List<Optional<Avaliacao>> getAvaliacaoByRestauranteId(UUID restauranteId);
+    List<Optional<Avaliacao>> getAvaliacaoByUsuarioId(UUID usuarioId);
 	
 }
  

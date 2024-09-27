@@ -1,5 +1,6 @@
 package br.com.fiap.level3.domain.exception;
 
+import br.com.fiap.level3.domain.avaliacao.core.domain.model.exception.AddAvaliacaoException;
 import br.com.fiap.level3.domain.restaurante.core.model.exception.AddRestauranteException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.exception.ConstraintViolationException;
@@ -18,6 +19,18 @@ public class ControllerException {
 
     @ExceptionHandler(AddRestauranteException.class)
     public ResponseEntity<StandardError> validation(AddRestauranteException exception,
+                                                        HttpServletRequest request) {
+        this.standardError.setTimeStamp(Instant.now());
+        this.standardError.setStatus(HttpStatus.BAD_REQUEST.value());
+        this.standardError.setError("Parametros de Entrada incorretos");
+        this.standardError.setMessage(exception.getMessage());
+        this.standardError.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(this.standardError);
+    }
+    
+    @ExceptionHandler(AddAvaliacaoException.class)
+    public ResponseEntity<StandardError> validationAvaliacao(AddAvaliacaoException exception,
                                                         HttpServletRequest request) {
         this.standardError.setTimeStamp(Instant.now());
         this.standardError.setStatus(HttpStatus.BAD_REQUEST.value());
