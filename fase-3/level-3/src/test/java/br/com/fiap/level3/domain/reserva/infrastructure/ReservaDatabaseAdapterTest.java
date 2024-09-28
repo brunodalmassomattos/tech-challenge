@@ -2,7 +2,7 @@ package br.com.fiap.level3.domain.reserva.infrastructure;
 
 import br.com.fiap.level3.domain.reserva.core.model.enums.StatusEnum;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.Reserva;
-import br.com.fiap.level3.domain.reserva.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.reserva.core.model.restaurante.RestauranteReserva;
 import br.com.fiap.level3.domain.reserva.core.model.usuario.Usuario;
 import br.com.fiap.level3.domain.reserva.mocks.ReservaTestMock;
 import br.com.fiap.level3.domain.reserva.mocks.RestauranteTestMock;
@@ -137,23 +137,23 @@ public class ReservaDatabaseAdapterTest {
 
     @Test
     void deveRetornarRestauranteAoBuscarPorRestauranteId() {
-        Restaurante restaurante = RestauranteTestMock.getRestaurante();
+        RestauranteReserva restaurante = RestauranteTestMock.getRestaurante();
 
-        when(entityManager.find(ArgumentMatchers.<Class<Restaurante>>any(), any(UUID.class))).thenReturn(restaurante);
-        Optional<Restaurante> restauranteEncontrado = reservaDatabaseAdapter.getRestauranteById(restaurante.getId());
+        when(entityManager.find(ArgumentMatchers.<Class<RestauranteReserva>>any(), any(UUID.class))).thenReturn(restaurante);
+        Optional<RestauranteReserva> restauranteEncontrado = reservaDatabaseAdapter.getRestauranteById(restaurante.getId());
 
         assertThat(restauranteEncontrado).isNotEmpty().contains(restaurante);
-        verify(entityManager, times(1)).find(ArgumentMatchers.<Class<Restaurante>>any(), any(UUID.class));
+        verify(entityManager, times(1)).find(ArgumentMatchers.<Class<RestauranteReserva>>any(), any(UUID.class));
     }
 
     @Test
     void deveRetornarEmptyAoBuscarPorRestauranteId() {
-        Restaurante restaurante = RestauranteTestMock.getRestaurante();
+        RestauranteReserva restaurante = RestauranteTestMock.getRestaurante();
 
-        when(entityManager.find(ArgumentMatchers.<Class<Restaurante>>any(), any(UUID.class))).thenReturn(null);
-        Optional<Restaurante> restauranteEncontrado = reservaDatabaseAdapter.getRestauranteById(restaurante.getId());
+        when(entityManager.find(ArgumentMatchers.<Class<RestauranteReserva>>any(), any(UUID.class))).thenReturn(null);
+        Optional<RestauranteReserva> restauranteEncontrado = reservaDatabaseAdapter.getRestauranteById(restaurante.getId());
 
         assertThat(restauranteEncontrado).isEmpty();
-        verify(entityManager, times(1)).find(ArgumentMatchers.<Class<Restaurante>>any(), any(UUID.class));
+        verify(entityManager, times(1)).find(ArgumentMatchers.<Class<RestauranteReserva>>any(), any(UUID.class));
     }
 }

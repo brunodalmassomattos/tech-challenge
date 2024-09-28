@@ -369,7 +369,7 @@ public class ReservaFacadeTest {
         assertTrue(result.isPresent());
         assertEquals(reservaId, result.get().id());
         assertEquals(StatusEnum.CONCLUIDA.getDescricao(), result.get().status());
-        assertTrue(result.get().data().isBefore(LocalDate.now()));
+        assertTrue(LocalDate.parse(result.get().data()).isBefore(LocalDate.now()));
     }
 
 

@@ -24,7 +24,7 @@ public class ReservaFacade implements CreateNewReserva {
     @Override
     public ReservaDTO createNewReserva(ReservaDTO reservaDTO) {
         Usuario usuario = getUsuarioById(reservaDTO.usuarioId());
-        Restaurante restaurante = getRestauranteById(reservaDTO.restauranteId());
+        RestauranteReserva restaurante = getRestauranteById(reservaDTO.restauranteId());
 
         Reserva reserva = Reserva.criarReserva(reservaDTO, restaurante, usuario, StatusEnum.CRIADA);
 
@@ -40,7 +40,7 @@ public class ReservaFacade implements CreateNewReserva {
                        .orElseThrow(() -> new ControllerNotFoundException("Usuário não encontrado para o ID: " + usuarioId));
     }
 
-    private Restaurante getRestauranteById(UUID restauranteId) {
+    private RestauranteReserva getRestauranteById(UUID restauranteId) {
         return reservaDatabase.getRestauranteById(restauranteId)
                        .orElseThrow(() -> new ControllerNotFoundException("Restaurante não encontrado para o ID: " + restauranteId));
     }
@@ -55,7 +55,7 @@ public class ReservaFacade implements CreateNewReserva {
         }
     }
 
-    private void atingiuCapacidadeRestaurante(Restaurante restaurante, Reserva novaReserva) {
+    private void atingiuCapacidadeRestaurante(RestauranteReserva restaurante, Reserva novaReserva) {
         Optional<Long> quantidadeLugaresOcupados = reservaDatabase.getQuantidadeLugaresReservadosByRestaurante(restaurante.getId());
 
         quantidadeLugaresOcupados.ifPresent(quantidadeLugares -> {

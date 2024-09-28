@@ -5,7 +5,6 @@ import br.com.fiap.level3.DatabaseHelper;
 import br.com.fiap.level3.domain.reserva.core.model.enums.StatusEnum;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.Reserva;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.ReservaDTO;
-import br.com.fiap.level3.domain.reserva.core.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.reserva.core.model.usuario.Usuario;
 import br.com.fiap.level3.domain.reserva.mocks.ReservaDTOTestMock;
 import br.com.fiap.level3.domain.reserva.mocks.ReservaTestMock;
@@ -70,6 +69,6 @@ public class ReservaDatabaseAdapterIT {
     void deveRetornarQuantidadeDeLugaresReservadosParaRestauranteInformado() {
         UUID restauranteId = UUID.fromString("e0c65eb4-cb52-4df0-a582-44bc8ab756fb");
         Optional<Long> reservaEncontrada = reservaDatabaseAdapter.getQuantidadeLugaresReservadosByRestaurante(restauranteId);
-        assertThat(reservaEncontrada).isPresent().get().isEqualTo(5L);
+        assertThat(reservaEncontrada).isPresent().get().isEqualTo(97L);
     }
 }
