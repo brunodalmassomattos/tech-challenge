@@ -4,14 +4,22 @@ import br.com.fiap.level3.domain.reserva.core.model.enums.StatusEnum;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.ReservaDTO;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.ReservaRestauranteDTO;
 import br.com.fiap.level3.domain.reserva.core.ports.incoming.CreateNewReserva;
+import br.com.fiap.level3.domain.reserva.mocks.ReservaDTOTestMock;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ReservaSteps {
@@ -24,6 +32,8 @@ public class ReservaSteps {
     private ReservaRestauranteDTO reservasRestaurante;
     private ReservaDTO reservaEncontrada;
     private ReservaDTO reservaAtualizada;
+    private ReservaDTO reservaNova;
+    private ReservaDTO reservaRegistrada;
 
     @Given("um restaurante com ID {string}")
     public void umRestauranteComID(String restauranteIdStr) {
@@ -105,5 +115,37 @@ public class ReservaSteps {
     @Then("o sistema retorna uma mensagem indicando que a reserva não foi encontrada")
     public void oSistemaRetornaUmaMensagemIndicandoQueAReservaNaoFoiEncontrada() {
         assertNull(reservaAtualizada);
+    }
+
+
+    @Transactional
+    @When("uma nova reserva é enviada")
+    public void umaNovaReservaEEnviada() {
+        Random gerador = new Random();
+        long dias = gerador.nextInt(365);
+        long horas = gerador.nextInt(24);
+
+        this.reservaNova = ReservaDTOTestMock.reservaDTOBuilder()
+                                   .data(LocalDate.now().plusDays(dias).toString())
+                                   .hora(LocalTime.now().plusHours(horas).format(DateTimeFormatter.ofPattern("HH:mm")))
+                                   .build();
+    }
+
+
+    @Then("registrar nova reserva")
+    public void registrarNovaReserva() {
+        this.reservaRegistrada = createNewReserva.createNewReserva(reservaNova);
+    }
+
+    @And("reserva registrada com sucesso é retornada")
+    public void reservaRegistradaComSucessoERetornada() {
+        assertThat(this.reservaRegistrada)
+                .isNotNull()
+                .extracting(ReservaDTO::id)
+                .isNotNull();
+
+        assertThat(this.reservaRegistrada)
+                .extracting(ReservaDTO::status)
+                .isEqualTo(StatusEnum.CRIADA.getDescricao());
     }
 }

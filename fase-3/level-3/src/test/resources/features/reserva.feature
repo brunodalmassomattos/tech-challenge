@@ -78,3 +78,8 @@ Feature: Gerenciamento de Reservas
     Given uma reserva inexistente com ID "9999aaaa-bbbb-cccc-dddd-eeeeffffffff"
     When o sistema tenta atualizar o status da reserva para "CONFIRMADA"
     Then o sistema retorna uma mensagem indicando que a reserva não foi encontrada
+
+  Scenario: Registrar nova reserva
+    When uma nova reserva é enviada
+    Then registrar nova reserva
+    And reserva registrada com sucesso é retornada
