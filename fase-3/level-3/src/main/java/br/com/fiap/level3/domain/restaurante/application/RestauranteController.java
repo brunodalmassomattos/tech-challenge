@@ -90,6 +90,7 @@ public class RestauranteController {
         this.deleteRestaurante.deleteRestaurante(UUID.fromString(id));
         return new ResponseEntity<>("Restaurante Alterado", HttpStatus.OK);
     }
+
     @PatchMapping("/{idRestaurante}/endereco/{idEndereco}")
     public ResponseEntity<String> alteraEndereco(
             @PathVariable String idRestaurante,
