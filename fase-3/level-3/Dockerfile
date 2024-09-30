@@ -5,7 +5,7 @@ WORKDIR /app
 
 RUN mvn clean package -DskipTests
 
-FROM amazoncorretto:17.0.12
+FROM amazoncorretto:17-alpine-jdk
 ARG JAR_FILE=app/target/*.jar
 COPY --from=build ${JAR_FILE} app.jar
 EXPOSE 8080
