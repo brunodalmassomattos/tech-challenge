@@ -56,15 +56,20 @@ public class ReservaFacade implements CreateNewReserva {
     }
 
     private void atingiuCapacidadeRestaurante(RestauranteReserva restaurante, Reserva novaReserva) {
+        Optional<Long> quantidadeLugaresOcupados = reservaDatabase.getQuantidadeLugaresReservadosByRestaurante(restaurante.getId());
 
-        Long quantidadeLugaresOcupados = reservaDatabase.getQuantidadeLugaresReservadosByRestaurante(restaurante.getId());
-        int totalLugaresOcupados = Integer.sum(novaReserva.getQuantidadePessoas(), quantidadeLugaresOcupados.intValue());
+        quantidadeLugaresOcupados.ifPresent(quantidadeLugares -> {
+            int totalLugaresOcupados  = Integer.sum(novaReserva.getQuantidadePessoas(), quantidadeLugares.intValue());
 
-        if (totalLugaresOcupados > restaurante.getCapacidade()) {
-            throw new ControllerNotFoundException(
-                    String.format("Atingiu a capacidade do restaurante, restam apenas %d lugares",
-                            (restaurante.getCapacidade() - quantidadeLugaresOcupados)));
-        }
+            if (totalLugaresOcupados > restaurante.getCapacidade()) {
+                throw new ControllerNotFoundException(
+                        String.format("Atingiu a capacidade do restaurante, restam apenas %d lugares",
+                                (restaurante.getCapacidade() - quantidadeLugares)));
+            }
+        });
+
+
+
     }
 
     @Override

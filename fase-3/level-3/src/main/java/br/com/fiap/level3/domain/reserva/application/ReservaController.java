@@ -6,6 +6,7 @@ import br.com.fiap.level3.domain.reserva.core.model.reserva.ReservaDTO;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.ReservaRestauranteDTO;
 import br.com.fiap.level3.domain.reserva.core.ports.incoming.CreateNewReserva;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class ReservaController {
 
     @PostMapping
     public ResponseEntity<ReservaDTO> criarReserva(@RequestBody ReservaDTO reservaDTO) {
-        return ResponseEntity.ok(newReserva.createNewReserva(reservaDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(newReserva.createNewReserva(reservaDTO));
     }
 
     @GetMapping("/restaurante/{restauranteId}")

@@ -44,8 +44,8 @@ public class ReservaIntegrationTest {
     @Test
     public void testListarReservasPorRestaurante() throws Exception {
         UUID restauranteId = UUID.randomUUID();
-        ReservaDTO reserva1 = new ReservaDTO(UUID.randomUUID(), LocalDate.now(), LocalTime.now(), 2, restauranteId, UUID.randomUUID(), StatusEnum.CRIADA.getDescricao());
-        ReservaDTO reserva2 = new ReservaDTO(UUID.randomUUID(), LocalDate.now(), LocalTime.now(), 3, restauranteId, UUID.randomUUID(), StatusEnum.CRIADA.getDescricao());
+        ReservaDTO reserva1 = new ReservaDTO(UUID.randomUUID(), LocalDate.now().toString(), LocalTime.now().toString(), 2, restauranteId, UUID.randomUUID(), StatusEnum.CRIADA.getDescricao());
+        ReservaDTO reserva2 = new ReservaDTO(UUID.randomUUID(), LocalDate.now().toString(), LocalTime.now().toString(), 3, restauranteId, UUID.randomUUID(), StatusEnum.CRIADA.getDescricao());
         ReservaRestauranteDTO reservaRestauranteDTO = new ReservaRestauranteDTO(Arrays.asList(reserva1, reserva2), 5, 10, true);
 
         when(createNewReserva.listarReservasPorRestaurante(restauranteId)).thenReturn(reservaRestauranteDTO);
@@ -62,7 +62,7 @@ public class ReservaIntegrationTest {
     @Test
     public void testListarReservaPorId() throws Exception {
         UUID reservaId = UUID.randomUUID();
-        ReservaDTO reservaDTO = new ReservaDTO(reservaId, LocalDate.now(), LocalTime.now(), 2, UUID.randomUUID(), UUID.randomUUID(), StatusEnum.CRIADA.getDescricao());
+        ReservaDTO reservaDTO = new ReservaDTO(reservaId, LocalDate.now().toString(), LocalTime.now().toString(), 2, UUID.randomUUID(), UUID.randomUUID(), StatusEnum.CRIADA.getDescricao());
 
         when(createNewReserva.listarReservaPorId(reservaId)).thenReturn(Optional.of(reservaDTO));
 
@@ -77,7 +77,7 @@ public class ReservaIntegrationTest {
     public void testAtualizarStatusReserva() throws Exception {
         UUID reservaId = UUID.randomUUID();
         StatusEnum novoStatus = StatusEnum.CONFIRMADA;
-        ReservaDTO reservaAtualizada = new ReservaDTO(reservaId, LocalDate.now(), LocalTime.now(), 2, UUID.randomUUID(), UUID.randomUUID(), novoStatus.getDescricao());
+        ReservaDTO reservaAtualizada = new ReservaDTO(reservaId, LocalDate.now().toString(), LocalTime.now().toString(), 2, UUID.randomUUID(), UUID.randomUUID(), novoStatus.getDescricao());
 
         when(createNewReserva.atualizarStatusReserva(reservaId, novoStatus)).thenReturn(Optional.of(reservaAtualizada));
 

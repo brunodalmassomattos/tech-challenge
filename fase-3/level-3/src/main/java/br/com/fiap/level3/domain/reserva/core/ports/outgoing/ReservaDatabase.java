@@ -15,7 +15,7 @@ public interface ReservaDatabase {
 
     Optional<Reserva> getReservaAbertaByUsuarioAndData(UUID usuarioId, LocalDate data);
 
-    Long getQuantidadeLugaresReservadosByRestaurante(UUID restauranteId);
+    Optional<Long> getQuantidadeLugaresReservadosByRestaurante(UUID restauranteId);
 
     Optional<Usuario> getUsuarioById(UUID id);
 

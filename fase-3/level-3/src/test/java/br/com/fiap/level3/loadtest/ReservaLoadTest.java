@@ -4,6 +4,7 @@ import br.com.fiap.level3.domain.reserva.core.model.enums.StatusEnum;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.ReservaDTO;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.ReservaRestauranteDTO;
 import br.com.fiap.level3.domain.reserva.core.model.reserva.AtualizarStatusDTO;
+import br.com.fiap.level3.domain.reserva.mocks.ReservaDTOTestMock;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -121,6 +122,41 @@ public class ReservaLoadTest {
 
         System.out.printf("Atualizar Status Reserva - Total time: %.3f seconds%n", totalTimeSeconds);
         System.out.printf("Atualizar Status Reserva - Average time per request: %.3f seconds%n", averageTimeSeconds);
+
+        executorService.shutdown();
+    }
+
+    @Test
+    void deveCriarNovaReservaComCarga() throws Exception {
+        ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OF_USERS);
+        List<CompletableFuture<ResponseEntity<ReservaDTO>>> futures = new ArrayList<>();
+
+        StopWatch watch = StopWatch.createStarted();
+
+        for (int i = 0; i < NUMBER_OF_USERS; i++) {
+            CompletableFuture<ResponseEntity<ReservaDTO>> future = CompletableFuture.supplyAsync(() -> {
+                ReservaDTO reservaDTO = ReservaDTOTestMock.getReservaDTO();
+                HttpEntity<ReservaDTO> requestEntity = new HttpEntity<>(reservaDTO);
+                return restTemplate.exchange(
+                        "/reservas",
+                        HttpMethod.POST,
+                        requestEntity,
+                        ReservaDTO.class
+                );
+            }, executorService);
+            futures.add(future);
+        }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+        watch.stop();
+
+        long totalTimeMillis = watch.getTime();
+        double totalTimeSeconds = totalTimeMillis / 1000.0;
+        double averageTimeSeconds = totalTimeSeconds / NUMBER_OF_USERS;
+
+        System.out.printf("Cadastrar nova reserva Reserva - Total time: %.3f seconds%n", totalTimeSeconds);
+        System.out.printf("Cadastrar nova reserva Reserva - Average time per request: %.3f seconds%n", averageTimeSeconds);
 
         executorService.shutdown();
     }

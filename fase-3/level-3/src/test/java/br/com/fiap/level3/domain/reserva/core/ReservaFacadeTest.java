@@ -58,7 +58,7 @@ public class ReservaFacadeTest {
         when(reservaDatabase.getReservaAbertaByUsuarioAndData(any(UUID.class), any(LocalDate.class)))
                 .thenReturn(Optional.empty());
         when(reservaDatabase.getQuantidadeLugaresReservadosByRestaurante(any(UUID.class)))
-                .thenReturn(Long.valueOf(10));
+                .thenReturn(Optional.of(10L));
         when(reservaDatabase.save(any(Reserva.class)))
                 .thenAnswer(p -> p.getArgument(0));
 
@@ -106,7 +106,7 @@ public class ReservaFacadeTest {
         when(reservaDatabase.getReservaAbertaByUsuarioAndData(any(UUID.class), any(LocalDate.class)))
                 .thenReturn(Optional.empty());
         when(reservaDatabase.getQuantidadeLugaresReservadosByRestaurante(any(UUID.class)))
-                .thenReturn(Long.valueOf(97));
+                .thenReturn(Optional.of(97L));
 
         assertThatThrownBy(() -> reservaFacade.createNewReserva(novaReserva))
                 .isInstanceOf(ControllerNotFoundException.class)
@@ -369,7 +369,7 @@ public class ReservaFacadeTest {
         assertTrue(result.isPresent());
         assertEquals(reservaId, result.get().id());
         assertEquals(StatusEnum.CONCLUIDA.getDescricao(), result.get().status());
-        assertTrue(result.get().data().isBefore(LocalDate.now()));
+        assertTrue(LocalDate.parse(result.get().data()).isBefore(LocalDate.now()));
     }
 
 
