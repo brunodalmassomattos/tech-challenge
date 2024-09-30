@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import br.com.fiap.level3.domain.avaliacao.core.AvaliacaoFacade;
 import br.com.fiap.level3.domain.avaliacao.infrastructure.AvaliacaoDatabaseAdapter;
+import jakarta.persistence.EntityManager;
 import br.com.fiap.level3.domain.avaliacao.core.ports.incoming.AddAvaliacao;
 import br.com.fiap.level3.domain.avaliacao.core.ports.incoming.AlterAvaliacao;
 import br.com.fiap.level3.domain.avaliacao.core.ports.incoming.FindAvaliacao;
@@ -14,8 +15,8 @@ import br.com.fiap.level3.domain.avaliacao.core.ports.outcoming.AvaliacaoDatabas
 public class AvaliacaoConfig {
 
     @Bean
-    public AvaliacaoDatabase avaliacaoDatabase(JdbcTemplate jdbcTemplate) {
-        return new AvaliacaoDatabaseAdapter(jdbcTemplate);
+    public AvaliacaoDatabase avaliacaoDatabase(JdbcTemplate jdbcTemplate,EntityManager entityManager) {
+        return new AvaliacaoDatabaseAdapter(jdbcTemplate, entityManager);
     }
 
     @Bean
