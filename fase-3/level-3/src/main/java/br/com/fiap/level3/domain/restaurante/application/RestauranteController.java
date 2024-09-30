@@ -3,13 +3,11 @@ package br.com.fiap.level3.domain.restaurante.application;
 import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
 import br.com.fiap.level3.domain.restaurante.core.model.endereco.AlterarEnderecoDTO;
 import br.com.fiap.level3.domain.restaurante.core.model.endereco.Endereco;
-import br.com.fiap.level3.domain.restaurante.core.model.endereco.EnderecoDTO;
 import br.com.fiap.level3.domain.restaurante.core.model.restaurante.AlterarRestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.model.restaurante.Restaurante;
 import br.com.fiap.level3.domain.restaurante.core.model.restaurante.RestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.model.tiporestaurante.TipoRestauranteDTO;
 import br.com.fiap.level3.domain.restaurante.core.ports.incoming.*;
-
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -18,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -59,23 +56,6 @@ public class RestauranteController {
         return ResponseEntity.ok(RestauranteDTO.fromRestaurantes(restaurantes));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RestauranteDTO> buscarRestaurantePorId(@PathVariable String id) {
-        Optional<Restaurante> restaurante = this.findRestaurante.getRestauranteById(UUID.fromString(id));
-        return restaurante.map(value -> ResponseEntity.ok(RestauranteDTO.fromRestaurante(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/nome")
-    public ResponseEntity<List<RestauranteDTO>> buscarRestaurantePorNome(@RequestParam String nome) {
-        List<Restaurante> restaurantes = this.findRestaurante.getRestauranteByNome(nome);
-
-        if (restaurantes.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(RestauranteDTO.fromRestaurantes(restaurantes));
-    }
-
     @GetMapping("/tipo-restaurante")
     public ResponseEntity<List<RestauranteDTO>> buscarRestaurantePorTipo(
             @RequestParam(required = false) String id,
@@ -110,6 +90,7 @@ public class RestauranteController {
         this.deleteRestaurante.deleteRestaurante(UUID.fromString(id));
         return new ResponseEntity<>("Restaurante Alterado", HttpStatus.OK);
     }
+
     @PatchMapping("/{idRestaurante}/endereco/{idEndereco}")
     public ResponseEntity<String> alteraEndereco(
             @PathVariable String idRestaurante,

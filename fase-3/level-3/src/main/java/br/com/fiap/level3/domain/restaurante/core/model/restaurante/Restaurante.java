@@ -19,6 +19,7 @@ public class Restaurante {
     private String horarioFuncionamento;
     private int capacidade;
     private boolean status;
+
     private TipoRestaurante tipoRestaurante;
     private Endereco endereco;
 

@@ -3,6 +3,7 @@ package br.com.fiap.level3.domain.tiporestaurante.infrastructure;
 import br.com.fiap.level3.domain.tiporestaurante.core.model.TipoRestaurante;
 import br.com.fiap.level3.domain.tiporestaurante.core.ports.outcoming.TipoRestauranteDatabase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +29,7 @@ public class TipoRestauranteDatabaseAdapter implements TipoRestauranteDatabase {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TipoRestaurante> findAll() {
         return (List<TipoRestaurante>) this.tipoRestauranteRepository.findAll();
     }

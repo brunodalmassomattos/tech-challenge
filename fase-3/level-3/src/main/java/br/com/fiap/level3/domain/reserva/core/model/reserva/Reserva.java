@@ -2,14 +2,17 @@ package br.com.fiap.level3.domain.reserva.core.model.reserva;
 
 import br.com.fiap.level3.domain.exception.ControllerNotFoundException;
 import br.com.fiap.level3.domain.reserva.core.model.enums.StatusEnum;
-import br.com.fiap.level3.domain.reserva.core.model.restaurante.Restaurante;
+import br.com.fiap.level3.domain.reserva.core.model.restaurante.RestauranteReserva;
 import br.com.fiap.level3.domain.reserva.core.model.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -37,7 +40,7 @@ public class Reserva {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurante_id")
-    private Restaurante restaurante;
+    private RestauranteReserva restaurante;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
@@ -46,11 +49,17 @@ public class Reserva {
     @Column(name = "status_reserva", nullable = false)
     private String status;
 
-    public static Reserva criarReserva(ReservaDTO reservaDTO, Restaurante restaurante, Usuario usuario, StatusEnum status) {
-        validarCriacaoReserva(reservaDTO);
+    public static Reserva criarReserva(ReservaDTO reservaDTO, RestauranteReserva restaurante, Usuario usuario, StatusEnum status) {
+        validarCamposObrigatorios(reservaDTO.data(), reservaDTO.hora());
+        LocalDate data = LocalDate.parse(reservaDTO.data(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalTime hora = LocalTime.parse(reservaDTO.hora(), DateTimeFormatter.ofPattern("HH:mm"));
+
+        validarDataHoraMaiorQueAtual(data, hora);
+        validarQuantidadePessoas(reservaDTO.quantidadePessoas());
+
         return Reserva.builder()
-                       .data(reservaDTO.data())
-                       .hora(reservaDTO.hora())
+                       .data(data)
+                       .hora(hora)
                        .quantidadePessoas(reservaDTO.quantidadePessoas())
                        .restaurante(restaurante)
                        .usuario(usuario)
@@ -58,25 +67,19 @@ public class Reserva {
                        .build();
     }
 
-    private static void validarCriacaoReserva(ReservaDTO reservaDTO) {
-        validarCamposObrigatorios(reservaDTO.data(), reservaDTO.hora());
-        validarDataHoraMaiorQueAtual(reservaDTO.data(), reservaDTO.hora());
-        validarQuantidadePessoas(reservaDTO.quantidadePessoas());
-    }
-
-    private static void validarCamposObrigatorios(LocalDate data, LocalTime hora) {
+    private static void validarCamposObrigatorios(String data, String hora) {
         isDataNull(data);
         isHoraNull(hora);
     }
 
-    private static void isDataNull(LocalDate data) {
-        if(Objects.isNull(data)) {
+    private static void isDataNull(String data) {
+        if(StringUtils.isBlank(data)) {
             throw new ControllerNotFoundException("É necessário informar uma data para criar reserva!");
         }
     }
 
-    private static void isHoraNull(LocalTime hora) {
-        if(Objects.isNull(hora)) {
+    private static void isHoraNull(String hora) {
+        if(StringUtils.isBlank(hora)) {
             throw new ControllerNotFoundException("É necessário informar um horário para criar reserva!");
         }
     }
@@ -92,7 +95,7 @@ public class Reserva {
     }
 
     private static boolean isHoraInvalida(LocalTime hora) {
-        long diferencaMinutos = hora.until(LocalTime.now(), ChronoUnit.MINUTES);
+        long diferencaMinutos = ChronoUnit.MINUTES.between(LocalTime.now(), hora);
         return diferencaMinutos < 30;
     }
 

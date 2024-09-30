@@ -12,7 +12,7 @@ public enum StatusEnum {
 
     CONFIRMADA("CONFIRMADA"), //A reserva foi confirmada pelo restaurante.
     CANCELADA("CANCELADA"), //A reserva foi cancelada pelo cliente ou pelo restaurante.
-    AGUARDANDO_CONFIRMACAO("CANCELADA"), //A reserva foi feita, mas ainda não foi confirmada pelo restaurante.
+    AGUARDANDO_CONFIRMACAO("AGUARDANDO_CONFIRMACAO"), //A reserva foi feita, mas ainda não foi confirmada pelo restaurante.
     NAO_COMPARECEU("NAO_COMPARECEU"), //O cliente não apareceu para a reserva.
     EM_ANDAMENTO("EM_ANDAMENTO"), //O cliente chegou e a reserva está em andamento.
     CONCLUIDA("CONCLUIDA"), //A reserva foi concluída com sucesso, e o cliente já saiu.

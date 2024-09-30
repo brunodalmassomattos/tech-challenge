@@ -11,7 +11,6 @@ import br.com.fiap.level3.domain.restaurante.core.ports.incoming.FindRestaurante
 import br.com.fiap.level3.domain.restaurante.core.ports.outcoming.RestauranteDatabase;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class RestauranteFacade implements FindRestaurante, AddRestaurante, AlterRestaurante, DeleteRestaurante {
@@ -22,15 +21,9 @@ public class RestauranteFacade implements FindRestaurante, AddRestaurante, Alter
         this.database = database;
     }
 
-    @Override
-    public Optional<Restaurante> getRestauranteById(UUID id) {
-        return Optional.ofNullable(this.database.getRestauranteById(id)
-                .orElseThrow(() -> new ControllerNotFoundException("Restaurante não encontrado!")));
-    }
-
-    @Override
-    public List<Restaurante> getRestauranteByNome(String nome) {
-        return this.database.getRestauranteByNome(nome);
+    private Restaurante getRestauranteById(UUID id) {
+        return this.database.getRestauranteById(id)
+                .orElseThrow(() -> new ControllerNotFoundException("Restaurante não encontrado!"));
     }
 
     @Override
@@ -55,7 +48,7 @@ public class RestauranteFacade implements FindRestaurante, AddRestaurante, Alter
 
     @Override
     public void alterRestaurante(Restaurante restaurante) {
-        var restautanteSalvo = this.getRestauranteById(restaurante.getId()).get();
+        var restautanteSalvo = this.getRestauranteById(restaurante.getId());
         restautanteSalvo.setNome(restaurante.getNome() == null ? restautanteSalvo.getNome() : restaurante.getNome());
         restautanteSalvo.setHorarioFuncionamento(restaurante.getHorarioFuncionamento() == null ? restautanteSalvo.getHorarioFuncionamento() : restaurante.getHorarioFuncionamento());
         restautanteSalvo.setCapacidade(restaurante.getCapacidade() == 0 ? restautanteSalvo.getCapacidade() : restaurante.getCapacidade());
@@ -65,7 +58,7 @@ public class RestauranteFacade implements FindRestaurante, AddRestaurante, Alter
 
     @Override
     public void deleteRestaurante(UUID id) {
-        var restautanteSalvo = this.getRestauranteById(id).get();
+        var restautanteSalvo = this.getRestauranteById(id);
         this.database.delete(restautanteSalvo.getId());
     }
 
