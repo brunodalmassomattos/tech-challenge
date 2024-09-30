@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import lombok.Builder;
+
+@Builder
 public record AvaliacaoDTO(String id, Integer nota, String comentario, String restauranteId, String usuarioId) {
 
 	public static AvaliacaoDTO fromAvaliacao(Avaliacao avaliacao) {

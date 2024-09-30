@@ -3,6 +3,7 @@ package br.com.fiap.level3.domain.avaliacao.application;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -58,22 +59,32 @@ public class AvaliacaoController {
     
     @GetMapping("/restauranteId")
     public ResponseEntity<List<AvaliacaoDTO>> buscarAvaliacaoPorRestauranteId(@RequestParam String restauranteId) {
-        List<Avaliacao> avaliacoes = this.findAvaliacao.getAvaliacaoByRestauranteId(UUID.fromString(restauranteId));
-        if(avaliacoes.isEmpty()) {
+        List<Optional<Avaliacao>> avaliacoes = this.findAvaliacao.getAvaliacaoByRestauranteId(UUID.fromString(restauranteId));
+
+        List<Avaliacao> avaliacoesValidas = avaliacoes.stream()
+            .flatMap(Optional::stream)
+            .collect(Collectors.toList());
+
+        if (avaliacoesValidas.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(AvaliacaoDTO.fromAvaliacoes(avaliacoes));
 
+        return ResponseEntity.ok(AvaliacaoDTO.fromAvaliacoes(avaliacoesValidas));
     }
     
     @GetMapping("/usuarioId")
     public ResponseEntity<List<AvaliacaoDTO>> buscarAvaliacaoPorUsuarioId(@RequestParam String usuarioId) {
-        List<Avaliacao> avaliacoes = this.findAvaliacao.getAvaliacaoByUsuarioId(UUID.fromString(usuarioId));
-        if(avaliacoes.isEmpty()) {
+        List<Optional<Avaliacao>> avaliacoes = this.findAvaliacao.getAvaliacaoByUsuarioId(UUID.fromString(usuarioId));
+
+        List<Avaliacao> avaliacoesValidas = avaliacoes.stream()
+            .flatMap(Optional::stream)
+            .collect(Collectors.toList());
+
+        if (avaliacoesValidas.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(AvaliacaoDTO.fromAvaliacoes(avaliacoes));
 
+        return ResponseEntity.ok(AvaliacaoDTO.fromAvaliacoes(avaliacoesValidas));
     }
     
     @PatchMapping("/{id}")
