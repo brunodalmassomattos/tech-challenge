@@ -82,6 +82,14 @@ A estrutura que propomos se baseia na divisão em camadas, com cada camada tendo
 ### Camada de Infraestrutura (Infrastructure Layer)
 &nbsp;&nbsp; **Persistence:** Implementa os repositórios, utilizando um ORM como Hibernate para interagir com o banco de dados.
 
+### Tecnologias Utilizadas
+- **Java 17**
+- **Spring Boot**
+- **Docker**
+- **Render** (para hospedagem)
+- **AWS** (para hospedagem)
+- **Supabase** (PostgreSQL como banco de dados)
+
 ## Estrutura de Pacotes Detalhada
 
 ````
@@ -90,8 +98,14 @@ A estrutura que propomos se baseia na divisão em camadas, com cada camada tendo
 |----controller/
 |----service/
 |--domain/
-|----model/
-|----repository/
+|----dominio/
+|------application/
+|------core/
+|--------model/
+|--------ports/
+|----------incoming/
+|----------outcoming/
+|------infrastuture/
 |--infrastructure/
 |----persistence/
 ````
@@ -108,3 +122,20 @@ D - Dependency Inversion Principle: Dependências devem apontar para abstraçõe
 - Reusabilidade: A lógica de negócio está isolada na camada de domínio. <br>
 - Testabilidade: É fácil escrever testes unitários para cada camada. <br>
 - Extensibilidade: É fácil adicionar novas funcionalidades sem impactar outras partes do sistema.
+
+## Construção do Projeto
+Certifique-se de que todas as dependências Maven estão instaladas:
+   ````
+      mvn clean install -DskipTests
+   ````
+
+### Executando com Docker
+Construa a imagem Docker e inicie o container:
+   ````
+         docker build level3 .
+         docker run --name level3-container -p 8080:8080 -e password_supa='grupo29@@2024' -it level3
+   ````
+
+### Acessando o SWAGGER
+Após iniciar o container, acesse a interface Swagger para interagir com a API através do navegador: 
+[Documentação do Swagger](http://localhost:8080/swagger-ui/index.html#/)
