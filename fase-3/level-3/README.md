@@ -82,14 +82,6 @@ A estrutura que propomos se baseia na divisão em camadas, com cada camada tendo
 ### Camada de Infraestrutura (Infrastructure Layer)
 &nbsp;&nbsp; **Persistence:** Implementa os repositórios, utilizando um ORM como Hibernate para interagir com o banco de dados.
 
-### Tecnologias Utilizadas
-- **Java 17**
-- **Spring Boot**
-- **Docker**
-- **Render** (para hospedagem)
-- **AWS** (para hospedagem)
-- **Supabase** (PostgreSQL como banco de dados)
-
 ## Estrutura de Pacotes Detalhada
 
 ````
@@ -126,7 +118,7 @@ D - Dependency Inversion Principle: Dependências devem apontar para abstraçõe
 ## Construção do Projeto
 Certifique-se de que todas as dependências Maven estão instaladas:
    ````
-      mvn clean install -DskipTests
+      mvn clean install
    ````
 
 ### Executando com Docker
