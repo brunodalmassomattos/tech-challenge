@@ -18,7 +18,7 @@ public class UsuarioController {
     private final FindUsuario findUsuario;
 
     @GetMapping("")
-    public ResponseEntity<List<UsuarioDTO>> listaTodosTipoRestaurante() {
+    public ResponseEntity<List<UsuarioDTO>> listaUsuarios() {
         var usuarios = this.findUsuario.getUsuarios();
 
         if (usuarios.isEmpty()) {
