@@ -29,7 +29,21 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
     }
 
     @Override
-    public void save(Produto product) {
-        repository.save(ProdutoMapper.toEntity(product));
+    public List<Produto> findByNameOrDescription(String nome, String descricao) {
+        return repository.findByNomeContainingOrDescricaoContainingIgnoreCase(nome, descricao)
+                .stream()
+                .map(ProdutoMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public Produto save(Produto produto) {
+        var produtoEntity = repository.save(ProdutoMapper.toEntity(produto));
+        return ProdutoMapper.toDomain(produtoEntity);
+    }
+
+    @Override
+    public void delete(Produto produto) {
+        repository.delete(ProdutoMapper.toEntity(produto));
     }
 }

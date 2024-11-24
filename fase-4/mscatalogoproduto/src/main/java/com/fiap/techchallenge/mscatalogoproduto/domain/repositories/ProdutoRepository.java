@@ -10,6 +10,8 @@ public interface ProdutoRepository {
 
     Optional<Produto> findById(UUID id);
     List<Produto> findAll();
+    List<Produto> findByNameOrDescription(String name, String description);
 
-    void save(Produto product);
+    Produto save(Produto product);
+    void delete(Produto product);
 }
