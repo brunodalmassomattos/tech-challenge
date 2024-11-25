@@ -16,6 +16,7 @@ public class GetProdutoUseCase {
     }
 
     public Produto execute(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Produto não localizado para o id: " + id));
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não localizado para o id: " + id));
     }
 }

@@ -7,6 +7,7 @@ import com.fiap.techchallenge.mscatalogoproduto.application.dtos.ProdutoResponse
 import com.fiap.techchallenge.mscatalogoproduto.application.usecases.*;
 import com.fiap.techchallenge.mscatalogoproduto.domain.entities.Produto;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,8 @@ public class ProdutoController {
     private final SearchProdutosUseCase searchProdutosUseCase;
     private final CreateProdutoUseCase createprodutoUseCase;
     private final AlterProdutoUseCase alterProdutoUseCase;
+    private final BaixaEstoqueProdutoUseCase baixaEstoqueProdutoUseCase;
+    private final EstornoEstoqueUseCase estornoEstoqueUseCase;
     private final DeleteProdutoUseCase deleteProdutoUseCase;
 
     public ProdutoController(GetAllProdutosUseCase getAllProdutosUseCase,
@@ -30,35 +33,45 @@ public class ProdutoController {
                              SearchProdutosUseCase searchProdutosUseCase,
                              CreateProdutoUseCase createprodutoUseCase,
                              AlterProdutoUseCase alterProdutoUseCase,
+                             BaixaEstoqueProdutoUseCase baixaEstoqueProdutoUseCase,
+                             EstornoEstoqueUseCase estornoEstoqueUseCase,
                              DeleteProdutoUseCase deleteProdutoUseCase) {
         this.getAllProdutosUseCase = getAllProdutosUseCase;
         this.getProdutoUseCase = getProdutoUseCase;
         this.searchProdutosUseCase = searchProdutosUseCase;
         this.createprodutoUseCase = createprodutoUseCase;
         this.alterProdutoUseCase = alterProdutoUseCase;
+        this.baixaEstoqueProdutoUseCase = baixaEstoqueProdutoUseCase;
+        this.estornoEstoqueUseCase = estornoEstoqueUseCase;
         this.deleteProdutoUseCase = deleteProdutoUseCase;
     }
 
     @PostMapping
-    public ResponseEntity<ProdutoResponse> createProduto(@RequestBody CreateProdutoRequest request) {
-        request.validate();
-        Produto produto = createprodutoUseCase.execute(
-                request.nome(),
-                request.descricao(),
-                request.preco(),
-                request.quantidadeEstoque(),
-                request.idCategoria());
+    public ResponseEntity<?> createProduto(@RequestBody CreateProdutoRequest request) {
+        try {
+            request.validate();
+            Produto produto = createprodutoUseCase.execute(
+                    request.nome(),
+                    request.descricao(),
+                    request.preco(),
+                    request.quantidadeEstoque(),
+                    request.idCategoria());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new ProdutoResponse(
-                        produto.getId().toString(),
-                        produto.getNome(),
-                        produto.getDescricao(),
-                        produto.getPreco(),
-                        produto.getQtdEstoque(),
-                        new CategoriaResponse(
-                                produto.getCategoria().getId().toString(),
-                                produto.getCategoria().getDescricao())));
+            return ResponseEntity.status(HttpStatus.CREATED).body(
+                    new ProdutoResponse(
+                            produto.getId().toString(),
+                            produto.getNome(),
+                            produto.getDescricao(),
+                            produto.getPreco(),
+                            produto.getQtdEstoque(),
+                            new CategoriaResponse(
+                                    produto.getCategoria().getId().toString(),
+                                    produto.getCategoria().getDescricao())));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro inesperado ao criar o produto.");
+        }
     }
 
     @PatchMapping("/{id}")
@@ -97,19 +110,25 @@ public class ProdutoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponse> getProduto(@PathVariable UUID id) {
-        Produto produto = getProdutoUseCase.execute(id);
+    public ResponseEntity<?> getProduto(@PathVariable UUID id) {
+        try {
+            Produto produto = getProdutoUseCase.execute(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ProdutoResponse(
-                        produto.getId().toString(),
-                        produto.getNome(),
-                        produto.getDescricao(),
-                        produto.getPreco(),
-                        produto.getQtdEstoque(),
-                        new CategoriaResponse(
-                                produto.getCategoria().getId().toString(),
-                                produto.getCategoria().getDescricao())));
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ProdutoResponse(
+                            produto.getId().toString(),
+                            produto.getNome(),
+                            produto.getDescricao(),
+                            produto.getPreco(),
+                            produto.getQtdEstoque(),
+                            new CategoriaResponse(
+                                    produto.getCategoria().getId().toString(),
+                                    produto.getCategoria().getDescricao())));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping
@@ -134,9 +153,10 @@ public class ProdutoController {
     @GetMapping("/search")
     public List<ProdutoResponse> searchProdutos(
             @RequestParam(required = false) String nome,
-            @RequestParam(required = false) String descricao
-    ) {
+            @RequestParam(required = false) String descricao) {
+
         List<Produto> produtos = searchProdutosUseCase.execute(nome, descricao);
+
         return produtos.stream()
                 .map(p -> new ProdutoResponse(
                         p.getId().toString(),
@@ -149,5 +169,54 @@ public class ProdutoController {
                                 p.getCategoria().getDescricao())
                 ))
                 .toList();
+    }
+
+    @PatchMapping("/{id}/baixa-estoque")
+    public ResponseEntity<?> baixaQuantidadeProdutoEstoque(
+            @PathVariable UUID id,
+            @RequestParam Integer quantidade) {
+        try {
+            Produto produto = baixaEstoqueProdutoUseCase.execute(id, quantidade);
+
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ProdutoResponse(
+                            produto.getId().toString(),
+                            produto.getNome(),
+                            produto.getDescricao(),
+                            produto.getPreco(),
+                            produto.getQtdEstoque(),
+                            new CategoriaResponse(
+                                    produto.getCategoria().getId().toString(),
+                                    produto.getCategoria().getDescricao())));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PatchMapping("/{id}/estorno-estoque")
+    public ResponseEntity<?> estornarEstoque(
+            @PathVariable UUID id,
+            @RequestParam Integer quantidade) {
+        try {
+            Produto produto = estornoEstoqueUseCase.execute(id, quantidade);
+
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ProdutoResponse(
+                            produto.getId().toString(),
+                            produto.getNome(),
+                            produto.getDescricao(),
+                            produto.getPreco(),
+                            produto.getQtdEstoque(),
+                            new CategoriaResponse(
+                                    produto.getCategoria().getId().toString(),
+                                    produto.getCategoria().getDescricao())));
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
