@@ -1,18 +1,17 @@
 package br.com.fiap.funcionalidadeDeCargaDeProdutos.application.service;
 
-import br.com.fiap.funcionalidadeDeCargaDeProdutos.domain.entity.Produto;
-
+import br.com.fiap.funcionalidadeDeCargaDeProdutos.application.dto.ProdutoDTO;
 import java.util.List;
 
 public interface ProdutoService {
 
-    Produto createProduto(Produto produto);
+    ProdutoDTO createProduto(ProdutoDTO produtoDTO);
 
-    Produto updateProduto(Long id, Produto produto);
+    ProdutoDTO updateProduto(Long id, ProdutoDTO produtoDTO);
 
     void deleteProduto(Long id);
 
-    Produto getProdutoById(Long id);
+    ProdutoDTO getProdutoById(Long id);
 
-    List<Produto> getAllProdutos();
+    List<ProdutoDTO> getAllProdutos();
 }

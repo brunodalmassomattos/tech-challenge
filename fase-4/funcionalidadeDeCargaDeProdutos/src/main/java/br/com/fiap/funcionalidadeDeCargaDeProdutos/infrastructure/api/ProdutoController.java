@@ -1,45 +1,58 @@
 package br.com.fiap.funcionalidadeDeCargaDeProdutos.infrastructure.api;
 
+import br.com.fiap.funcionalidadeDeCargaDeProdutos.application.dto.ProdutoDTO;
 import br.com.fiap.funcionalidadeDeCargaDeProdutos.application.service.ProdutoService;
-import br.com.fiap.funcionalidadeDeCargaDeProdutos.domain.entity.Produto;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.List;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/produtos")
 @RequiredArgsConstructor
+@Tag(name = "Produtos", description = "Gerenciamento de produtos")
 public class ProdutoController {
 
     private final ProdutoService produtoService;
 
+    @Operation(summary = "Cria um novo produto")
     @PostMapping
-    public ResponseEntity<Produto> createProduto(@Valid @RequestBody Produto produto) {
-        Produto novoProduto = produtoService.createProduto(produto);
-        return ResponseEntity.ok(novoProduto);
+    public ResponseEntity<ProdutoDTO> createProduto(@Valid @RequestBody ProdutoDTO produtoDTO) {
+        ProdutoDTO novoProduto = produtoService.createProduto(produtoDTO);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(novoProduto.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(novoProduto);
     }
 
+    @Operation(summary = "Obtém um produto pelo ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> getProdutoById(@PathVariable Long id) {
-        Produto produto = produtoService.getProdutoById(id);
+    public ResponseEntity<ProdutoDTO> getProdutoById(@PathVariable Long id) {
+        ProdutoDTO produto = produtoService.getProdutoById(id);
         return ResponseEntity.ok(produto);
     }
 
+    @Operation(summary = "Lista todos os produtos")
     @GetMapping
-    public ResponseEntity<List<Produto>> getAllProdutos() {
-        List<Produto> produtos = produtoService.getAllProdutos();
+    public ResponseEntity<List<ProdutoDTO>> getAllProdutos() {
+        List<ProdutoDTO> produtos = produtoService.getAllProdutos();
         return ResponseEntity.ok(produtos);
     }
 
+    @Operation(summary = "Atualiza um produto existente")
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> updateProduto(@PathVariable Long id, @Valid @RequestBody Produto produto) {
-        Produto produtoAtualizado = produtoService.updateProduto(id, produto);
+    public ResponseEntity<ProdutoDTO> updateProduto(@PathVariable Long id, @Valid @RequestBody ProdutoDTO produtoDTO) {
+        ProdutoDTO produtoAtualizado = produtoService.updateProduto(id, produtoDTO);
         return ResponseEntity.ok(produtoAtualizado);
     }
 
+    @Operation(summary = "Exclui um produto")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduto(@PathVariable Long id) {
         produtoService.deleteProduto(id);

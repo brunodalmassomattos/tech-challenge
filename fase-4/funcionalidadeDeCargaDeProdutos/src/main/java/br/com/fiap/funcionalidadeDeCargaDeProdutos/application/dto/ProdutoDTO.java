@@ -1,18 +1,11 @@
-package br.com.fiap.funcionalidadeDeCargaDeProdutos.domain.entity;
+package br.com.fiap.funcionalidadeDeCargaDeProdutos.application.dto;
 
-import jakarta.persistence.*;
+import lombok.Data;
 import jakarta.validation.constraints.*;
-import lombok.*;
-import java.io.Serializable;
 
-@Entity
-@Getter
-@Setter
-@NoArgsConstructor
-public class Produto implements Serializable {
+@Data
+public class ProdutoDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "O nome do produto é obrigatório.")
@@ -30,17 +23,7 @@ public class Produto implements Serializable {
     @Min(value = 0, message = "A quantidade em estoque não pode ser negativa.")
     private Integer qtdEstoque;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_id")
     @NotNull(message = "A categoria é obrigatória.")
-    @ToString.Exclude
-    private Categoria categoria;
-
-    public Produto(String nome, Double preco, Integer qtdEstoque, Categoria categoria) {
-        this.nome = nome;
-        this.preco = preco;
-        this.qtdEstoque = qtdEstoque;
-        this.categoria = categoria;
-    }
+    private Long categoriaId;
 }
 

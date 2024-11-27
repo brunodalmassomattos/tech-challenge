@@ -1,41 +1,29 @@
 package br.com.fiap.funcionalidadeDeCargaDeProdutos.infrastructure.handler;
 
-import jakarta.persistence.EntityNotFoundException;
+import br.com.fiap.funcionalidadeDeCargaDeProdutos.domain.exception.ResourceNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /**
-     * Trata exceções genéricas de runtime.
-     */
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> handleRuntimeException(RuntimeException ex, WebRequest request) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    /**
-     * Trata exceções quando uma entidade não é encontrada.
-     */
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
-        String mensagem = "Recurso não encontrado: " + ex.getMessage();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensagem);
-    }
-
-    /**
-     * Trata erros de validação em métodos anotados com @Valid.
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> erros = new HashMap<>();
@@ -47,21 +35,28 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(erros);
     }
 
-    /**
-     * Trata exceções de tipo de argumento inválido em métodos de controller.
-     */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<?> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, WebRequest request) {
+    public ResponseEntity<?> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
         String mensagem = String.format("O parâmetro '%s' recebeu o valor '%s', que é de um tipo inválido. Corrija e tente novamente.",
                 ex.getName(), ex.getValue());
         return ResponseEntity.badRequest().body(mensagem);
     }
 
-    /**
-     * Trata todas as outras exceções não capturadas por handlers específicos.
-     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        String mensagem = "Operação não pôde ser completada devido a uma violação de integridade de dados.";
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(mensagem);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+        logger.error("Erro de runtime", ex);
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleAllExceptions(Exception ex, WebRequest request) {
+    public ResponseEntity<?> handleAllExceptions(Exception ex) {
+        logger.error("Erro inesperado", ex);
         String mensagem = "Ocorreu um erro interno no servidor. Por favor, tente novamente mais tarde.";
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mensagem);
     }

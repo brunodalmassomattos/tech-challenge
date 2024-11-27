@@ -18,7 +18,7 @@ public class SwaggerConfig {
                         .version("v1.0"))
                 .externalDocs(new ExternalDocumentation()
                         .description("Mais informações")
-                        .url("http://springdoc.org"));
+                        .url("https://springdoc.org"));
     }
 
     @Bean
