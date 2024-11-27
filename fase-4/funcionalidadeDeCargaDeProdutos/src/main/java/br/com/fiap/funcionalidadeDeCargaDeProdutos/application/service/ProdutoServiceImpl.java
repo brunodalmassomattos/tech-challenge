@@ -2,6 +2,7 @@ package br.com.fiap.funcionalidadeDeCargaDeProdutos.application.service;
 
 import br.com.fiap.funcionalidadeDeCargaDeProdutos.domain.entity.Produto;
 import br.com.fiap.funcionalidadeDeCargaDeProdutos.domain.repository.ProdutoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     public Produto updateProduto(Long id, Produto produto) {
         Produto existente = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado com id " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id " + id));
 
         existente.setNome(produto.getNome());
         existente.setDescricao(produto.getDescricao());
@@ -40,7 +41,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     public Produto getProdutoById(Long id) {
         return produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado com id " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id " + id));
     }
 
     @Override

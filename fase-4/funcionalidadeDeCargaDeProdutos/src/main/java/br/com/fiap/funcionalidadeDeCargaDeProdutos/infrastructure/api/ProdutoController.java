@@ -2,11 +2,12 @@ package br.com.fiap.funcionalidadeDeCargaDeProdutos.infrastructure.api;
 
 import br.com.fiap.funcionalidadeDeCargaDeProdutos.application.service.ProdutoService;
 import br.com.fiap.funcionalidadeDeCargaDeProdutos.domain.entity.Produto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/produtos")
@@ -16,7 +17,7 @@ public class ProdutoController {
     private final ProdutoService produtoService;
 
     @PostMapping
-    public ResponseEntity<Produto> createProduto(@RequestBody Produto produto) {
+    public ResponseEntity<Produto> createProduto(@Valid @RequestBody Produto produto) {
         Produto novoProduto = produtoService.createProduto(produto);
         return ResponseEntity.ok(novoProduto);
     }
@@ -34,7 +35,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> updateProduto(@PathVariable Long id, @RequestBody Produto produto) {
+    public ResponseEntity<Produto> updateProduto(@PathVariable Long id, @Valid @RequestBody Produto produto) {
         Produto produtoAtualizado = produtoService.updateProduto(id, produto);
         return ResponseEntity.ok(produtoAtualizado);
     }
