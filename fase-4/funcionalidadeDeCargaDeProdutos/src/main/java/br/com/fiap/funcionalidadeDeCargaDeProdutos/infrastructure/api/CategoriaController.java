@@ -6,9 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -26,14 +29,14 @@ public class CategoriaController {
         CategoriaDTO novaCategoria = categoriaService.createCategoria(categoriaDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(novaCategoria.getId())
+                .buildAndExpand(novaCategoria.id())
                 .toUri();
         return ResponseEntity.created(location).body(novaCategoria);
     }
 
     @Operation(summary = "Obtém uma categoria pelo ID")
     @GetMapping("/{id}")
-    public ResponseEntity<CategoriaDTO> getCategoriaById(@PathVariable Long id) {
+    public ResponseEntity<CategoriaDTO> getCategoriaById(@PathVariable UUID id) {
         CategoriaDTO categoria = categoriaService.getCategoriaById(id);
         return ResponseEntity.ok(categoria);
     }
@@ -47,14 +50,14 @@ public class CategoriaController {
 
     @Operation(summary = "Atualiza uma categoria existente")
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaDTO> updateCategoria(@PathVariable Long id, @Valid @RequestBody CategoriaDTO categoriaDTO) {
+    public ResponseEntity<CategoriaDTO> updateCategoria(@PathVariable UUID id, @Valid @RequestBody CategoriaDTO categoriaDTO) {
         CategoriaDTO categoriaAtualizada = categoriaService.updateCategoria(id, categoriaDTO);
         return ResponseEntity.ok(categoriaAtualizada);
     }
 
     @Operation(summary = "Exclui uma categoria")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategoria(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategoria(@PathVariable UUID id) {
         categoriaService.deleteCategoria(id);
         return ResponseEntity.noContent().build();
     }

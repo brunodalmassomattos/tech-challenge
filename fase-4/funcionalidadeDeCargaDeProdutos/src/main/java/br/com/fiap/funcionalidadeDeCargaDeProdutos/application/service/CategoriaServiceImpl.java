@@ -8,7 +8,9 @@ import br.com.fiap.funcionalidadeDeCargaDeProdutos.domain.repository.CategoriaRe
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +30,11 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     @Transactional
-    public CategoriaDTO updateCategoria(Long id, CategoriaDTO categoriaDTO) {
+    public CategoriaDTO updateCategoria(UUID id, CategoriaDTO categoriaDTO) {
         Categoria existente = categoriaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada com id " + id));
 
-        existente.setDescricao(categoriaDTO.getDescricao());
+        existente.setDescricao(categoriaDTO.descricao());
 
         Categoria atualizada = categoriaRepository.save(existente);
         return categoriaMapper.toDto(atualizada);
@@ -40,7 +42,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     @Transactional
-    public void deleteCategoria(Long id) {
+    public void deleteCategoria(UUID id) {
         if (!categoriaRepository.existsById(id)) {
             throw new ResourceNotFoundException("Categoria não encontrada com id " + id);
         }
@@ -48,7 +50,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
-    public CategoriaDTO getCategoriaById(Long id) {
+    public CategoriaDTO getCategoriaById(UUID id) {
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada com id " + id));
         return categoriaMapper.toDto(categoria);

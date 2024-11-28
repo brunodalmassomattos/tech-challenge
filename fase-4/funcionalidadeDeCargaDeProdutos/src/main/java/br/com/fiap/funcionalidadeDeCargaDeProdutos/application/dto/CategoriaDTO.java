@@ -1,15 +1,12 @@
 package br.com.fiap.funcionalidadeDeCargaDeProdutos.application.dto;
 
-import lombok.Data;
 import jakarta.validation.constraints.*;
+import java.util.UUID;
 
-@Data
-public class CategoriaDTO {
+public record CategoriaDTO(
+        UUID id,
 
-    private Long id;
-
-    @NotBlank(message = "A descrição da categoria é obrigatória.")
-    @Size(min = 2, max = 100, message = "A descrição deve ter entre 2 e 100 caracteres.")
-    private String descricao;
-}
-
+        @NotBlank(message = "A descrição da categoria é obrigatória.")
+        @Size(min = 2, max = 100, message = "A descrição deve ter entre 2 e 100 caracteres.")
+        String descricao
+) {}

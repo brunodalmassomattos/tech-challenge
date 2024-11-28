@@ -10,7 +10,9 @@ import br.com.fiap.funcionalidadeDeCargaDeProdutos.domain.repository.ProdutoRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,24 +26,23 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     @Transactional
     public ProdutoDTO createProduto(ProdutoDTO produtoDTO) {
-        Produto produto = produtoMapper.toEntity(produtoDTO);
-        Categoria categoria = validarCategoria(produtoDTO.getCategoriaId());
-        produto.setCategoria(categoria);
+        Categoria categoria = validarCategoria(produtoDTO.categoriaId());
+        Produto produto = produtoMapper.toEntity(produtoDTO, categoria);
         Produto salvo = produtoRepository.save(produto);
         return produtoMapper.toDto(salvo);
     }
 
     @Override
     @Transactional
-    public ProdutoDTO updateProduto(Long id, ProdutoDTO produtoDTO) {
+    public ProdutoDTO updateProduto(UUID id, ProdutoDTO produtoDTO) {
         Produto existente = produtoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com id " + id));
 
-        Categoria categoria = validarCategoria(produtoDTO.getCategoriaId());
-        existente.setNome(produtoDTO.getNome());
-        existente.setDescricao(produtoDTO.getDescricao());
-        existente.setPreco(produtoDTO.getPreco());
-        existente.setQtdEstoque(produtoDTO.getQtdEstoque());
+        Categoria categoria = validarCategoria(produtoDTO.categoriaId());
+        existente.setNome(produtoDTO.nome());
+        existente.setDescricao(produtoDTO.descricao());
+        existente.setPreco(produtoDTO.preco());
+        existente.setQtdEstoque(produtoDTO.qtdEstoque());
         existente.setCategoria(categoria);
 
         Produto atualizado = produtoRepository.save(existente);
@@ -50,7 +51,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     @Transactional
-    public void deleteProduto(Long id) {
+    public void deleteProduto(UUID id) {
         if (!produtoRepository.existsById(id)) {
             throw new ResourceNotFoundException("Produto não encontrado com id " + id);
         }
@@ -58,7 +59,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
-    public ProdutoDTO getProdutoById(Long id) {
+    public ProdutoDTO getProdutoById(UUID id) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com id " + id));
         return produtoMapper.toDto(produto);
@@ -72,9 +73,8 @@ public class ProdutoServiceImpl implements ProdutoService {
                 .collect(Collectors.toList());
     }
 
-    private Categoria validarCategoria(Long categoriaId) {
+    private Categoria validarCategoria(UUID categoriaId) {
         return categoriaRepository.findById(categoriaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada com id " + categoriaId));
     }
 }
-

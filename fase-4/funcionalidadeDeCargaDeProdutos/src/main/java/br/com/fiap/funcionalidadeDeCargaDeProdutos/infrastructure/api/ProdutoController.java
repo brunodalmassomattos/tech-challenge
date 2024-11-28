@@ -6,9 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -26,14 +29,14 @@ public class ProdutoController {
         ProdutoDTO novoProduto = produtoService.createProduto(produtoDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(novoProduto.getId())
+                .buildAndExpand(novoProduto.id())
                 .toUri();
         return ResponseEntity.created(location).body(novoProduto);
     }
 
     @Operation(summary = "Obtém um produto pelo ID")
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoDTO> getProdutoById(@PathVariable Long id) {
+    public ResponseEntity<ProdutoDTO> getProdutoById(@PathVariable UUID id) {
         ProdutoDTO produto = produtoService.getProdutoById(id);
         return ResponseEntity.ok(produto);
     }
@@ -47,16 +50,15 @@ public class ProdutoController {
 
     @Operation(summary = "Atualiza um produto existente")
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoDTO> updateProduto(@PathVariable Long id, @Valid @RequestBody ProdutoDTO produtoDTO) {
+    public ResponseEntity<ProdutoDTO> updateProduto(@PathVariable UUID id, @Valid @RequestBody ProdutoDTO produtoDTO) {
         ProdutoDTO produtoAtualizado = produtoService.updateProduto(id, produtoDTO);
         return ResponseEntity.ok(produtoAtualizado);
     }
 
     @Operation(summary = "Exclui um produto")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduto(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduto(@PathVariable UUID id) {
         produtoService.deleteProduto(id);
         return ResponseEntity.noContent().build();
     }
 }
-
