@@ -9,4 +9,12 @@ public class CategoriaMapper {
         return new Categoria(categoriaEntity.getId(), categoriaEntity.getDescricao());
     }
 
+    public static CategoriaEntity toEntityDescricao(Categoria categoria) {
+        return new CategoriaEntity(categoria.getDescricao());
+    }
+
+    public static CategoriaEntity toEntity(Categoria categoria) {
+        return new CategoriaEntity(categoria.getId(), categoria.getDescricao());
+    }
+
 }

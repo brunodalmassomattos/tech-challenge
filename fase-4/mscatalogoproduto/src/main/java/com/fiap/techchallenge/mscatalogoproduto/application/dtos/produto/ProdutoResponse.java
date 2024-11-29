@@ -1,4 +1,4 @@
-package com.fiap.techchallenge.mscatalogoproduto.application.dtos;
+package com.fiap.techchallenge.mscatalogoproduto.application.dtos.produto;
 
 import java.math.BigDecimal;
 

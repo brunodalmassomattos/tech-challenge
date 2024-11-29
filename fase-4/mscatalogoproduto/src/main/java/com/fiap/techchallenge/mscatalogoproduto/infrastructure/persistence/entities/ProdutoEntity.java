@@ -2,7 +2,6 @@ package com.fiap.techchallenge.mscatalogoproduto.infrastructure.persistence.enti
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
 
 import java.math.BigDecimal;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package com.fiap.techchallenge.mscatalogoproduto.application.usecases;
+package com.fiap.techchallenge.mscatalogoproduto.application.usecases.produto;
 
 import com.fiap.techchallenge.mscatalogoproduto.domain.entities.Produto;
 import com.fiap.techchallenge.mscatalogoproduto.domain.repositories.ProdutoRepository;

@@ -9,9 +9,12 @@ import java.util.UUID;
 public interface ProdutoRepository {
 
     Optional<Produto> findById(UUID id);
+
     List<Produto> findAll();
+
     List<Produto> findByNameOrDescription(String name, String description);
 
-    Produto save(Produto product);
-    void delete(Produto product);
+    Produto save(Produto produto);
+
+    void delete(Produto produto);
 }

@@ -1,4 +1,4 @@
-package com.fiap.techchallenge.mscatalogoproduto.application.dtos;
+package com.fiap.techchallenge.mscatalogoproduto.application.dtos.produto;
 
 public record CreateProdutoRequest(String nome,
                                    String descricao,

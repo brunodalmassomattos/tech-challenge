@@ -1,13 +1,12 @@
 package com.fiap.techchallenge.mscatalogoproduto.application.controller;
 
-import com.fiap.techchallenge.mscatalogoproduto.application.dtos.AlterProdutoRequest;
-import com.fiap.techchallenge.mscatalogoproduto.application.dtos.CategoriaResponse;
-import com.fiap.techchallenge.mscatalogoproduto.application.dtos.CreateProdutoRequest;
-import com.fiap.techchallenge.mscatalogoproduto.application.dtos.ProdutoResponse;
-import com.fiap.techchallenge.mscatalogoproduto.application.usecases.*;
+import com.fiap.techchallenge.mscatalogoproduto.application.dtos.produto.AlterProdutoRequest;
+import com.fiap.techchallenge.mscatalogoproduto.application.dtos.produto.CategoriaResponse;
+import com.fiap.techchallenge.mscatalogoproduto.application.dtos.produto.CreateProdutoRequest;
+import com.fiap.techchallenge.mscatalogoproduto.application.dtos.produto.ProdutoResponse;
+import com.fiap.techchallenge.mscatalogoproduto.application.usecases.produto.*;
 import com.fiap.techchallenge.mscatalogoproduto.domain.entities.Produto;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

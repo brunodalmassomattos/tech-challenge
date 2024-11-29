@@ -17,4 +17,8 @@ public class CategoriaEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String descricao;
+
+    public CategoriaEntity(String descricao) {
+        this.descricao = descricao;
+    }
 }
