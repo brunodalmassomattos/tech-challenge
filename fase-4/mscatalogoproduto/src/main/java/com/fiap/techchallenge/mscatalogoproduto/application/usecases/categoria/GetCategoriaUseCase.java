@@ -17,6 +17,6 @@ public class GetCategoriaUseCase {
 
     public Categoria execute(UUID id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoria  não localizado para o id: " + id));
+                .orElseThrow(() -> new RuntimeException("Categoria não localizado para o id: " + id));
     }
 }

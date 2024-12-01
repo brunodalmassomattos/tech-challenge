@@ -1,13 +1,17 @@
 package com.fiap.techchallenge.mscatalogoproduto.infrastructure.persistence.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
 @Entity(name = "produtos")
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProdutoEntity {
 
     @Id
@@ -21,5 +25,4 @@ public class ProdutoEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "categoria_id")
     private CategoriaEntity categoriaEntity;
-
 }

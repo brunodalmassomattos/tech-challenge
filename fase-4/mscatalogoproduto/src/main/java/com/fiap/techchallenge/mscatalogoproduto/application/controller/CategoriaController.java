@@ -23,7 +23,6 @@ public class CategoriaController {
     private final DeleteCategoriaUseCase deleteCategoriaUseCase;
     private final AlterCategoriaUseCase alterCategoriaUseCase;
 
-
     public CategoriaController(CreateCategoriaUseCase criarCategoriaUseCase,
                                GetAllCategoriasUseCase getAllCategoriasUseCase,
                                GetCategoriaUseCase getCategoriaUseCase,

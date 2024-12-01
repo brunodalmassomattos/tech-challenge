@@ -1,8 +1,8 @@
 package com.fiap.techchallenge.mscatalogoproduto.application.usecases.categoria;
 
+import com.fiap.techchallenge.mscatalogoproduto.application.usecases.execption.CategoriaException;
 import com.fiap.techchallenge.mscatalogoproduto.domain.entities.Categoria;
 import com.fiap.techchallenge.mscatalogoproduto.domain.repositories.CategoriaRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +15,7 @@ public class CreateCategoriaUseCase {
 
     public Categoria execute(String descricao) {
         if (categoriaRepository.existsByDescricao(descricao)) {
-            throw new EntityNotFoundException("Já existe uma categoria com esta descrição.");
+            throw new CategoriaException("Já existe uma categoria com esta descrição.");
         }
 
         Categoria categoria = new Categoria();
