@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface EntregaService {
 
-    EntregaResponseDto criarEntrega(UUID enderecoUsuarioId);
+    void criarEntrega(PedidoConsumerDto pedidoConsumerDto);
 
     EntregaResponseDto atualizarSituacao(UUID id, String situacao);
 

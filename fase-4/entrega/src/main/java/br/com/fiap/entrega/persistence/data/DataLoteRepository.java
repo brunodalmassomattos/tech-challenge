@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface DataLoteRepository extends JpaRepository<Lote, UUID> {
 
     @Query("SELECT lote " +
-                   "FROM Lote lote " +
+                   "FROM entrega.Lote lote " +
                    "WHERE lote.cepEntrega LIKE :cep% " +
                    "AND lote.status = :situacao")
     Optional<Lote> findByCep(@Param("cep") String cep, @Param("situacao") String situacao);

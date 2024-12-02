@@ -20,7 +20,7 @@ public class LoteRepositoryImpl implements LoteRepository {
     public Lote buscarPorId(UUID id) {
         return repository.findById(id)
                         .orElseThrow(() -> new ControllerNotFoundException(
-                                String.format("Não existe lote de entrega para id: %s", id.toString())));
+                                String.format("Não existe lote de entrega para id: %s", id)));
     }
 
     @Override

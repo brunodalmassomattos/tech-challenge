@@ -1,5 +1,6 @@
 package br.com.fiap.entrega.domain.entity;
 
+import br.com.fiap.entrega.application.dto.EnderecoEntregaDto;
 import br.com.fiap.entrega.application.dto.EntregaLoteResponseDto;
 import br.com.fiap.entrega.application.dto.EntregaResponseDto;
 import br.com.fiap.entrega.application.dto.LocalizacaoDto;
@@ -7,6 +8,7 @@ import br.com.fiap.entrega.application.enumerator.SituacaoEnum;
 import br.com.fiap.entrega.application.exception.ControllerNotFoundException;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -21,7 +23,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity(name = "entrega.Entrega")
 @Table(name = "Entrega")
 public class Entrega {
 
@@ -33,6 +35,8 @@ public class Entrega {
 
     private String codigoRastreio;
 
+    private String notaFiscal;
+
     private Timestamp dataHoraEntrega;
 
     private String latitude;
@@ -41,19 +45,20 @@ public class Entrega {
 
     private String entregador;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "lote_id")
     private Lote lote;
 
-    public static Entrega criarEntrega(Endereco endereco) {
+    public static Entrega criarEntrega(String notaFiscal, Endereco endereco) {
         return Entrega.builder()
                        .endereco(endereco)
                        .status(SituacaoEnum.CRIADO.getValor())
                        .codigoRastreio(criarCodigoRastreio())
+                       .notaFiscal(validarNotaFiscal(notaFiscal))
                        .build();
     }
 
@@ -111,6 +116,13 @@ public class Entrega {
         return codigo;
     }
 
+    private static String validarNotaFiscal(String notaFiscal) {
+        if (!StringUtils.hasText(notaFiscal)) {
+            throw new ControllerNotFoundException("Nota fiscal inválida, não foi possível criar entrega");
+        }
+        return notaFiscal;
+    }
+
     private static LocalizacaoDto criarLocalizacaoDto(String longitude, String latitude) {
         return new LocalizacaoDto(longitude, latitude);
     }
@@ -162,8 +174,7 @@ public class Entrega {
 
     private static Timestamp criarDataHoraEntrega(String situacao) {
         String dataHora = LocalDateTime.now()
-                                  .truncatedTo(ChronoUnit.SECONDS)
-                                  .format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+                                  .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         return Timestamp.valueOf(dataHora);
     }
 

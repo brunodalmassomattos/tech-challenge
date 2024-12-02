@@ -1,5 +1,6 @@
 package br.com.fiap.entrega.application.service;
 
+import br.com.fiap.entrega.application.exception.ControllerNotFoundException;
 import br.com.fiap.entrega.domain.entity.Endereco;
 import br.com.fiap.entrega.domain.repository.EnderecoRepository;
 import br.com.fiap.entrega.domain.service.EnderecoService;
@@ -16,8 +17,6 @@ public class EnderecoServiceImpl implements EnderecoService {
 
     @Override
     public Endereco buscarEnderecoPorId(UUID id) {
-        var teste = repository.buscarPorId(id);
-        return teste;
-
+        return repository.buscarPorId(id);
     }
 }

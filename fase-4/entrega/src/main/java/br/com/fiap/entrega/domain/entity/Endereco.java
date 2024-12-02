@@ -13,7 +13,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity(name = "entrega.Endereco")
 @Table(name = "Endereco")
 public class Endereco {
 
@@ -41,6 +41,18 @@ public class Endereco {
                        .rua(endereco.getRua())
                        .numero(endereco.getNumero())
                        .cep(endereco.getCep())
+                       .build();
+    }
+
+    public static Endereco toEntity(EnderecoEntregaDto enderecoDto) {
+        return Endereco.builder()
+                       .id(enderecoDto.id())
+                       .estado(enderecoDto.estado())
+                       .cidade(enderecoDto.cidade())
+                       .bairro(enderecoDto.bairro())
+                       .rua(enderecoDto.rua())
+                       .numero(enderecoDto.numero())
+                       .cep(enderecoDto.cep())
                        .build();
     }
 }

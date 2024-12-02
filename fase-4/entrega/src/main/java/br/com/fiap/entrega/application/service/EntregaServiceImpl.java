@@ -1,7 +1,8 @@
 package br.com.fiap.entrega.application.service;
 
 import br.com.fiap.entrega.application.dto.*;
-import br.com.fiap.entrega.domain.entity.Endereco;
+import br.com.fiap.entrega.application.gateway.ClienteGateway;
+import br.com.fiap.entrega.application.event.PedidoProducer;
 import br.com.fiap.entrega.domain.entity.Entrega;
 import br.com.fiap.entrega.domain.entity.Lote;
 import br.com.fiap.entrega.domain.repository.EntregaRepository;
@@ -10,6 +11,7 @@ import br.com.fiap.entrega.domain.service.EntregaService;
 import br.com.fiap.entrega.domain.service.LoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -21,16 +23,22 @@ public class EntregaServiceImpl implements EntregaService {
     private final EnderecoService enderecoService;
     private final LoteService loteService;
     private final EntregaRepository repository;
+    private final ClienteGateway gateway;
+    private final PedidoProducer pedidoProducer;
 
     @Override
-    public EntregaResponseDto criarEntrega(UUID enderecoUsuarioId) {
-        Endereco endereco = enderecoService.buscarEnderecoPorId(enderecoUsuarioId);
-        Optional<Lote> lote = loteService.buscarLotePorCep(endereco.getCep());
-        Entrega entrega = Entrega.criarEntrega(endereco);
-        lote.ifPresentOrElse(entrega::setLote,
-                () -> entrega.setLote(Lote.criarLote(endereco.getCep())));
+    @Transactional
+    public void criarEntrega(PedidoConsumerDto pedidoConsumerDto) {
+        ClienteDto clienteDto = gateway.obterClientePorId(pedidoConsumerDto.clienteId());
 
-        return Entrega.toEntregaResponseDto(repository.persistir(entrega));
+        Optional<Lote> lote = loteService.buscarLotePorCep(clienteDto.enderecoEntrega().cep());
+        Entrega entrega = Entrega.criarEntrega(pedidoConsumerDto.notaFiscal(),
+                enderecoService.buscarEnderecoPorId(clienteDto.enderecoEntrega().id()));
+        lote.ifPresentOrElse(entrega::setLote,
+                () -> entrega.setLote(Lote.criarLote(clienteDto.enderecoEntrega().cep())));
+
+        repository.persistir(entrega);
+        enviarCodigoRastreio(entrega);
     }
 
     @Override
@@ -58,6 +66,14 @@ public class EntregaServiceImpl implements EntregaService {
         Entrega entrega = buscarEntregaPorId(id);
         Entrega.alterarLocalizacao(entrega, localizacao);
         return Entrega.toEntregaResponseDto(repository.persistir(entrega));
+    }
+
+    private void enviarCodigoRastreio(Entrega entrega) {
+        PedidoProducerDto pedidoProducerDto = new PedidoProducerDto(
+                "Rastreio",
+                entrega.getNotaFiscal(),
+                entrega.getCodigoRastreio());
+        pedidoProducer.sendMessage("rastreio", pedidoProducerDto);
     }
 
     private Entrega buscarEntregaPorId(UUID id) {

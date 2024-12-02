@@ -13,7 +13,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity(name = "entrega.Lote")
 @Table(name = "Lote")
 public class Lote {
 
@@ -32,7 +32,7 @@ public class Lote {
     private String transportadora;
 
     @OneToMany(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.PERSIST,
             mappedBy = "lote")
     private List<Entrega> entregas;
 

@@ -2,17 +2,18 @@ package br.com.fiap.entrega.application.service;
 
 import br.com.fiap.entrega.application.dto.EntregaResponseDto;
 import br.com.fiap.entrega.application.dto.LocalizacaoDto;
+import br.com.fiap.entrega.application.dto.PedidoConsumerDto;
+import br.com.fiap.entrega.application.dto.PedidoProducerDto;
 import br.com.fiap.entrega.application.enumerator.SituacaoEnum;
+import br.com.fiap.entrega.application.event.PedidoProducer;
 import br.com.fiap.entrega.application.exception.ControllerNotFoundException;
+import br.com.fiap.entrega.application.gateway.ClienteGateway;
 import br.com.fiap.entrega.domain.entity.Entrega;
 import br.com.fiap.entrega.domain.repository.EntregaRepository;
 import br.com.fiap.entrega.domain.service.EnderecoService;
 import br.com.fiap.entrega.domain.service.EntregaService;
 import br.com.fiap.entrega.domain.service.LoteService;
-import br.com.fiap.entrega.mocks.EnderecoMock;
-import br.com.fiap.entrega.mocks.EntregaMock;
-import br.com.fiap.entrega.mocks.LocalizacaoDtoMock;
-import br.com.fiap.entrega.mocks.LoteMock;
+import br.com.fiap.entrega.mocks.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,12 +43,18 @@ class EntregaServiceImplTest {
     @Mock
     private LoteService loteService;
 
+    @Mock
+    private ClienteGateway gateway;
+
+    @Mock
+    private PedidoProducer producer;
+
     private AutoCloseable openMocks;
 
     @BeforeEach
     void setUp() {
         openMocks = MockitoAnnotations.openMocks(this);
-        service = new EntregaServiceImpl(enderecoService, loteService, repository);
+        service = new EntregaServiceImpl(enderecoService, loteService, repository, gateway, producer);
     }
 
     @AfterEach
@@ -57,18 +64,17 @@ class EntregaServiceImplTest {
 
     @Test
     void deveCriarEntregaComSucessoQuandoTerLoteCriado() {
+
+        when(gateway.obterClientePorId(any(String.class))).thenReturn(ClienteDtoMock.getClienteDto());
         when(enderecoService.buscarEnderecoPorId(any(UUID.class))).thenReturn(EnderecoMock.getEndereco());
         when(loteService.buscarLotePorCep(any(String.class))).thenReturn(Optional.of(LoteMock.getLoteEncontrado()));
         when(repository.persistir(any(Entrega.class))).thenReturn(EntregaMock.getEntregaCriada());
+        doNothing().when(producer).sendMessage(anyString(), any(PedidoProducerDto.class));
 
-        EntregaResponseDto retornoDto = service.criarEntrega(UUID.randomUUID());
+        service.criarEntrega(PedidoConsumerDtoMock.getPedidoConsumerDto());
 
-        assertThat(retornoDto).isNotNull();
-        assertThat(retornoDto.enderecoEntregaDto()).isNotNull();
-        assertThat(retornoDto.situacao()).isEqualTo(SituacaoEnum.CRIADO);
-        assertThat(retornoDto.codigoRastreio()).isNotNull();
-        assertThat(retornoDto.loteId()).isNotNull();
-
+        verify(gateway, times(1)).obterClientePorId(any(String.class));
+        verify(producer, times(1)).sendMessage(anyString(), any(PedidoProducerDto.class));
         verify(repository, times(1)).persistir(any(Entrega.class));
         verify(enderecoService, times(1)).buscarEnderecoPorId(any(UUID.class));
         verify(loteService, times(1)).buscarLotePorCep(any(String.class));
@@ -76,18 +82,16 @@ class EntregaServiceImplTest {
 
     @Test
     void deveCriarEntregaComSucessoQuandoNaoEncontrarLoteCriadoParaCep() {
+        when(gateway.obterClientePorId(any(String.class))).thenReturn(ClienteDtoMock.getClienteDto());
         when(enderecoService.buscarEnderecoPorId(any(UUID.class))).thenReturn(EnderecoMock.getEndereco());
         when(loteService.buscarLotePorCep(any(String.class))).thenReturn(Optional.empty());
         when(repository.persistir(any(Entrega.class))).thenReturn(EntregaMock.getEntregaCriada());
+        doNothing().when(producer).sendMessage(anyString(), any(PedidoProducerDto.class));
 
-        EntregaResponseDto retornoDto = service.criarEntrega(UUID.randomUUID());
+        service.criarEntrega(PedidoConsumerDtoMock.getPedidoConsumerDto());
 
-        assertThat(retornoDto).isNotNull();
-        assertThat(retornoDto.enderecoEntregaDto()).isNotNull();
-        assertThat(retornoDto.situacao()).isEqualTo(SituacaoEnum.CRIADO);
-        assertThat(retornoDto.codigoRastreio()).isNotNull();
-        assertThat(retornoDto.loteId()).isNotNull();
-
+        verify(gateway, times(1)).obterClientePorId(any(String.class));
+        verify(producer, times(1)).sendMessage(anyString(), any(PedidoProducerDto.class));
         verify(repository, times(1)).persistir(any(Entrega.class));
         verify(enderecoService, times(1)).buscarEnderecoPorId(any(UUID.class));
         verify(loteService, times(1)).buscarLotePorCep(any(String.class));

@@ -7,7 +7,6 @@ import br.com.fiap.entrega.persistence.data.DataEntregaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -21,11 +20,6 @@ public class EntregaRepositoryImpl implements EntregaRepository {
         return dataRepository.findById(id)
                         .orElseThrow(() -> new ControllerNotFoundException(
                                 String.format("Não existe entrega para o id: %s", id.toString())));
-    }
-
-    @Override
-    public List<Entrega> buscarPorLoteId(UUID loteId) {
-        return dataRepository.findByLoteId(loteId);
     }
 
     @Override

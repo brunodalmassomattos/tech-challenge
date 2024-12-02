@@ -18,11 +18,6 @@ public class EntregaController {
     private final EntregaService entregaService;
     private final LoteService loteService;
 
-    @PostMapping
-    public EntregaResponseDto criarEntrega(@RequestParam UUID enderecoId) {
-        return entregaService.criarEntrega(enderecoId);
-    }
-
     @PutMapping("/alterar-situacao/{id}")
     public ResponseEntity<EntregaResponseDto> alterarSituacaoEntrega(@PathVariable UUID id,
                                                                      @Schema(enumAsRef = true,
