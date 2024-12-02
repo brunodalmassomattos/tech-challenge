@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>br.com.fiap</groupId>
-    <artifactId>entrega</artifactId>
+    <artifactId>mslogistica</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>entrega</name>
-    <description>entrega</description>
+    <name>mslogistica</name>
+    <description>mslogistica</description>
     <url/>
     <licenses>
         <license/>
