@@ -170,7 +170,7 @@ public class ProdutoController {
                 .toList();
     }
 
-    @@PostMapping("/{id}/baixa-estoque")
+    @PostMapping("/{id}/baixa-estoque")
     public ResponseEntity<?> baixaQuantidadeProdutoEstoque(
             @PathVariable UUID id,
             @RequestParam Integer quantidade) {
@@ -194,7 +194,7 @@ public class ProdutoController {
         }
     }
 
-    @@PostMapping("/{id}/estorno-estoque")
+    @PostMapping("/{id}/estorno-estoque")
     public ResponseEntity<?> estornarEstoque(
             @PathVariable UUID id,
             @RequestParam Integer quantidade) {
