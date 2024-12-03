@@ -62,6 +62,22 @@ git clone https://github.com/brunodalmassomattos/tech-challenge/tree/feature/fun
 - Localize a classe `FuncionalidadeDeCargaDeProdutosApplication`
 - Execute-a através do botão "Run"
 
+4. Preparar o Arquivo CSV
+Coloque o arquivo produtos.csv no diretório src/main/resources/input/ seguindo o padrão abaixo:
+
+```bash
+nome,descricao,preco,qtdEstoque,categoriaDescricao
+Smartphone ABC,Um smartphone avançado,2999.99,50,Eletrônicos
+Notebook ABC,Notebook potente para trabalho,4999.99,30,Informática
+```
+
+5. Executar o Job Manualmente
+Para iniciar o job de importação manualmente, faça uma requisição POST para o endpoint /jobs/import. Utilize o Postman ou Insomnia para enviar uma requisição POST para o endpoint.
+
+```bash
+curl -X POST http://localhost:8080/jobs/import
+```
+
 ---
 
 ## Testes
