@@ -1,21 +1,21 @@
-# Microsserviço de Logística de Entregas
+# Microsserviço Controle de Pedido
 
-Este é o microsserviço responsável pela Logística de Entrega do Sistema de Gerenciamento de Pedidos. O serviço é responsável por separar pedidos em lotes de entrega de acordo com o Cep do endereço de entrega do usuário.
+Este é o microsserviço responsável pelo gerenciamento dos pedidos. O serviço é responsável por criar e controlar o pedido até a entrega ao usuário.
 
 ## 🚀 Features
 
-- Consumir eventos via Kafka de pedidos pagos para criar entrega
-- Enviar código de rastreio utilizando Kafka
-- Buscar cliente via Spring Integration
-- Documentação Swagger/OpenAPI
-- Integração com banco de dados PostgreSQL (Supabase)
+- Consumir eventos via Kafka o rastreio.
+- Enviar confirmações de pagamentos via Kafka.
+- Buscar produtos utilizando OpenFeign.
+- Documentação Swagger/OpenAPI.
+- Integração com banco de dados PostgreSQL (Supabase).
 
 ## 🛠️ Tecnologias Utilizadas
 
 - Java 17
 - Spring Boot 3.2.0
 - Spring Data JPA
-- Spring Integration
+- Spring Spring Cloud
 - Spring Kafka
 - PostgreSQL (Supabase)
 - Swagger/OpenAPI
@@ -34,22 +34,16 @@ Este é o microsserviço responsável pela Logística de Entrega do Sistema de G
 src/
 ├── main/
 │   ├── java/
-│   │   └── br.com.fiap.mslogistica/
+│   │   └── br.com.fiap.pedido/
 │   │       ├── domain/
 │   │       │   ├── application/
 │   │       │   │   ├── controller/
 │   │       │   │   ├── dto/
-│   │       │   │   ├── enumerator/
-│   │       │   │   ├── event/
-│   │       │   │   ├── exception/
-│   │       │   │   ├── gateway/
-│   │       │   │   └── service/
 │   │       │   ├── domain/
-│   │       │   │   ├── entity/
-│   │       │   │   ├── repository/
+│   │       │   │   ├── models/
 │   │       │   │   └── service/
 │   │       │   └── persistence/
-│   │       │       ├── data/
+│   │       │       ├── external.client/
 │   │       │       └── repository/
 │   └── resources/
 │       └── application.properties
@@ -69,21 +63,21 @@ git clone <url-do-repositorio>
 
 ## 📍 Endpoints
 
-### Clientes
-- PUT /entrega/atualizar-localizacao/{id} - Atualizar localização da entrega
-- PUT /entrega/atualizar-localizacao-lote/{loteId} - Atualizar localização do lote de entregas
-- PUT /entrega/atribuir-transportadora/{loteId} - Atribuir transportadora ao lote de entregas
-- PUT /entrega/atribuir-entregador/{id} - Atribuir entregador à entrega
-- PUT /entrega/alterar-situacao/{id} - Alterar situação da entrega
-- PUT /entrega/alterar-situacao-lote/{loteId} - Alterar situação do lote de entregas
-- GET /entrega/entregas-lote/{loteId} - Buscar entregas de lote
-- GET /entrega/entrega-codigoRastreio/{codigoRastreio} - Buscar entrega por código de rastreio
+### Pedido
+- POST /api/pedido - Cria pedido
+- POST /api/pedido/atualiza/id/{idPedido} - Atualiza pedido
+- POST /api/pedido/atualiza/status/{idNota} - Atualiza status pedido
+- GET /api/pedido/busca/usuario/{idUsuario} - Busca pedido por usuário
+- GET /api/pedido/busca/status/{status} - Busca pedido por status 
+- GET /api/pedido/busca/notafiscal/{idNota} - Busca pedido pela nota fiscal
+- DEL /api/pedido/deleta/id/{idPedido} - Deleta pelo id do pedido 
+- DEL /api/pedido/deleta/notafiscal/{idNota} - Delata pedido pela nota fiscal
 
 ## 📚 Documentação
 
 A documentação completa da API está disponível através do Swagger UI:
 ```
-http://localhost:8089/swagger-ui/index.html#
+http://localhost:8082/swagger-ui/index.html#
 ```
 
 ## 🔍 Testes
